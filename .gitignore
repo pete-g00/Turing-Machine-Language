@@ -1,0 +1,8 @@
+# latexmk
+*.aux
+*.cls
+*.fdb_latexmk
+*.log
+*.synctex(busy)
+*.synctex
+
