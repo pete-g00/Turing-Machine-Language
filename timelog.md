@@ -14,7 +14,11 @@
 
 ## Week 2
 
-### 27 Sep 2020
+### 27 Sep 2022
 
-* *0.5 hours* Downloaded the template for the project and removed unnecessary files
+* *0.5 hours* Downloaded the template for the project and removed unnecessary files.
 * *0.5 hours* Created GitHub repository using the template.
+
+### 28 Sep 2022
+
+* *0.5 hours* Formulated a brief plan for the entire project.
