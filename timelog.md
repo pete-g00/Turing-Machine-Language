@@ -22,3 +22,7 @@
 ### 28 Sep 2022
 
 * *0.5 hours* Formulated a brief plan for the entire project.
+
+### 30 Sep 2022
+
+* *1 hour* Initial meeting with Ornela
