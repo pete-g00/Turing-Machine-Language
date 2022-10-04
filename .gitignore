@@ -5,4 +5,5 @@
 *.log
 *.synctex(busy)
 *.synctex
-
+*.synctex.gz
+*.fls

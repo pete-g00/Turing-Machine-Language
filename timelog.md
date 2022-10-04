@@ -26,3 +26,9 @@
 ### 30 Sep 2022
 
 * *1 hour* Initial meeting with Ornela
+
+## Week 3
+
+## 04 Oct 2022
+* *1.5 hours* Started working on the specification for the TM language. Added EBNF to the document and general rules.
+* *1.5 hours* Added execution of a TM program on a valid tape.
