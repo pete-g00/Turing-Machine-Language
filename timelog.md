@@ -36,3 +36,4 @@
 ## 05 Oct 2022
 * *1 hour* Added an example of an execution of a valid tape on a TM program.
 * *1.5 hours* Started working on the proof of equivalence document. Defined complete programs and added examples/illustrations.
+* *0.5 hours* Added plans for week 4 and agenda for the week 3 meeting with Ornela.
