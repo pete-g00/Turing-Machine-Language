@@ -59,7 +59,7 @@
 \begin{document}
     \maketitle
     \begin{abstract}
-        This document contains the specification of the TM programming language (called Turing Machine Language, or TML), and how it can be used to change the state of a tape. In the first section, we discuss TML rules (the EBNF and contextual rules), and give examples of valid and invalid TML programs. In the second section, we define tapes and how a TML program can be executed on a tape.
+        This document contains the specification of the TM programming language (called Turing Machine Language, or TML), and how it can be used to change the state of a tape. In the first section, we discuss TML rules (the EBNF and contextual rules), and give examples of valid and invalid TML programs. In the second section, we define tapes and how a TML program can be executed on a tape. This section also includes some examples of executing a TM program on a given tape.
     \end{abstract}
 
     \section{TML rules}
@@ -152,6 +152,7 @@ module isEven {
         \item a basic block at line 12.
     \end{itemize}
     \end{example}
+    \newpage
 
     \section{TML execution}
     In this section, we discuss how a valid TML program can execute a tape. The tape we will be using has infinite spaces in both directions.
@@ -232,7 +233,7 @@ module isSecondValueA {
 
     Now, we will define how we can execute a TML program on a valid tape.
     \begin{definition}
-        Let $P$ be a TML program, let $T$ be a valid tape for the program with $i$ the smallest integer such that $T(i)$ is not \texttt{blank} ($i$ is the original \emph{tapehead index} and $T(i)$ the original \textit{tapehead value}). We \emph{execute $P$ on $T$} by constructing (countable) different tapes until execution is terminated. We first take the given tape and the tapehead index and execute it using the first block $b$ in the first module of $P$ to construct the next tape $T'$ and next tapehead index $i'$. This is done as follows:
+        Let $P$ be a TML program, let $T$ be a valid tape for the program with $i$ the smallest integer such that $T(i)$ is not \texttt{blank} ($i$ is the initial \emph{tapehead index} and $T(i)$ the initial \textit{tapehead value}). We \emph{execute $P$ on $T$} by constructing (countable) different tapes until execution is terminated. We first take the given tape and the tapehead index and execute it using the first block $b$ in the first module of $P$ to construct the next tape $T'$ and next tapehead index $i'$. This is done as follows:
         \begin{itemize}
             \item if the block is a switch block, we take the first block from the case corresponding to the tapehead value- now, we must have a basic block;
             \item if there is a \textit{changeto} \texttt{val} command in the basic block, the next tape $T'$ is given by 
@@ -261,5 +262,233 @@ module isSecondValueA {
     \begin{remark}
         By construction, for a valid program, precisely one of the 5 possible step applies when choosing the next block to execute or terminate.
     \end{remark}
-
+    
+    \begin{example}
+        Consider the following TML program:
+\begin{lstlisting}[language=TML]
+alphabet = {"a", "b"}
+module palindrome {
+    switch tapehead {
+        if blank {
+            accept
+        } if a {
+            changeto blank
+            move right
+            switch tapehead {
+                while a, b {
+                    move right
+                } if blank {
+                    move left
+                    switch tapehead {
+                        if blank, a {
+                            changeto blank
+                            move left
+                            goto restart
+                        } if b {
+                            reject
+                        }
+                    }
+                }
+            }
+        }  if b {
+            changeto blank
+            move right
+            switch tapehead {
+                while a, b {
+                    move right
+                } if blank {
+                    move left
+                    switch tapehead {
+                        if blank, b {
+                            changeto blank
+                            move left
+                            goto restart
+                        } if a {
+                            reject
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+module restart {
+    switch tapehead {
+        while a, b {
+            move left
+        } if blank {
+            move right
+            goto palindrome
+        }
+    }
+}
+\end{lstlisting}
+    We will execute the program on the following tape.
+    \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \draw[thick] (-0.25, 0) -- (0, 0);
+            \foreach \x[count=\i] in {a, b, a} {
+                \draw[thick] (\i*0.5-0.25, 0) -- (\i*0.5, 0);
+                \node at (\i*0.5-0.125, 0.3) {\texttt{\x}};
+            }
+            \draw[thick] (1.75, 0) -- (2, 0);
+    
+            \draw[->, thick] (0.375, -0.5) -- (0.375, -0.1);
+        \end{tikzpicture}
+    \end{figure}
+    \noindent The arrow points to the tapehead value. We first execute the switch block at \texttt{palindrome}. Since the tapehead value is \texttt{a}, we execute the basic block at lines 7-8. So, we change the tapehead value to \texttt{blank}, and the tapehead moves to the right by one step. Since this is an \textit{if}-block, without a flow command, and there is a block following this one, the next block to be executed is the switch block at lines 9-24. Now, the current tape is the following.
+    \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \draw[thick] (-0.25, 0) -- (0, 0);
+            \foreach \x[count=\i] in {b, a} {
+                \draw[thick] (\i*0.5-0.25, 0) -- (\i*0.5, 0);
+                \node at (\i*0.5-0.125, 0.3) {\texttt{\x}};
+            }
+            \draw[thick] (1.25, 0) -- (1.5, 0);
+    
+            \draw[->, thick] (0.375, -0.5) -- (0.375, -0.1);
+        \end{tikzpicture}
+    \end{figure}
+    \noindent The current block is a switch block. The tapehead value is \texttt{b}, so we are at the \textit{while} command at line 11. The basic block here only contains a \textit{move} command. So, we leave the tape as is, and the tapehead moves to the right once. This is a \textit{while} command, so the next block to execute is still this switch block. The current tape state is the following.
+    \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \draw[thick] (-0.25, 0) -- (0, 0);
+            \foreach \x[count=\i] in {b, a} {
+                \draw[thick] (\i*0.5-0.25, 0) -- (\i*0.5, 0);
+                \node at (\i*0.5-0.125, 0.3) {\texttt{\x}};
+            }
+            \draw[thick] (1.25, 0) -- (1.5, 0);
+    
+            \draw[->, thick] (0.875, -0.5) -- (0.875, -0.1);
+        \end{tikzpicture}
+    \end{figure}
+    \noindent The current block is still a switch block. The tapehead value is \texttt{a}, so we execute the same \textit{while} command at line 11. Moreover, the next block to execute is still the switch block. Now, the current tape state is the following.
+    \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \draw[thick] (-0.25, 0) -- (0, 0);
+            \foreach \x[count=\i] in {b, a} {
+                \draw[thick] (\i*0.5-0.25, 0) -- (\i*0.5, 0);
+                \node at (\i*0.5-0.125, 0.3) {\texttt{\x}};
+            }
+            \draw[thick] (1.25, 0) -- (1.5, 0);
+    
+            \draw[->, thick] (1.375, -0.5) -- (1.375, -0.1);
+        \end{tikzpicture}
+    \end{figure}
+    \noindent For the third time, we are executing the same switch block. Now, however, the tapehead value is \texttt{blank}, so we execute the first block of the \textit{if} command at line 13. Since this is an \textit{if} command and this is not the last block in the if command, the next block to execute is the switch block at lines 14-22.
+    \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \draw[thick] (-0.25, 0) -- (0, 0);
+            \foreach \x[count=\i] in {b, a} {
+                \draw[thick] (\i*0.5-0.25, 0) -- (\i*0.5, 0);
+                \node at (\i*0.5-0.125, 0.3) {\texttt{\x}};
+            }
+            \draw[thick] (1.25, 0) -- (1.5, 0);
+    
+            \draw[->, thick] (0.875, -0.5) -- (0.875, -0.1);
+        \end{tikzpicture}
+    \end{figure}
+    \noindent Now, the current block is a switch block. The tapehead value is \texttt{a}, so we take the basic block at lines 16-18. The value of the tapehead becomes \texttt{blank}, and the tapehead moves to the left. The next block to execute is the switch block in \texttt{restart}.
+    \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \draw[thick] (-0.25, 0) -- (0, 0);
+            \foreach \x[count=\i] in {b} {
+                \draw[thick] (\i*0.5-0.25, 0) -- (\i*0.5, 0);
+                \node at (\i*0.5-0.125, 0.3) {\texttt{\x}};
+            }
+            \draw[thick] (0.75, 0) -- (1, 0);
+    
+            \draw[->, thick] (0.375, -0.5) -- (0.375, -0.1);
+        \end{tikzpicture}
+    \end{figure}
+    \noindent Since the current tapehead value is \texttt{b}, we execute the basic block at line 50. So, we move to the left, and the tape is left as is. Moreover, since this is a while block, the next block to execute is still the switch block.
+    \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \draw[thick] (-0.25, 0) -- (0, 0);
+            \foreach \x[count=\i] in {b} {
+                \draw[thick] (\i*0.5-0.25, 0) -- (\i*0.5, 0);
+                \node at (\i*0.5-0.125, 0.3) {\texttt{\x}};
+            }
+            \draw[thick] (0.75, 0) -- (1, 0);
+    
+            \draw[->, thick] (-0.125, -0.5) -- (-0.125, -0.1);
+        \end{tikzpicture}
+    \end{figure}
+    \noindent Since the current tapehead state is \texttt{blank}, we execute the basic block at lines 52-53. So, we move to the right, and the tape is left as is. The next block to execute is the switch block at \texttt{palindrome}.
+    \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \draw[thick] (-0.25, 0) -- (0, 0);
+            \foreach \x[count=\i] in {b} {
+                \draw[thick] (\i*0.5-0.25, 0) -- (\i*0.5, 0);
+                \node at (\i*0.5-0.125, 0.3) {\texttt{\x}};
+            }
+            \draw[thick] (0.75, 0) -- (1, 0);
+    
+            \draw[->, thick] (0.375, -0.5) -- (0.375, -0.1);
+        \end{tikzpicture}
+    \end{figure}
+    \noindent Since the current tapehead state is \texttt{b}, we execute the basic block at lines 26-27. So, we change the tapehead value to \texttt{blank}, move to the right. This is a while block, so the next block to be executed is still the switch block.
+    \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \draw[thick] (-0.25, 0) -- (0, 0);
+            \draw[thick] (0.25, 0) -- (0.5, 0);
+            \draw[thick] (0.75, 0) -- (1, 0);
+    
+            \draw[->, thick] (0.875, -0.5) -- (0.875, -0.1);
+        \end{tikzpicture}
+    \end{figure}
+    \noindent The current tapehead state is \texttt{blank}, so we execute the basic block at line 32. We move to the left and keep the tape as is. The next block to execute is the switch block at lines 33-41.
+    \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \draw[thick] (-0.25, 0) -- (0, 0);
+            \draw[thick] (0.25, 0) -- (0.5, 0);
+            \draw[thick] (0.75, 0) -- (1, 0);
+    
+            \draw[->, thick] (0.375, -0.5) -- (0.375, -0.1);
+        \end{tikzpicture}
+    \end{figure}
+    \noindent The current tapehead value is \texttt{blank}, so we execute the basic block at lines 35-37. We keep the tape as is, and move to the left. The next block to execute is the switch block at lines 48-55.
+    \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \draw[thick] (-0.25, 0) -- (0, 0);
+            \draw[thick] (0.25, 0) -- (0.5, 0);
+            \draw[thick] (0.75, 0) -- (1, 0);
+    
+            \draw[->, thick] (-0.125, -0.5) -- (-0.125, -0.1);
+        \end{tikzpicture}
+    \end{figure}
+    \noindent The current tapehead value is \texttt{blank}, so we execute the basic block at lines 52-53. In that case, we move to the right and go to the switch block at \texttt{palindrome}.
+    \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \draw[thick] (-0.25, 0) -- (0, 0);
+            \draw[thick] (0.25, 0) -- (0.5, 0);
+            \draw[thick] (0.75, 0) -- (1, 0);
+    
+            \draw[->, thick] (0.375, -0.5) -- (0.375, -0.1);
+        \end{tikzpicture}
+    \end{figure}
+    \noindent The current tapehead value is \texttt{blank}, so we execute the basic block at line 5. We move to the left, keep the tapehead as is, and accept the tape. In that case, the final state of the tape is the following.
+    \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \draw[thick] (-0.25, 0) -- (0, 0);
+            \draw[thick] (0.25, 0) -- (0.5, 0);
+            \draw[thick] (0.75, 0) -- (1, 0);
+    
+            \draw[->, thick] (-0.125, -0.5) -- (-0.125, -0.1);
+        \end{tikzpicture}
+    \end{figure}
+\end{example}
 \end{document}

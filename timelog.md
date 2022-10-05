@@ -32,3 +32,7 @@
 ## 04 Oct 2022
 * *1.5 hours* Started working on the specification for the TM language. Added EBNF to the document and general rules.
 * *1.5 hours* Added execution of a TM program on a valid tape.
+
+## 05 Oct 2022
+* *1 hour* Added an example of an execution of a valid tape on a TM program.
+* *1.5 hours* Started working on the proof of equivalence document. Defined complete programs and added examples/illustrations.
