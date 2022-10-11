@@ -31,13 +31,20 @@
 
 ### 04 Oct 2022
 * *1.5 hours* Started working on the specification for the TM language. Added EBNF to the document and general rules.
-* *1.5 hours* Added execution of a TM program on a valid tape.
+* *1.5 hours* Added execution of a TML program on a valid tape.
 
 ### 05 Oct 2022
-* *1 hour* Added an example of an execution of a valid tape on a TM program.
+* *1 hour* Added an example of an execution of a valid tape on a TML program.
 * *1.5 hours* Started working on the proof of equivalence document. Defined complete programs and added examples/illustrations.
 * *0.5 hours* Added plans for week 4 and agenda for the week 3 meeting with Ornela.
 
-### 07 Sep 2022
+### 07 Oct 2022
 
 * *1 hour* Weekly meeting with Ornela
+
+## Week 4
+
+### 11 Oct 2022
+
+* *2 hours* Continued the proof of equivalence- showed that for every complete TML program, there is a corresponding TM (and vice versa).
+* *2 hours* Finished the proof of equivalence- showed that for every valid TML program, there is a complete TML program.
