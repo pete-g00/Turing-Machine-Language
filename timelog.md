@@ -53,3 +53,4 @@
 
 * *1.5 hours* Added examples of: converting a TM program into a TM, and converting a TM into a TM program.
 * *0.5 hours* Created the MoSCoWs for the project
+* *0.5 hours* Added plans for week 5 and agenda for the week 4 meeting with Ornela.
