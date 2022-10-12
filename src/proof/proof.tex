@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass{amsart}
 \usepackage[utf8]{inputenc}
 
 \usepackage{amsmath, amssymb, amsthm}
@@ -10,33 +10,39 @@
 \usepackage{listings}
 \usepackage{xcolor}
 
-\definecolor{codegreen}{rgb}{0,0.6,0}
-\definecolor{codegray}{rgb}{0.5,0.5,0.5}
-\definecolor{codepurple}{rgb}{0.58,0,0.82}
-\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\definecolor{bluekeywords}{rgb}{0.13, 0.19, 0.7}
+\definecolor{goldenkeywords}{rgb}{0.67, 0.58, 0.13}
+\definecolor{greencomments}{rgb}{0.1, 0.5, 0.2}
+\definecolor{redstrings}{rgb}{0.8, 0.15, 0.1}
+\definecolor{graynumbers}{rgb}{0.5, 0.5, 0.5}
+\definecolor{subtlegray}{rgb}{0.98, 0.98, 0.98}
 
-\lstdefinestyle{thestyle}{
-    backgroundcolor=\color{backcolour},
-    basicstyle=\ttfamily\footnotesize,
-    keywordstyle=\color{red!80}\bfseries,
-    ndkeywordstyle=\color{blue!80}\bfseries,
-    identifierstyle=\color{black},
-    commentstyle=\color{codegreen},
-    stringstyle=\color{codepurple},
-    breakatwhitespace=false,
-    breaklines=true,
-    captionpos=b,
-    keepspaces=true,
-    numberstyle=\tiny\color{codegray},
-    numbers=left,
-    numbersep=2pt,
+\usepackage{lstautogobble}
+\usepackage{listings}
+
+\lstset{
+    autogobble,    
+    columns=fullflexible,
     showspaces=false,
+    showtabs=false,
+    breaklines=true,
     showstringspaces=false,
-    showtabs=false,          
-    tabsize=2
+    breakatwhitespace=true,
+    escapeinside={(*@}{@*)},
+    rulecolor=\color{lightgray},
+    backgroundcolor=\color{subtlegray},
+    commentstyle=\color{greencomments},
+    keywordstyle=\color{bluekeywords},
+    ndkeywordstyle=\color{goldenkeywords},
+    stringstyle=\color{redstrings},
+    numberstyle=\color{graynumbers},
+    basicstyle=\ttfamily\linespread{1.15}\footnotesize,
+    frame=tb,
+    framesep=12pt,
+    framexleftmargin=12pt,
+    tabsize=4,
+    captionpos=b
 }
-
-\lstset{style=thestyle}
 
 \lstdefinelanguage{TML}{ 
     keywords={changeto, move, goto, if, switch, while, module, accept, reject, halt, alphabet},
@@ -55,14 +61,14 @@
 \newtheorem{example}[theorem]{Example}
 
 \title{TML Equivalence Proof}
-\author{Pete Gautam}
+\author[P. Gautam]{Pete Gautam}
 
 \begin{document}
-    \maketitle
 
     \begin{abstract}
         This document proves the equivalence of the TML with TMs. We do this by constructing an equivalent TML program for a TM, and vice versa. In the first section, we define complete TML programs, which are very close to TMs, and describe how they can be mapped into TMs.  In the second section, we define formally how complete TML programs can be transformed into TMs, and vice versa. Finally, the third section describes how we can transform a valid TML program into a complete TML program.
-    \end{abstract}
+    \end{abstract}    
+    \maketitle
 
     \section{Complete TML programs}
     \noindent Complete programs in the TML are a specific type of TML programs that are very detailed and obey different properties. As such, it is very easy to construct the TM corresponding to a complete program. In this section, we will build to the definition complete programs from complete blocks and modules.
@@ -106,12 +112,15 @@ goto s2
             \item the body of each \textit{while} command is a partially complete block.
         \end{itemize}
     \end{definition}
+
     % \begin{remark}
     %     Having no \textit{if} commands in a complete module means that the Turing machine never terminates. This is not an issue since it is still a valid Turing machine. 
     % \end{remark}
+    
     \begin{remark}
         For a \textit{while} command, the body must be partially complete because the corresponding edge in the TM is always a loop.
     \end{remark}
+    
     It is quite easy to map a single module to a sub-Turing machine. It precisely corresponds to having an initial state and edges going to other states as dictated by each case. Because the program is valid, we know that there is a case for each letter in the alphabet, including the \texttt{blank} letter.
     \begin{example}
         Consider the following complete module.
@@ -142,6 +151,7 @@ module basic {
         \caption{The sub-TM of the given Turing Machine complete module.}
     \end{figure}
     \end{example}
+
     \begin{remark}
         In the example above, we consider the state $s_1$ to be the \emph{corresponding state} of the module. For every complete module, there is precisely one corresponding state.
     \end{remark}
@@ -150,13 +160,17 @@ module basic {
     \begin{definition}
         Let $P$ be a TML program. We say that $P$ is \emph{complete} if it is composed of one or more complete modules. We also require every \textit{goto} command in a complete block to refer to an existing module.
     \end{definition}
+
     \begin{remark}
         The second condition (called \emph{valid reference}) is required for any TML program.
     \end{remark}
+
     \begin{remark}
         In general, a complete program is not composed of a single complete module. We will see later that a relatively simple module can be broken down into a couple of complete modules, each of which refer to each other.
     \end{remark}
+    
     Every module in the program can be converted to a state, along with directed edges to other states. If the program is complete, then we ensure that the states connect to form a valid TM.
+    
     \begin{example}
         Consider the following complete program.
 \begin{lstlisting}[language=TML]
@@ -209,9 +223,11 @@ module isDivTwoCheck {
         \caption{The TM of the given TML program. The state $s_0$ corresponds to the module \texttt{isDivTwo} and the state $s_1$ corresponds to the module \texttt{isDivTwoCheck}.}
     \end{figure}
     \end{example}
+    
     \begin{remark}
         In the example above, we converted a complete TML program into a TM. It is equally possible to convert a TM into a complete TML program.
     \end{remark}
+
     \begin{example}
         Consider the following TM:
         \begin{figure}[H]
@@ -325,6 +341,7 @@ module startsAndEndsSameCheckB {
 \end{lstlisting}
     This is a complete program since TMs always include the required commands corresponding to \textit{if} and \textit{while} commands.
     \end{example}
+
     \begin{remark}
         Although a TML program need not be complete, any valid TML program is equivalent to a complete one. So, a TML program that is not be complete is just a compact representation of its complete version.
     \end{remark}
@@ -340,6 +357,7 @@ module startsAndEndsSameCheckB {
             \item $q_0 \in Q$ is the starting state.
         \end{itemize}
     \end{definition}
+
     % \begin{remark}
     %     This is not the original definition of TMs given by Alan Turing. It is a variation of an equivalent definition given in 
     %     % TODO: Give the reference
@@ -388,10 +406,125 @@ module startsAndEndsSameCheckB {
             \end{itemize}
             We say that $P$ is \emph{the corresponding program for $M$}.
     \end{definition}
+
     \begin{remark}
         For any TM $M$, its corresponding program $P$ will be complete. By definition, every module in $P$ is complete.
     \end{remark}
     
+    \begin{example}
+        Consider the following TM:
+        \begin{figure}[H]
+            \centering
+            \begin{tikzpicture}
+                \node[circle, draw=black, fill=white, inner sep=0pt, minimum size=15pt] (s0) at (0, 0) {$s_0$};
+                \node[circle, draw=black, fill=white, inner sep=0pt, minimum size=15pt] (s1) at (2, 2) {$s_1$};
+                \node[circle, draw=black, fill=white, inner sep=0pt, minimum size=15pt] (s2) at (2, -2) {$s_2$};
+                \node[circle, draw=black, fill=white, inner sep=0pt, minimum size=15pt] (s3) at (4.5, 2) {$s_3$};
+                \node[circle, draw=black, fill=white, inner sep=0pt, minimum size=15pt] (s4) at (4.5, -2) {$s_4$};
+                \node[circle, draw=black, fill=white, inner sep=0pt, minimum size=15pt] (sY) at (2.5, 0) {$s_Y$};
+                \node[circle, draw=black, fill=white, inner sep=0pt, minimum size=15pt] (sN) at (5, 0) {$s_N$};
+                
+                \draw[->] (-1, 0) -- (s0);
+                \draw[->] (s0) -- node[above, rotate=45] {$a \to a, R$} (s1);
+                \draw[->] (s0) -- node[below, rotate=-45] {$b \to b, R$} (s2);
+                \draw[->] (s0) -- node[above] {$\# \to \#, R$} (sY);
+                \draw[->] (s1) edge[loop above] node[above, text width=2cm, align=center] {$a \to a, R$ $b \to b, R$} (s1);
+                \draw[->] (s2) edge[loop below] node[below, text width=2cm, align=center] {$a \to a, R$ $b \to b, R$} (s2);
+                \draw[->] (s1) -- node[above] {$\# \to \#, L$} (s3);
+                \draw[->] (s2) -- node[below] {$\# \to \#, L$} (s4);
+                \draw[->] (s3) -- node[above, rotate=-75, text width=2cm, align=center] {$b \to b, L$ $\# \to \#, L$} (sN);
+                \draw[->] (s4) -- node[below, rotate=75, text width=2cm, align=center] {$a \to a, L$ $\# \to \#, L$} (sN);
+                \draw[->] (s3) -- node[below, rotate=48] {$a \to a, L$} (sY);
+                \draw[->] (s4) -- node[above, rotate=-48] {$b \to b, L$} (sY);
+            \end{tikzpicture}
+            \caption{A Turing machine}
+        \end{figure}
+        \noindent Then, its corresponding TM program is:
+\begin{lstlisting}[language=TML]
+alphabet = {"a", "b"}
+module startsAndEndsSame {
+    switch tapehead {
+        if blank {
+            accept
+        } if a {
+            changeto a
+            move right
+            goto startsAndEndsSameMoveA
+        } if b {
+            changeto b
+            move right
+            goto startsAndEndsSameMoveB
+        }
+    }
+}
+module startsAndEndsSameMoveA {
+    switch tapehead {
+        while a {
+            changeto a
+            move right
+        } while b {
+            changeto b
+            move right
+        } if blank {
+            changeto blank
+            move left
+            goto startsAndEndsSameCheckA
+        }
+    }
+}
+module startsAndEndsSameCheckA {
+    switch tapehead {
+        if a {
+            changeto a
+            move left
+            accept
+        } if b {
+            changeto b
+            move left
+            reject
+        } if blank {
+            changeto blank
+            move left
+            reject
+        }
+    }
+}
+module startsAndEndsSameMoveB {
+    switch tapehead {
+        while a {
+            changeto a
+            move right
+        } while b {
+            changeto b
+            move right
+        } if blank {
+            changeto blank
+            move left
+            goto startsAndEndsSameCheckB
+        }
+    }
+}
+module startsAndEndsSameCheckB {
+    switch tapehead {
+        if a {
+            changeto a
+            move left
+            reject
+        } if b {
+            changeto b
+            move left
+            accept
+        } if blank {
+            changeto blank
+            move left
+            reject
+        }
+    }
+}
+\end{lstlisting}
+    This is a complete program since TMs always include the required commands corresponding to \textit{if} and \textit{while} commands.
+    \end{example}
+
     \begin{theorem} \label{thm:TM_to_TMP}
         Let $M$ be a TM, and let $P$ be the corresponding program for $M$. Then, $M$ and $P$ execute on every valid tape $T$ in the same way. That is, 
         \begin{itemize}
@@ -430,6 +563,80 @@ module startsAndEndsSameCheckB {
         \end{itemize}
         Then, the TM with all the states $q$, alphabet $\Sigma$, the transition function $\delta$ and initial state $q_0$ corresponding to the first module in $P$ is called the \emph{corresponding TM for $P$}.
     \end{definition}
+
+    \begin{example}
+        Consider the following complete TM program:
+\begin{lstlisting}[language=TML]
+alphabet = {"a", "b"}
+module moveToEnd {
+    switch tapehead {
+        while a {
+            changeto a
+            move right
+        } while b {
+            changeto b
+            move right
+        } if blank {
+            changeto blank
+            move left
+            goto checkAFirst
+        }
+    }
+}
+module checkAFirst {
+    switch tapehead {
+        if a {
+            changeto blank
+            move left
+            goto checkASecond
+        } if b, blank {
+            changeto blank
+            move left
+            reject
+        }
+    }
+}
+module checkASecond {
+    switch tapehead {
+        if a {
+            changeto blank
+            move left
+            accept
+        } if b, blank {
+            changeto blank
+            move left
+            reject
+        }
+    }
+}
+\end{lstlisting}
+    Then, its corresponding TM is the following:
+    \begin{figure}[H]
+        \centering
+        \begin{tikzpicture}
+            \node[circle, draw=black, fill=white, inner sep=0pt, minimum size=15pt] (s0) at (-0.5, 0) {$s_0$};
+            \node[circle, draw=black, fill=white, inner sep=0pt, minimum size=15pt] (s1) at (2, 0) {$s_1$};
+            \node[circle, draw=black, fill=white, inner sep=0pt, minimum size=15pt] (s2) at (4, 1) {$s_2$};
+            \node[circle, draw=black, fill=white, inner sep=0pt, minimum size=15pt] (sY) at (6, 1) {$s_Y$};
+            \node[circle, draw=black, fill=white, inner sep=0pt, minimum size=15pt] (sN) at (6, -1) {$s_N$};
+            
+            \draw[->] (-1.5, 0) -- (s0);
+            \draw[->] (s0) edge[loop above] node {$a \to a, R$} (s0);
+            \draw[->] (s0) edge[loop below] node {$a \to a, R$} (s0);
+            \draw[->] (s0) -- node[above] {$\# \to \#, L$} (s1);
+
+            \draw[->] (s1) -- node[above, rotate=25] {$a \to a, L$} (s2);
+            \draw[->] (s1) -- node[below, rotate=-15, pos=0.4] {$\# \to \#, L$} (sN);
+            \draw[->] (s1) -- node[above, rotate=-15, pos=0.4] {$b \to \#, L$} (sN);
+
+            \draw[->] (s2) -- node[above] {$\# \to \#, L$} (sY);
+
+            \draw[->] (s2) -- node[above, rotate=-45] {$b \to \#, L$} (sN);
+            \draw[->] (s2) -- node[below, rotate=-45] {$\# \to \#, L$} (sN);
+        \end{tikzpicture}
+        \caption{The TM corresponding to the program above. The state $s_0$ corresponds to the module \texttt{moveToEnd}; the state $s_1$ corresponds to the module \texttt{checkAFirst}; and the state $s_2$ corresponds to the module \texttt{checkASecond}.}
+    \end{figure}
+    \end{example}
 
     \begin{theorem} \label{thm:TMP_to_TM}
         Let $P$ be a complete TM program, and let $M$ be the corresponding TM for $P$.  Then, $P$ and $M$ execute on every valid tape $T$ in the same way. That is,
@@ -484,6 +691,90 @@ module startsAndEndsSameCheckB {
     \begin{remark}
         Let $P$ be a TM program. For every block $b$ in $P$, there is a complete module $m$ in the completion program $P^+$. We say that $m$ is the \emph{corresponding complete module} of $b$.
     \end{remark}
+    
+    \begin{example}
+        Consider the following TM program:
+\begin{lstlisting}[language=TML]
+alphabet = {"a", "b"}
+module simpleProgram {
+    changeto b
+    move left
+    move right
+    accept
+}
+\end{lstlisting}
+\noindent Them, its first completion is the following program:
+\begin{lstlisting}[language=TML]
+alphabet = {"a", "b"}
+module simple1 {
+    changeto b
+    move left
+    goto simple2
+}
+module simple2 {
+    move right
+    accept
+}
+\end{lstlisting}
+\noindent The second completion is the following program:
+\begin{lstlisting}[language=TML]
+alphabet = {"a", "b"}
+module simple1 {
+    switch tapehead {
+        if a, b, blank {
+            changeto b
+            move left
+            goto simple2
+        }
+    }
+}
+module simple2 {
+    switch tapehead {
+        if a, b, blank {
+            move right
+            accept
+        }
+    }
+}
+\end{lstlisting}
+\noindent Finally, the completion of $P$ is the following:
+\begin{lstlisting}[language=TML]
+alphabet = {"a", "b"}
+module simple1 {
+    switch tapehead {
+        if a {
+            changeto b
+            move left
+            goto simple2
+        } if b {
+            changeto b
+            move left
+            goto simple2
+        } if blank {
+            changeto b
+            move left
+            goto simple2
+        }
+    }
+}
+module simple2 {
+    switch tapehead {
+        if a {
+            changeto a
+            move right
+            accept
+        } if b {
+            changeto b
+            move right
+            accept
+        } if blank {
+            move right
+            accept
+        }
+    }
+}
+\end{lstlisting}
+    \end{example}
 
     \begin{theorem}
         Let $P$ be a valid TM program. Then, $P$ and its completion $P^+$ execute on every valid tape $T$ in the same way. That is,

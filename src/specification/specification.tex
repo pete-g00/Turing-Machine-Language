@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass{amsart}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath, amssymb, amsthm}
 \usepackage{float}
@@ -15,33 +15,39 @@
 \newtheorem{remark}[rules]{Remark}
 \newtheorem{example}[rules]{Example}
 
-\definecolor{codegreen}{rgb}{0,0.6,0}
-\definecolor{codegray}{rgb}{0.5,0.5,0.5}
-\definecolor{codepurple}{rgb}{0.58,0,0.82}
-\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\definecolor{bluekeywords}{rgb}{0.13, 0.19, 0.7}
+\definecolor{goldenkeywords}{rgb}{0.67, 0.58, 0.13}
+\definecolor{greencomments}{rgb}{0.1, 0.5, 0.2}
+\definecolor{redstrings}{rgb}{0.8, 0.15, 0.1}
+\definecolor{graynumbers}{rgb}{0.5, 0.5, 0.5}
+\definecolor{subtlegray}{rgb}{0.98, 0.98, 0.98}
 
-\lstdefinestyle{thestyle}{
-    backgroundcolor=\color{backcolour},
-    basicstyle=\ttfamily\footnotesize,
-    keywordstyle=\color{red!80}\bfseries,
-    ndkeywordstyle=\color{blue!80}\bfseries,
-    identifierstyle=\color{black},
-    commentstyle=\color{codegreen},
-    stringstyle=\color{codepurple},
-    breakatwhitespace=false,
-    breaklines=true,
-    captionpos=b,
-    keepspaces=true,
-    numberstyle=\tiny\color{codegray},
-    numbers=left,
-    numbersep=2pt,
+\usepackage{lstautogobble}
+\usepackage{listings}
+
+\lstset{
+    autogobble,    
+    columns=fullflexible,
     showspaces=false,
+    showtabs=false,
+    breaklines=true,
     showstringspaces=false,
-    showtabs=false,          
-    tabsize=2
+    breakatwhitespace=true,
+    escapeinside={(*@}{@*)},
+    rulecolor=\color{lightgray},
+    backgroundcolor=\color{subtlegray},
+    commentstyle=\color{greencomments},
+    keywordstyle=\color{bluekeywords},
+    ndkeywordstyle=\color{goldenkeywords},
+    stringstyle=\color{redstrings},
+    numberstyle=\color{graynumbers},
+    basicstyle=\ttfamily\linespread{1.15}\footnotesize,
+    frame=tb,
+    framesep=12pt,
+    framexleftmargin=12pt,
+    tabsize=4,
+    captionpos=b
 }
-
-\lstset{style=thestyle}
 
 \lstdefinelanguage{TML}{ 
     keywords={changeto, move, goto, if, switch, while, module, accept, reject, halt, alphabet},
@@ -57,11 +63,12 @@
 \author{Pete Gautam}
 
 \begin{document}
-    \maketitle
     \begin{abstract}
         This document contains the specification of the TM programming language (called Turing Machine Language, or TML), and how it can be used to change the state of a tape. In the first section, we discuss TML rules (the EBNF and contextual rules), and give examples of valid and invalid TML programs. In the second section, we define tapes and how a TML program can be executed on a tape. This section also includes some examples of executing a TM program on a given tape.
     \end{abstract}
 
+    \maketitle
+    
     \section{TML rules}
     In this section, we define the rules that a valid program in TML should obey. First, the following is the specification of the TML in EBNF:
     \begin{align*}
@@ -152,7 +159,6 @@ module isEven {
         \item a basic block at line 12.
     \end{itemize}
     \end{example}
-    \newpage
 
     \section{TML execution}
     In this section, we discuss how a valid TML program can execute a tape. The tape we will be using has infinite spaces in both directions.

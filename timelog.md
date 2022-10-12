@@ -48,3 +48,8 @@
 
 * *2 hours* Continued the proof of equivalence- showed that for every complete TML program, there is a corresponding TM (and vice versa).
 * *2 hours* Finished the proof of equivalence- showed that for every valid TML program, there is a complete TML program.
+
+### 12 Oct 2022
+
+* *1.5 hours* Added examples of: converting a TM program into a TM, and converting a TM into a TM program.
+* *0.5 hours* Created the MoSCoWs for the project
