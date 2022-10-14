@@ -10,7 +10,6 @@
 - Examples of valid programs in the specification (completed; could add more)
 - Examples of invalid programs in the specification
 - Examples in the proof illustrating the equivalence proof (completed; could add more)
-- Background and motivation for TMs and TMLs
 
 ### Could Have
 - Connection with the Church-Turing Thesis (in particular lambda-calculus)
@@ -23,5 +22,3 @@
 
 ## Part III: TML Website
 
-
-## Part IV: TML Evaluation

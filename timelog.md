@@ -25,7 +25,7 @@
 
 ### 30 Sep 2022
 
-* *1 hour* Initial meeting with Ornela
+* *1 hour* Initial meeting with Ornela.
 
 ## Week 3
 
@@ -40,7 +40,7 @@
 
 ### 07 Oct 2022
 
-* *1 hour* Weekly meeting with Ornela
+* *1 hour* Weekly meeting with Ornela.
 
 ## Week 4
 
@@ -52,5 +52,9 @@
 ### 12 Oct 2022
 
 * *1.5 hours* Added examples of: converting a TM program into a TM, and converting a TM into a TM program.
-* *0.5 hours* Created the MoSCoWs for the project
+* *0.5 hours* Created the MoSCoWs for the project.
 * *0.5 hours* Added plans for week 5 and agenda for the week 4 meeting with Ornela.
+
+### 14 Oct 2022
+
+* *1 hour* Weekly meeting with Ornela.
