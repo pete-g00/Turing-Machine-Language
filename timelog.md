@@ -58,3 +58,12 @@
 ### 14 Oct 2022
 
 * *1 hour* Weekly meeting with Ornela.
+
+## Week 5
+
+### 18 Oct 2022
+
+* *0.5 hours* Updated MoSCoWs with Part II stuff.
+* *1.5 hour* Updated the documents- combined the proof and specification to documentation; changed some parts based on review/feedback from Ornela (e.g. added an invalid program in the spec).
+* *0.5 hours* Started working on the parser- set up typescript and completed `CodePosition`.
+* *0.5 hours* Set up CI/CD with linting

@@ -8,3 +8,6 @@
 *.synctex.gz
 *.fls
 *.out
+
+# npm
+node_modules

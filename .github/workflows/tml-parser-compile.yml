@@ -1,0 +1,40 @@
+name: Build, lint and test package
+
+on:
+  push:
+    branches:
+      main
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: 'src/tml-parser'
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: use node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
+      
+      - name: install dependencies
+        if: steps.cache-nodemodules.outputs.cache-hit != 'true'
+        run: npm ci
+      
+      # - name: build
+      #   run: npm run build
+      
+      - name: lint
+        run: npm run lint
+      
+      # - name: test
+      #   run: npm test
