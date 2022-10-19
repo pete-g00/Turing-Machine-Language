@@ -6,3 +6,6 @@ The plan for week 4 is to continue working on the proof of equivalence of TMs an
 
 # Week 5 Plan
 The plan for week 5 is to finish the specification and the proof. They are mostly complete, so the aim is just to proofread everything and add more background and make everything concise. I would also like to connect this with Church-Turing Thesis and see what I can do with it. If there is time, I can start looking into the next phase of the project- creating a parser for TML programs. It might be a start to just create an ANTLR .g4 file for it and experiment how to parse and what exactly there is to do. I believe I will have to manually create the parser, and this shouldn't be hard because the language is quite simple.
+
+# Week 6 Plan
+The plan for week 6 is to continue working on the parser. I have started by creating a class that returns each token in the program at a time, and will continue this with parser for TML, converter for TML to TM, executor for TML on a tape, etc. It is not expected that I complete all of this next week- the unit tests take a long time to write!

@@ -73,3 +73,4 @@
 * *2 hour* Completed the class `CodeWrapper`- a wrapper for code that essentially tokenises every word in a TM program.
 * *0.5 hours* Researched creating tests using jest for typescript.
 * *1 hour* Created tests for the class `CodeWrapper` and `CodePosition`.
+* *0.5 hours* Added plans for week 6 and agenda for week 5 
