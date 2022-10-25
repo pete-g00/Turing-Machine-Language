@@ -71,4 +71,24 @@ export class CodePosition {
       this.startColNumber + 1
     }:${this.endColNumber + 1}`;
   }
+
+  /**
+   * Combines two positions so that the final position starts at the start of the starting position and finishes at the end of the ending position.
+   *
+   * @param startPosition the initial code position
+   * @param endPosition the final code position
+   *
+   * @returns the combined code position, from the start position to the end position
+   */
+  public static combine(
+    startPosition: CodePosition,
+    endPosition: CodePosition
+  ): CodePosition {
+    return new CodePosition(
+      startPosition.startLineNumber,
+      endPosition.endLineNumber,
+      startPosition.startColNumber,
+      endPosition.endColNumber
+    );
+  }
 }

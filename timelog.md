@@ -74,3 +74,13 @@
 * *0.5 hours* Researched creating tests using jest for typescript.
 * *1 hour* Created tests for the class `CodeWrapper` and `CodePosition`.
 * *0.5 hours* Added plans for week 6 and agenda for week 5 
+
+## Week 6
+
+### 25 Oct 2022
+
+* *1 hour* Created the classes `Context`- a family of classes to save relevant data relating to different commands.
+* *0.5 hours* Created the class `BaseVisitor`- an abstract visitor to visit all the types of commands in a TM program.
+* *0.5 hours* Updated the class `Context` with visit methods.
+* *1 hour* Started working on the class `CodeParser`- the parser of a raw TM program into a `ProgramContext` using `BaseVisitor`. 
+* *0.5 hours* Weekly meeting with Ornela.
