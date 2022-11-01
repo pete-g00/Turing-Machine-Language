@@ -1,4 +1,4 @@
-name: Build, lint and test package
+name: Build, lint and test the compiler
 
 on:
   push:

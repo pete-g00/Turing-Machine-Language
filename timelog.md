@@ -89,3 +89,11 @@
 
 * *4 hours* Changed the documentation- moved all the content to the dissertation, and changed the document based on initial feedback from Ornela.
 
+## Week 7
+
+## 1 Nov 2022
+
+* *1 hour* Started writing tests for `CodeParser`- testing the parsing errors.
+* *1.5 hours* Finished tests for `CodeParser`- testing the correctly parsed context.
+* *1 hour* Started the class `CodeValidator`.
+
