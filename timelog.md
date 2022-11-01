@@ -96,4 +96,4 @@
 * *1 hour* Started writing tests for `CodeParser`- testing the parsing errors.
 * *1.5 hours* Finished tests for `CodeParser`- testing the correctly parsed context.
 * *1 hour* Started the class `CodeValidator`.
-
+* *0.5 hours* Added the agenda.
