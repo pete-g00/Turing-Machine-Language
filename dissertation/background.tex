@@ -1,0 +1,668 @@
+\chapter{Background}
+In this chapter, we consider the Turing Machine Language (TML) as an alternative to Turing Machines (TM). A TM can be executed on a tape, one step at a time, until we reach a terminating state on the TM. We will define the syntax of a TML program and how it can be executed on a tape in a similar manner. We will then prove that there is an equivalence between TML programs and TMs in terms of their execution on a tape.
+
+\section{Turing Machines}
+In this section, we review the definition of Turing Machines and executing a TM on a valid tape.
+
+A \emph{Turing Machine} (TM) is a collection $(Q, \Sigma, \delta, q_0)$, where:
+\begin{itemize}
+    \item $Q$ is a set of states, including the accept state $q_Y$ and reject state $q_N$;
+    \item $\Sigma$ is the set of letters, which does not include the \texttt{blank} symbol;
+    \item $\delta \colon Q \setminus \{q_Y, q_N\} \times \Sigma^+ \to Q \times \Sigma^+ \times \{\texttt{left}, \texttt{right}\}$, where $\Sigma^+ = \Sigma \cup \{\texttt{blank}\}$, is the transition function; and
+    \item $q_0 \in Q$ is the starting state.
+\end{itemize}
+We can represent a TM as a directed graph, with vertices as states and edges as transitions. For example, the following is a TM:
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \node[circle, draw=black, fill=white, inner sep=0pt, minimum size=15pt] (s0) at (0, 0) {$q_0$};
+        \node[circle, draw=black, fill=white, inner sep=0pt, minimum size=15pt] (s1) at (2.5, 0) {$q_1$};
+        \node[circle, draw=black, fill=white, inner sep=0pt, minimum size=15pt] (sN) at (5, -1) {$q_N$};                
+        \node[circle, draw=black, fill=white, inner sep=0pt, minimum size=15pt] (sY) at (5, 1) {$q_Y$};
+
+        \draw[-stealth] (-1, 0) -- (s0);
+        \draw[-stealth] (s0) -- node[above] {$\# \to \#, L$} (s1);
+        
+        \draw[-stealth] (s0) edge[loop above] node[above, text width=2cm, align=center] {$0 \to 0, R$ $1 \to 1, R$} (s0);
+        
+        \draw[-stealth] (s1) -- node[above, rotate=24] {$0 \to 0, R$} (sY);
+        \draw[-stealth] (s1) -- node[below, rotate=-24, text width=2cm, align=center] {$\# \to \#, R$ $1 \to 1, R$} (sN);
+    \end{tikzpicture}
+    \caption{A Turing Machine that accepts binary numbers divisible by 2.}
+\end{figure}
+\noindent In this case, the alphabet $\Sigma = \{0, 1\}$. The blank symbol is denoted by $\#$. The initial state is denoted by $q_0$; the accept state $q_Y$ and the reject state $q_N$. Every edge corresponds to an evaluation of the transition function $\delta$, e.g. $\delta(q_0, a) = (q_1, \texttt{blank}, \texttt{right})$.
+
+Let $\Sigma$ be an alphabet. A \emph{tape $T$ on $\Sigma$} is a function $T\colon \mathbb{Z} \to \Sigma^+$. In particular, the tape has infinite entries in both directions. Moreover, $T$ is a \emph{valid tape} if only finitely many symbols on $T$ are not \texttt{blank}, and all the values that can be non-\texttt{blank} are non-\texttt{blank}. That is, there exist integers $a, b$ such that for all $x \in \mathbb{Z}$, $T(x)$ is not \texttt{blank} if and only $x \geq a$ and $x \leq b$. We will represent a tape using a figure. For instance, let $\Sigma = \{0, 1\}$, and let $T$ be the tape on $\Sigma$ given below:
+\[T(x) = \begin{cases}
+    0 & x \in \{0, 2, 3\} \\
+    1 & x \in \{1\} \\
+    \texttt{blank} & \text{otherwise}.
+\end{cases}\]
+Then, the following figure represents the tape $T$:
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \draw[thick] (-0.25, 0) -- (0, 0);
+        \foreach \x[count=\i] in {0, 1, 0, 0} {
+            \draw[thick] (\i*0.5-0.25, 0) -- (\i*0.5, 0);
+            \node at (\i*0.5-0.125, 0.3) {\texttt{\x}};
+        }
+        \draw[thick] (2.25, 0) -- (2.5, 0);
+    \end{tikzpicture}
+\end{figure}
+\noindent We will assume that the first non-blank value is at index 0.
+
+% Note that the following tape would be invalid:
+% \begin{figure}[H]
+%     \centering
+%     \begin{tikzpicture}
+%         \draw[thick] (-0.25, 0) -- (0, 0);
+%         \foreach \x[count=\i] in {0, 1, 0, , 0} {
+%             \draw[thick] (\i*0.5-0.25, 0) -- (\i*0.5, 0);
+%             \node at (\i*0.5-0.125, 0.3) {\texttt{\x}};
+%         }
+%         \draw[thick] (2.75, 0) -- (3, 0);
+%     \end{tikzpicture}
+% \end{figure}
+% \noindent This is because there is a \texttt{blank} symbol between the non-blank symbols.
+
+% TODO: Add reference
+
+A TM can be executed on a tape. Let $M$ be a TM with alphabet $\Sigma$, and let $T$ be a (valid) tape on $\Sigma$. We execute $M$ on $T$ inductively, as follows:
+\begin{itemize}
+    \item At any point during execution, we maintain 3 objects- a tape on $\Sigma$, a state in $M$ and an index in the tape (called the \emph{tapehead index}). 
+    \item At the start, the tape is $T$; the tapehead index is $0$; and the state is the initial state $q_0$. 
+    \item At some point during the execution, assume that we have the tape $S$, tapehead index $j$, with \emph{tapehead value} $T(j) = t$, and a non-terminating state $q$ (i.e. not $q_Y$ or $q_N$). Denote $\delta(q, t) = (q', t', \texttt{dir})$. Then, the next state is $q'$, and the next tape $S'$ and the next tapehead index $j'$ are given by:
+    \[S'(x) = \begin{cases}
+        t' & x = i \\
+        S(x) & \text{otherwise},
+    \end{cases} \qquad j' = \begin{cases}
+        j+1 & \texttt{dir} = \texttt{right} \\
+        j-1 & \texttt{dir} = \texttt{left}.
+    \end{cases}\]
+    If the state $q'$ is not a terminating state, then the execution continues with these 3 objects. Otherwise, execution is terminated with terminating state $q'$.
+\end{itemize}
+
+\section{Turing Machine Language Program}
+In this section, we will define the syntax of the Turing Machine Language (TML). We will first give a program in TML, and then analyse the syntax. We will then define execution of a valid TML program on a tape in a similar manner to the execution of a TM.
+
+Consider the following TML program.
+\begin{lstlisting}[language=TML]
+alphabet = {"0", "1"}
+module isEven {
+    switch tapehead {
+        while 0, 1 {
+            move right
+        } if blank {
+            move left
+            switch tapehead {
+                if 0 {
+                    changeto blank
+                    accept
+                } if 1, blank {
+                    changeto blank
+                    reject
+                }
+            }
+        }
+    }
+}
+\end{lstlisting}
+A program in TML will be used to execute on a tape, so the syntax used guides us in executing the program on a tape. We will see that later. For now, we consider the rules of the TML program:
+\begin{itemize}
+    \item A valid TML \emph{program} is composed of the \emph{alphabet}, followed by one or more \emph{modules}. In the example above, the alphabet of the program is $\{0, 1\}$, and the program has a single module called \texttt{isEven}.
+    \item A module contains one or more \emph{blocks} (a specific sequence of commands). There are two types of blocks- \emph{basic blocks} and \emph{switch blocks}.
+    \item A basic block consists of \emph{basic commands} (\textit{changeto}, \textit{move} or \textit{flow} command). A basic block consists of at least one basic command, but it is not necessary for a basic block to be composed of all the basic commands. If multiple commands are present in a basic block, they must be in the following order- \textit{changeto}, \textit{move} and \textit{flow} command. In the program above, there is are many basic blocks, e.g. at lines 5, 7, 10-11 and 13-14. We do not say that line 10 is a basic block by itself; we want the basic block to be as long as possible.
+    \item A \emph{switch block} consists of a single switch statement. A switch statement must contain precisely one case (\textit{if} or \textit{while} command) for each of the letter in the alphabet, including the \texttt{blank} letter. The first block of a case block must be a basic block. In the program above, there is a switch block at lines 8-16.
+    \item The body of an \textit{if} command can be composed of multiple blocks. These blocks can be both basic blocks and switch blocks. We can see this at lines 6-17; the \textit{if} block has a basic block at line 7 and then a switch block.
+    \item The body of a \textit{while} command must be composed of a single basic block. The basic block cannot have a \textit{flow} command. This is because when we execute a \textit{while} block, the next block to run is the switch block it is in; we cannot accept, reject or go to another module.
+    \item A switch block must be the final block present; it cannot be followed by any other block, basic or switch.
+\end{itemize}
+The EBNF for the TML is given in the appendix.
+
+% Next, consider the following TML program.
+% \begin{lstlisting}[language=TML]
+% alphabet = {"0", "1"}
+% module program {
+%     switch tapehead {
+%         while 0, 1 {
+%             accept
+%         } if blank {
+%             move left
+%             reject
+%         }
+%     }
+% }
+% \end{lstlisting}
+% This program is not valid because it contains a terminating command in the \textit{while} block at lines 4-6. This does not logically make sense- if we want to terminate, it should be an \textit{if} block; there is no way a \textit{while} block can continue after rejecting the program in the first iteration.
+
+% TODO: Syntax errors in appendix?
+
+We will now consider how to execute a tape on a valid TML program. Let $P$ be a TML program with alphabet $\Sigma$ and let $T$ be a tape on $\Sigma$. We execute $P$ on $T$ inductively, as follows:
+\begin{itemize}
+    \item At any point during execution, we maintain 3 objects- a tape on $\Sigma$, a block of $P$ and the tapehead index. 
+    \item At the start, the tape is $T$; the tapehead index is $0$; and the block is the first block in the first module in $P$. 
+    \item At some point during the execution, assume that we have the tape $S$, tapehead index $j$, with tapehead value $T(j) = t$, and a block $b$. We define the next triple as follows:
+    \begin{itemize}
+        \item if $b$ is a switch block, we take the first block from the case corresponding to the tapehead value- because the program is valid, this is a basic block; we will now refer to this block as $b$.
+        \item if $b$ has a \textit{changeto} \texttt{val} command, the next tape $T'$ is given by 
+        \[T'(x) = \begin{cases}
+            \texttt{val} & x = i \\
+            T(x) & \text{otherwise}.
+        \end{cases}\]
+        If the \textit{changeto} command is missing, then the tapehead $T' = T$.
+        \item if $b$ has a \textit{move} \texttt{dir} command, the next tapehead index is given by:
+        \[i' = \begin{cases}
+            i+1 & \texttt{dir} = \texttt{right} \\
+            i-1 & \texttt{dir} = \texttt{left}.
+        \end{cases}\]
+        If the \textit{move} command is missing, then $i' = i-1$.
+        \item we either terminate or determine the next block $b'$ to execute (in decreasing precedence):
+        \begin{itemize}
+            \item if the block is the body of a while case block, then the next block $b' = b$, i.e. we execute this switch block again (not necessarily the same case block);
+            \item if the block contains a terminating \textit{flow} command, execution is terminated and we return the terminated state (\texttt{accept} or \texttt{reject});
+            \item if the block contains a \textit{goto} \texttt{mod} command, then $b'$ is the first block of the module \texttt{mod};
+            \item if the block is not the final block in the current module, then $b'$ is next block in this module;
+            \item otherwise, execution is terminated and we return the state \texttt{reject}.
+        \end{itemize}
+    \end{itemize}
+    If execution is not terminated, execution continues with the next triplet.
+\end{itemize}
+
+We will now illustrate the execution with an example. Consider the following TML program:
+\begin{lstlisting}[language=TML]
+alphabet = {"a", "b"}
+module palindrome {
+    switch tapehead {
+        if blank {
+            accept
+        } if a {
+            changeto blank
+            move right
+            switch tapehead {
+                while a, b {
+                    move right
+                } if blank {
+                    move left
+                    switch tapehead {
+                        if blank, a {
+                            changeto blank
+                            move left
+                            goto restart
+                        } if b {
+                            reject
+                        }
+                    }
+                }
+            }
+        }  if b {
+            changeto blank
+            move right
+            switch tapehead {
+                while a, b {
+                    move right
+                } if blank {
+                    move left
+                    switch tapehead {
+                        if blank, b {
+                            changeto blank
+                            move left
+                            goto restart
+                        } if a {
+                            reject
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+module restart {
+    switch tapehead {
+        while a, b {
+            move left
+        } if blank {
+            move right
+            goto palindrome
+        }
+    }
+}
+\end{lstlisting}
+We will execute the program on the following tape.
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \draw[thick] (-0.25, 0) -- (0, 0);
+        \foreach \x[count=\i] in {a, b, a} {
+            \draw[thick] (\i*0.5-0.25, 0) -- (\i*0.5, 0);
+            \node at (\i*0.5-0.125, 0.3) {\texttt{\x}};
+        }
+        \draw[thick] (1.75, 0) -- (2, 0);
+
+        \draw[->, thick] (0.375, -0.5) -- (0.375, -0.1);
+    \end{tikzpicture}
+\end{figure}
+\noindent The arrow points to the tapehead value. We first execute the switch block at \texttt{palindrome}. Since the tapehead value is \texttt{a}, we execute the basic block at lines 7-8. So, we change the tapehead value to \texttt{blank}, and the tapehead moves to the right by one step. Since this is an \textit{if}-block, without a flow command, and there is a block following this one, the next block to be executed is the switch block at lines 9-24. Now, the current tape is the following.
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \draw[thick] (-0.25, 0) -- (0, 0);
+        \foreach \x[count=\i] in {b, a} {
+            \draw[thick] (\i*0.5-0.25, 0) -- (\i*0.5, 0);
+            \node at (\i*0.5-0.125, 0.3) {\texttt{\x}};
+        }
+        \draw[thick] (1.25, 0) -- (1.5, 0);
+
+        \draw[->, thick] (0.375, -0.5) -- (0.375, -0.1);
+    \end{tikzpicture}
+\end{figure}
+\noindent The current block is a switch block. The tapehead value is \texttt{b}, so we are at the \textit{while} command at line 11. The basic block here only contains a \textit{move} command. So, we leave the tape as is, and the tapehead moves to the right once. This is a \textit{while} command, so the next block to execute is still this switch block. The current tape state is the following.
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \draw[thick] (-0.25, 0) -- (0, 0);
+        \foreach \x[count=\i] in {b, a} {
+            \draw[thick] (\i*0.5-0.25, 0) -- (\i*0.5, 0);
+            \node at (\i*0.5-0.125, 0.3) {\texttt{\x}};
+        }
+        \draw[thick] (1.25, 0) -- (1.5, 0);
+
+        \draw[->, thick] (0.875, -0.5) -- (0.875, -0.1);
+    \end{tikzpicture}
+\end{figure}
+\noindent The current block is still a switch block. The tapehead value is \texttt{a}, so we execute the same \textit{while} command at line 11. Moreover, the next block to execute is still the switch block. Now, the current tape state is the following.
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \draw[thick] (-0.25, 0) -- (0, 0);
+        \foreach \x[count=\i] in {b, a} {
+            \draw[thick] (\i*0.5-0.25, 0) -- (\i*0.5, 0);
+            \node at (\i*0.5-0.125, 0.3) {\texttt{\x}};
+        }
+        \draw[thick] (1.25, 0) -- (1.5, 0);
+
+        \draw[->, thick] (1.375, -0.5) -- (1.375, -0.1);
+    \end{tikzpicture}
+\end{figure}
+\noindent For the third time, we are executing the same switch block. Now, however, the tapehead value is \texttt{blank}, so we execute the first block of the \textit{if} command at line 13. Since this is an \textit{if} command and this is not the last block in the if command, the next block to execute is the switch block at lines 14-22.
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \draw[thick] (-0.25, 0) -- (0, 0);
+        \foreach \x[count=\i] in {b, a} {
+            \draw[thick] (\i*0.5-0.25, 0) -- (\i*0.5, 0);
+            \node at (\i*0.5-0.125, 0.3) {\texttt{\x}};
+        }
+        \draw[thick] (1.25, 0) -- (1.5, 0);
+
+        \draw[->, thick] (0.875, -0.5) -- (0.875, -0.1);
+    \end{tikzpicture}
+\end{figure}
+\noindent Now, the current block is a switch block. The tapehead value is \texttt{a}, so we take the basic block at lines 16-18. The value of the tapehead becomes \texttt{blank}, and the tapehead moves to the left. The next block to execute is the switch block in \texttt{restart}.
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \draw[thick] (-0.25, 0) -- (0, 0);
+        \foreach \x[count=\i] in {b} {
+            \draw[thick] (\i*0.5-0.25, 0) -- (\i*0.5, 0);
+            \node at (\i*0.5-0.125, 0.3) {\texttt{\x}};
+        }
+        \draw[thick] (0.75, 0) -- (1, 0);
+
+        \draw[->, thick] (0.375, -0.5) -- (0.375, -0.1);
+    \end{tikzpicture}
+\end{figure}
+\noindent Since the current tapehead value is \texttt{b}, we execute the basic block at line 50. So, we move to the left, and the tape is left as is. Moreover, since this is a while block, the next block to execute is still the switch block.
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \draw[thick] (-0.25, 0) -- (0, 0);
+        \foreach \x[count=\i] in {b} {
+            \draw[thick] (\i*0.5-0.25, 0) -- (\i*0.5, 0);
+            \node at (\i*0.5-0.125, 0.3) {\texttt{\x}};
+        }
+        \draw[thick] (0.75, 0) -- (1, 0);
+
+        \draw[->, thick] (-0.125, -0.5) -- (-0.125, -0.1);
+    \end{tikzpicture}
+\end{figure}
+\noindent Since the current tapehead state is \texttt{blank}, we execute the basic block at lines 52-53. So, we move to the right, and the tape is left as is. The next block to execute is the switch block at \texttt{palindrome}.
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \draw[thick] (-0.25, 0) -- (0, 0);
+        \foreach \x[count=\i] in {b} {
+            \draw[thick] (\i*0.5-0.25, 0) -- (\i*0.5, 0);
+            \node at (\i*0.5-0.125, 0.3) {\texttt{\x}};
+        }
+        \draw[thick] (0.75, 0) -- (1, 0);
+
+        \draw[->, thick] (0.375, -0.5) -- (0.375, -0.1);
+    \end{tikzpicture}
+\end{figure}
+\noindent Since the current tapehead state is \texttt{b}, we execute the basic block at lines 26-27. So, we change the tapehead value to \texttt{blank}, move to the right. This is a while block, so the next block to be executed is still the switch block.
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \draw[thick] (-0.25, 0) -- (0, 0);
+        \draw[thick] (0.25, 0) -- (0.5, 0);
+        \draw[thick] (0.75, 0) -- (1, 0);
+
+        \draw[->, thick] (0.875, -0.5) -- (0.875, -0.1);
+    \end{tikzpicture}
+\end{figure}
+\noindent At this point, the tapehead index moves between the blank values as we move to the basic block at line 5. Then, the execution terminates and we accept the tape.
+
+\section{Complete TML Programs}
+When we defined execution of a valid TML program on a tape above, we said that a basic block need not have all 3 types of commands (\textit{changeto}, \textit{move} and a \textit{flow} command), but in the execution above, we have established some `default' ways in which a program gets executed. In particular,
+\begin{itemize}
+    \item if the \textit{changeto} command is missing, we do not change the value of the tape;
+    \item if the \textit{move} command is missing, we move left;
+    \item if the \textit{flow} command is missing, we can establish what to do using the rules described above- this is a bit more complicated than the two commands above.
+\end{itemize}
+Nonetheless, it is possible to include these `default' commands to give a \emph{complete} version of the program. This is what we will now establish. 
+
+Consider the following complete program.
+\begin{lstlisting}[language=TML]
+alphabet = {"0", "1"}
+module isOdd {
+    // move to the end
+    switch tapehead {
+        while 0 {
+            changeto 0
+            move right
+        } while 1 {
+            changeto 1
+            move right
+        } if blank {
+            changeto blank
+            move left
+            goto isOddCheck
+        }
+    }
+}
+module isOddCheck {
+    // accept if and only if the value is 1
+    switch tapehead {
+        if 0, blank {
+            changeto 0
+            move left
+            reject
+        } if 1 {
+            changeto blank
+            move left
+            accept
+        }
+    }
+}
+\end{lstlisting}
+Now, we consider the rules that a complete TML program obeys:
+\begin{itemize}
+    \item A basic block in a complete program has all the necessary commands- if the basic block is inside \textit{while} case, it has a \textit{changeto} command and a \textit{move} command; otherwise, it also has a \textit{flow} command.
+    \item A module in a complete program is composed of a single switch block.
+\end{itemize}
+
+% By adding the `default' values for the \textit{changeto} and the \textit{move} command, we can partly complete a valid TML program. We can further break 
+We will now construct a complete TML program for a valid TML program.
+\begin{enumerate}
+    \item We first break each module into smaller modules so that every module has just one basic/switch block- we add a \textit{goto} command to the next module if it appeared just below this block.
+    \item Then, we can convert each basic block to a switch block by just adding a single case that applies to each letter in the alphabet.
+    \item Finally, we add the default values to each basic block to get a complete TML program.
+\end{enumerate}
+This way, we can associate every block in the valid program with a corresponding block in the complete program. The complete version is always a switch block and might have more commands than the original block, but it still has all the commands present in the original block. 
+
+We will illustrate the process with an example. Assume we first have the following program.
+\begin{lstlisting}[language=TML]
+alphabet = {"a", "b"}
+module simpleProgram {
+    changeto b
+    move left
+    move right
+    accept
+}
+\end{lstlisting}
+After applying step 1 of completion, we get the following program.
+\begin{lstlisting}[language=TML]
+alphabet = {"a", "b"}
+module simple1 {
+    changeto b
+    move left
+    goto simple2
+}
+module simple2 {
+    move right
+    accept
+}
+\end{lstlisting}
+After applying step 2, we have the following program.
+\begin{lstlisting}[language=TML]
+alphabet = {"a", "b"}
+module simple1 {
+    switch tapehead {
+        if a, b, blank {
+            changeto b
+            move left
+            goto simple2
+        }
+    }
+}
+module simple2 {
+    switch tapehead {
+        if a, b, blank {
+            move right
+            accept
+        }
+    }
+}
+\end{lstlisting}
+Finally, after applying step 3, we get the following program:
+\begin{lstlisting}[language=TML]
+alphabet = {"a", "b"}
+module simple1 {
+    switch tapehead {
+        if a {
+            changeto b
+            move left
+            goto simple2
+        } if b {
+            changeto b
+            move left
+            goto simple2
+        } if blank {
+            changeto b
+            move left
+            goto simple2
+        }
+    }
+}
+module simple2 {
+    switch tapehead {
+        if a {
+            changeto a
+            move right
+            accept
+        } if b {
+            changeto b
+            move right
+            accept
+        } if blank {
+            move right
+            accept
+        }
+    }
+}
+\end{lstlisting}
+This program obeys the definition of a complete program.
+
+\begin{theorem}
+    Let $P$ be a valid TM program. Then, $P$ and its completion $P^+$ execute on every valid tape $T$ in the same way.
+\end{theorem}
+The proof of the theorem is given in the appendix.
+
+Because of the equivalence between valid and complete programs, we will assume that every valid program is complete from now on.
+
+\section{Equivalence of TMs and TMLs}
+In this section, we will show that there is an equivalence between TMs and valid (complete) TML programs. We will first construct a valid TML program for a TM and then show that it has the same behaviour as the TM. Later, we will construct a TM for a complete TML program, and show the equivalence in this case as well.
+
+We will first illustrate how to convert a TM to a (complete) TML program. So, consider the following TM:
+Consider the following TM:
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \node[circle, draw=black, fill=white, inner sep=0pt, minimum size=15pt] (s0) at (0, 0) {$q_0$};
+        \node[circle, draw=black, fill=white, inner sep=0pt, minimum size=15pt] (s1) at (2.5, 0) {$q_1$};
+        \node[circle, draw=black, fill=white, inner sep=0pt, minimum size=15pt] (sN) at (5, -1) {$q_N$};                
+        \node[circle, draw=black, fill=white, inner sep=0pt, minimum size=15pt] (sY) at (5, 1) {$q_Y$};
+
+        \draw[-stealth] (-1, 0) -- (s0);
+        \draw[-stealth] (s0) -- node[above] {$\# \to \#, L$} (s1);
+        
+        \draw[-stealth] (s0) edge[loop above] node[above, text width=2cm, align=center] {$0 \to 0, R$ $1 \to 1, R$} (s0);
+        
+        \draw[-stealth] (s1) -- node[above, rotate=24] {$0 \to 0, R$} (sY);
+        \draw[-stealth] (s1) -- node[below, rotate=-24, text width=2cm, align=center] {$\# \to \#, R$ $1 \to 1, R$} (sN);
+    \end{tikzpicture}
+\end{figure}
+Then, its corresponding TML program is the following:
+\begin{lstlisting}[language=TML]
+alphabet = {"0", "1"}
+module q0 {
+    switch tapehead {
+        while 0 {
+            changeto 0
+            move right
+        } while 1 {
+            changeto 1
+            move right
+        } if blank {
+            changeto blank
+            move left
+            goto q1
+        }
+    }
+}
+module q1 {
+    switch tapehead {
+        if 0 {
+            changeto 0
+            move right
+            accept
+        } if 1 {
+            changeto 1
+            move right
+            reject
+        } if blank {
+            changeto blank
+            move right
+            reject
+        }
+    }
+}
+\end{lstlisting}
+In general, we convert each (non-terminating) state in the TM $M$ to a TML module. The following is how we create the module:
+\begin{itemize}
+    \item the module contains a single \textit{switch} command;
+    \item for each letter $\sigma$ in the alphabet $\Sigma^+$, denote $\delta(q, \sigma) = (q', \sigma', \texttt{dir})$. We add a case in the \textit{switch} command corresponding to letter $\sigma$ (an \textit{if} case if $q' \neq q$, otherwise a \textit{while} case) with the following commands:
+    \begin{itemize}
+        \item \texttt{changeto} $\sigma'$
+        \item \texttt{move} \textit{dir}
+        \item in the case of an \textit{if} block, if $q'$ is \texttt{accept}, then the command \texttt{accept}; if $q'$ is \texttt{reject}, then the command \texttt{reject}; otherwise, \texttt{goto} $q'$.
+    \end{itemize}
+\end{itemize}
+Moreover, we can construct the program $P$ with:
+\begin{itemize}
+    \item the alphabet $\Sigma$;
+    \item modules corresponding to every state $q$ in $M$;
+    \item the module corresponding to the initial state $q_0$ placed at the top.
+\end{itemize}
+We say that $P$ is \emph{the corresponding program for $M$}.
+
+\begin{theorem}
+    Let $M$ be a TM, and let $P$ be the corresponding program for $M$. Then, $M$ and $P$ execute on every valid tape $T$ in the same way. 
+\end{theorem}
+The proof of the theorem is given in the appendix.
+
+Next, we construct a TM for a (complete) TML program. First, we illustrate with an example. So, consider the following complete TM program:
+\begin{lstlisting}[language=TML]
+alphabet = {"a", "b"}
+module moveToEnd {
+    switch tapehead {
+        while a {
+            changeto a
+            move right
+        } while b {
+            changeto b
+            move right
+        } if blank {
+            changeto blank
+            move left
+            goto checkAFirst
+        }
+    }
+}
+module checkAFirst {
+    switch tapehead {
+        if a {
+            changeto blank
+            move left
+            goto checkASecond
+        } if b, blank {
+            changeto blank
+            move left
+            reject
+        }
+    }
+}
+module checkASecond {
+    switch tapehead {
+        if a {
+            changeto blank
+            move left
+            accept
+        } if b, blank {
+            changeto blank
+            move left
+            reject
+        }
+    }
+}
+\end{lstlisting}
+Then, its corresponding TM is the following:
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \node[circle, draw=black, fill=white, inner sep=0pt, minimum size=15pt] (s0) at (-0.5, 0) {$s_0$};
+        \node[circle, draw=black, fill=white, inner sep=0pt, minimum size=15pt] (s1) at (2, 0) {$s_1$};
+        \node[circle, draw=black, fill=white, inner sep=0pt, minimum size=15pt] (s2) at (4, 1) {$s_2$};
+        \node[circle, draw=black, fill=white, inner sep=0pt, minimum size=15pt] (sY) at (6, 1) {$s_Y$};
+        \node[circle, draw=black, fill=white, inner sep=0pt, minimum size=15pt] (sN) at (6, -1) {$s_N$};
+        
+        \draw[-stealth] (-1.5, 0) -- (s0);
+        \draw[-stealth] (s0) edge[loop above] node[align=center, text width=2cm] {$a \to a, R$ $b \to b, R$} (s0);
+        \draw[-stealth] (s0) -- node[above] {$\# \to \#, L$} (s1);
+
+        \draw[-stealth] (s1) -- node[above, rotate=25] {$a \to a, L$} (s2);
+        \draw[-stealth] (s1) -- node[below, rotate=-15, pos=0.4] {$\# \to \#, L$} (sN);
+        \draw[-stealth] (s1) -- node[above, rotate=-15, pos=0.4] {$b \to \#, L$} (sN);
+
+        \draw[-stealth] (s2) -- node[above] {$\# \to \#, L$} (sY);
+
+        \draw[-stealth] (s2) -- node[above, rotate=-45] {$b \to \#, L$} (sN);
+        \draw[-stealth] (s2) -- node[below, rotate=-45] {$\# \to \#, L$} (sN);
+    \end{tikzpicture}
+    \caption{The TM corresponding to the program above. The state $s_0$ corresponds to the module \texttt{moveToEnd}; the state $s_1$ corresponds to the module \texttt{checkAFirst}; and the state $s_2$ corresponds to the module \texttt{checkASecond}.}
+\end{figure}
+In general, for each module $m$ in $P$, we construct the state $q$ as follows- for each letter $\sigma$ in $\Sigma^+$, we define $\delta(q, \sigma) = (q', \sigma', \texttt{dir})$, where:
+\begin{itemize}
+    \item the value $\sigma'$ is the letter given in the \textit{changeto} command within $m$;
+    \item the value \texttt{dir} is the direction given in the \textit{move} command within $m$;
+    \item if the \textit{flow} command in $m$ corresponding to $\sigma$ is \texttt{accept}, then $q'$ is the \texttt{accept} state; if it is \texttt{reject}, then $q'$ is the \texttt{reject} state; if we are in a \textit{while} block, then $q' = q$; otherwise, $q'$ is the state corresponding to the module given in the \textit{goto} command.
+\end{itemize}
+Then, the TM with all the states $q$, the same alphabet $\Sigma$, the transition function $\delta$ and initial state $q_0$ corresponding to the first module in $P$ is the \emph{corresponding TM for $P$}.
+
+\begin{theorem}
+    Let $P$ be a complete TM program, and let $M$ be the corresponding TM for $P$. Then, $P$ and $M$ execute on every valid tape $T$ in the same way.
+\end{theorem}
+The proof of the theorem is given in the appendix.
+
+Hence, we have established that for any valid TML program, there is a TM, and vice versa.

@@ -84,3 +84,8 @@
 * *0.5 hours* Updated the class `Context` with visit methods.
 * *1 hour* Started working on the class `CodeParser`- the parser of a raw TM program into a `ProgramContext` using `BaseVisitor`. 
 * *0.5 hours* Weekly meeting with Ornela.
+
+### 26 Oct 2022
+
+* *4 hours* Changed the documentation- moved all the content to the dissertation, and changed the document based on initial feedback from Ornela.
+
