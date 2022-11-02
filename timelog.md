@@ -96,4 +96,11 @@
 * *1 hour* Started writing tests for `CodeParser`- testing the parsing errors.
 * *1.5 hours* Finished tests for `CodeParser`- testing the correctly parsed context.
 * *1 hour* Started the class `CodeValidator`.
-* *0.5 hours* Added the agenda.
+* *0.5 hours* Added the agenda for the meeting- tomorrow's meeting has been cancelled.
+
+## 2 Nov 2022
+
+* *1 hour* Continued the class `CodeValidator`- more things to validate.
+* *1 hour* Created tests for `CodeValidator`.
+* *1 hour* Fixed some bugs in `CodeParser` (getting the error position correctly, changing blank to the empty string)
+

@@ -110,7 +110,7 @@ export class CodeParser {
                 throw new SyntaxError(`${this._wrapper.currentPosition}- Expected value "${this._wrapper.currentValue}" to be "${finishedValue}".`);
             }
             if (includesBlank && this._wrapper.currentValue == "blank") {
-                values.add("blank");
+                values.add("");
             } else {
                 if (this._wrapper.currentValue.length != 1) {
                     throw new SyntaxError(`${this._wrapper.currentPosition}- The value "${this._wrapper.currentValue}" must have length 1.`);
@@ -293,64 +293,62 @@ export class CodeParser {
 
     private _parseBasicBlock(): BasicBlockContext {
         const startPosition = this._wrapper.currentPosition;
-
+        let endPosition = startPosition;
+        
         let changeToCommand:ChangeToContext|undefined;
         let moveCommand:MoveContext|undefined;
         let flowCommand:FlowChangeContext|undefined;
-        let foundCommand = false;
-
+        
         if (this._wrapper.currentValue == "changeto") {
-            foundCommand = true;
+            endPosition = this._wrapper.currentPosition;
             changeToCommand = this._parseChangeTo();
             this._moveNext();
         } 
         if (this._wrapper.currentValue == "move") {
-            foundCommand = true;
+            endPosition = this._wrapper.currentPosition;
             moveCommand = this._parseMove();
             this._moveNext();
         }
         if (["accept", "reject"].includes(this._wrapper.currentValue)) {
-            foundCommand = true;
+            endPosition = this._wrapper.currentPosition;
             flowCommand = this._parseTermination();
             this._moveNext();
         } else if (this._wrapper.currentValue == "goto") {
-            foundCommand = true;
+            endPosition = this._wrapper.currentPosition;
             flowCommand = this._parseGoTo();
             this._moveNext();
         }
 
-        if (!foundCommand) {
+        if (startPosition === endPosition) {
             throw new SyntaxError(`${startPosition}- Invalid basic command "${this._wrapper.currentValue}".`);
         }
         
-        const endPosition = this._wrapper.currentPosition;
         const position = CodePosition.combine(startPosition, endPosition);
 
         return new BasicBlockContext(position, changeToCommand, moveCommand, flowCommand);
     }
     private _parseCoreBlock(): CoreBasicBlockContext {
         const startPosition = this._wrapper.currentPosition;
+        let endPosition = startPosition;
 
         let changeToCommand:ChangeToContext|undefined;
         let moveCommand:MoveContext|undefined;
-        let foundCommand = false;
 
         if (this._wrapper.currentValue == "changeto") {
-            foundCommand = true;
+            endPosition = this._wrapper.currentPosition;
             changeToCommand = this._parseChangeTo();
             this._moveNext();
         } 
         if (this._wrapper.currentValue == "move") {
-            foundCommand = true;
+            endPosition = this._wrapper.currentPosition;
             moveCommand = this._parseMove();
             this._moveNext();
         }
         
-        if (!foundCommand) {
+        if (startPosition === endPosition) {
             throw new SyntaxError(`${startPosition}- Invalid core command "${this._wrapper.currentValue}".`);
         }
 
-        const endPosition = this._wrapper.currentPosition;
         const position = CodePosition.combine(startPosition, endPosition);
         
         return new CoreBasicBlockContext(position, changeToCommand, moveCommand);
@@ -360,7 +358,7 @@ export class CodeParser {
         const startPosition = this._wrapper.currentPosition;
         this._moveNext();
 
-        const value = this._wrapper.currentValue;
+        const value = this._wrapper.currentValue === "blank" ? "" : this._wrapper.currentValue;
         
         const endPosition = this._wrapper.currentPosition;
         const position = CodePosition.combine(startPosition, endPosition);
