@@ -91,16 +91,23 @@
 
 ## Week 7
 
-## 1 Nov 2022
+### 1 Nov 2022
 
 * *1 hour* Started writing tests for `CodeParser`- testing the parsing errors.
 * *1.5 hours* Finished tests for `CodeParser`- testing the correctly parsed context.
 * *1 hour* Started the class `CodeValidator`.
 * *0.5 hours* Added the agenda for the meeting- tomorrow's meeting has been cancelled.
 
-## 2 Nov 2022
+### 2 Nov 2022
 
 * *1 hour* Continued the class `CodeValidator`- more things to validate.
 * *1 hour* Created tests for `CodeValidator`.
 * *1 hour* Fixed some bugs in `CodeParser` (getting the error position correctly, changing blank to the empty string)
 
+## Week 8
+
+### 8 Nov 2022
+
+* *0.5 hours* Created the classes `TMState`- a family of classes to represent Turing machine states.
+* *0.5 hours* Created the class `TuringMachine`- a class to represent Turing machine.
+* *1 hour* Created tests for `TMState` and `TuringMachine`.
