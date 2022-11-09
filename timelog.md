@@ -115,3 +115,4 @@
 ### 9 Nov 2022
 
 * *2 hours* Created the class `CodeConverter`- converts a TM program into a TM.
+* *0.5 hours* Added the agenda for the meeting.
