@@ -11,7 +11,7 @@ test("TerminationTMState accept returns the alphabet given", () => {
 
 test("TMState cannot transition for the terminating state accept", () => {
     expect(() => {
-        acceptState.transition();
+        acceptState.transition('a');
     }).toThrowError(new Error("Cannot transition from a termination state."));
 });
 
