@@ -111,3 +111,7 @@
 * *0.5 hours* Created the classes `TMState`- a family of classes to represent Turing machine states.
 * *0.5 hours* Created the class `TuringMachine`- a class to represent Turing machine.
 * *1 hour* Created tests for `TMState` and `TuringMachine`.
+
+### 9 Nov 2022
+
+* *2 hours* Created the class `CodeConverter`- converts a TM program into a TM.

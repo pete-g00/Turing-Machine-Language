@@ -43,7 +43,7 @@ export class TMChanger {
         this._direction = direction;
     }
 
-    public transition(letter:string) : TMChange {
+    public apply(letter:string) : TMChange {
         return {
             letter: this._letter ?? letter,
             direction: this._direction ?? Direction.LEFT,
@@ -100,11 +100,11 @@ export class TerminationTMState extends TMState {
         return this._alphabet;
     }
 
-    public static ACCEPT(alphabet:Set<string>):TerminationTMState {
+    public static ACCEPT(alphabet:Set<string>):TMState {
         return new TerminationTMState("accept", alphabet);
     }
 
-    public static REJECT(alphabet:Set<string>):TerminationTMState {
+    public static REJECT(alphabet:Set<string>):TMState {
         return new TerminationTMState("reject", alphabet);
     }
 }
@@ -125,7 +125,7 @@ export class ConstantTMState extends TMState {
 
     public transition(letter: string): TMChange | undefined {
         return this.alphabet.has(letter) || letter === "" ? 
-            this._changer.transition(letter) :
+            this._changer.apply(letter) :
             undefined;
     }
 }
@@ -151,7 +151,7 @@ export class VariableTMState extends TMState {
     public transition(letter:string) :TMChange|undefined {
         const changer = this._transitionMap.get(letter);
         if (changer) {
-            return changer.transition(letter);
+            return changer.apply(letter);
         } else {
             return undefined;
         }
