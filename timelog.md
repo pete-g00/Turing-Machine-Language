@@ -116,3 +116,18 @@
 
 * *2 hours* Created the class `CodeConverter`- converts a TM program into a TM.
 * *0.5 hours* Added the agenda for the meeting.
+
+### 11 Nov 2022
+
+* *1 hour* Weekly meeting with Ornela 
+
+## Week 9
+
+### 15 Nov 2022
+* *2 hours* Created tests for `CodeConverter`.
+
+### 16 Nov 2022
+
+* *0.5 hours* Created the class `TMTape`- a class to represent TM tapes.
+* *0.5 hours* Created tests for `TMTape`.
+* *0.5 hours* Added the agenda for the meeting.
