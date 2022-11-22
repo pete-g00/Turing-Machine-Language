@@ -20,12 +20,15 @@ module block2 {
     }
 }`;
 
-const isDiv2Iterative = `alphabet = {0, 1}
+const isDiv2Iterative = `// checks whether a binary number is a multiple of 2 iteratively
+alphabet = {0, 1} // only binary values allowed
 module isDiv2 {
+    // move to the end first
     switch tapehead {
         while 0, 1 {
             move right
         } if blank {
+            // check the last letter is 0
             move left
             switch tapehead {
                 if 0 {
@@ -116,7 +119,7 @@ test("CodeParser parses a while command correctly", () => {
     expect(whileCase.block.changeToCommand).toBeUndefined();
     expect(whileCase.block.moveCommand).toBeDefined();
 
-    expect(whileCase.position).toEqual(new CodePosition(3, 6, 8, 9));
+    expect(whileCase.position).toEqual(new CodePosition(5, 8, 8, 9));
 });
 
 test("CodeParser parses an if command correctly", () => {
@@ -130,7 +133,7 @@ test("CodeParser parses an if command correctly", () => {
     expect(ifCase.blocks[0]).toBeInstanceOf(BasicBlockContext);
     expect(ifCase.blocks[1]).toBeInstanceOf(SwitchBlockContext);
 
-    expect(ifCase.position).toEqual(new CodePosition(5, 15, 10, 9));
+    expect(ifCase.position).toEqual(new CodePosition(7, 18, 10, 9));
 });
 
 test("CodeParser parses a switch block correctly", () => {
@@ -157,7 +160,7 @@ test("CodeParser parses a move command correctly", () => {
     const moveCommand = whileCase.block.moveCommand!;
 
     expect(moveCommand.direction).toBe(Direction.RIGHT);
-    expect(moveCommand.position).toEqual(new CodePosition(4, 5, 12, 22));
+    expect(moveCommand.position).toEqual(new CodePosition(6, 7, 12, 22));
 });
 
 test("CodeParser parses a changeto command correctly", () => {

@@ -18,6 +18,55 @@ export class CodeParser {
     }
 
     /**
+     * Moves to the next line (or end of file) given that this line is a comment line now
+     * 
+     * @returns whether we reached the end of code
+     */
+     private _ignoreComments():boolean {
+        let couldMoved:boolean;
+        const startLine = this._wrapper.currentPosition.startLineNumber;
+        do {
+            couldMoved = this._wrapper.moveNext();
+        } while (couldMoved && startLine === this._wrapper.currentPosition.startLineNumber);
+        return !couldMoved;
+    }
+
+    /**
+     * Matches full-line comment(s) in the program
+     * 
+     * @returns whether we reached the end of code
+     */
+    private _matchComments():boolean {
+        let finished = false;
+        while (this._wrapper.currentValue === "//") {
+            finished = this._ignoreComments();
+        }
+        return finished;
+    }
+    
+    /**
+     * Moves to the next value, ignoring comments.
+     * If `shouldThrow` is given and `false`, then returns the result. Otherwise, throws an error if encounters the end of file.
+     *  
+     * @throws syntax error if there is no next value
+     * 
+     * @returns whether we should move
+     * 
+     * @param shouldThrow whether an error should be thrown
+     */
+     private _moveNext(shouldThrow?:boolean):boolean {
+        shouldThrow = shouldThrow ?? true;
+        if ((!this._wrapper.moveNext() || this._matchComments())) {
+            if (shouldThrow) {
+                throw new SyntaxError(`${this._wrapper.currentPosition}- Unexpected end of file.`);
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * Parses the given code.
      * 
      * @throws SyntaxError if there is a syntax error
@@ -25,7 +74,10 @@ export class CodeParser {
      * @returns the parsed version of the program
      */
     public parse(): ProgramContext {
-        this._moveNext();
+        if (!this._wrapper.moveNext()) {
+            throw new Error(`${this._wrapper.currentPosition}- Empty file.`);
+        }
+        this._matchComments();
 
         return this._parseProgram();
     }
@@ -40,17 +92,6 @@ export class CodeParser {
     private _matchValue(value:string) {
         if (this._wrapper.currentValue !== value) {
             throw new SyntaxError(`${this._wrapper.currentPosition}- Expected value "${this._wrapper.currentValue}" to be "${value}".`);
-        }
-    }
-
-    /**
-     * Moves to the next value
-     *  
-     * @throws syntax error if there is no next value
-     */
-    private _moveNext() {
-        if (!this._wrapper.moveNext()) {
-            throw new SyntaxError(`${this._wrapper.currentPosition}- Unexpected end of file.`);
         }
     }
 
@@ -76,7 +117,7 @@ export class CodeParser {
         const alphabet = this._parseAlphabet();
         const modules:ModuleContext[] = [];
 
-        while (this._wrapper.moveNext()) {
+        while (this._moveNext(false)) {
             modules.push(this._parseModule());
         }
         
@@ -395,6 +436,7 @@ export class CodeParser {
 
         return new GoToContext(position, this._wrapper.currentValue);
     }
+    
 
     private _parseTermination(): TerminationContext {
         const position = this._wrapper.currentPosition;

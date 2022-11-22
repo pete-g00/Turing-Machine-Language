@@ -1,14 +1,32 @@
 import { BaseVisitor } from "./BaseVisitor";
 import { ProgramContext, AlphabetContext, ModuleContext, BasicBlockContext, CoreBasicBlockContext, SwitchBlockContext, IfCaseContext, WhileCaseContext, GoToContext, TerminationContext, TerminationState } from "./Context";
-import { ConstantTMState, TuringMachine, VariableTMState, TMChanger } from "./TuringMachine";
+import { ConstantTMState, TuringMachine, VariableTMState, IncompleteTMChange } from "./TuringMachine";
 
+/**
+ * The class `CodeConverter` converts a valid TM program into a valid TM.
+ */
 export class CodeConverter extends BaseVisitor<TuringMachine> {
+    // the TM being created
     private _turingMachine: TuringMachine;
+
+    // the current module being converted
     private _moduleLabel?:string;
+
+    // the current block index
     private _blockIndex?:number;
+
+    // whether the given block in the module/if block is the last block
     private _isLastBlock?:boolean;
+
+    // the alphabet of the TM
     private _alphabet:Set<string>|undefined;
 
+    /**
+     * Creates a `CodeConverter`.
+     * 
+     * The class `CodeConverter` converts a valid TM program into a valid TM.
+     * 
+     */
     public constructor() {
         super();
         this._turingMachine = new TuringMachine();
@@ -63,7 +81,7 @@ export class CodeConverter extends BaseVisitor<TuringMachine> {
         return nextLabel;
     }
 
-    private _getTMChanger(currentLabel:string, block:BasicBlockContext | CoreBasicBlockContext) :TMChanger {
+    private _getTMChange(currentLabel:string, block:BasicBlockContext | CoreBasicBlockContext) :IncompleteTMChange {
         const direction = block.moveCommand?.direction;
 
         let nextState:string;
@@ -77,15 +95,19 @@ export class CodeConverter extends BaseVisitor<TuringMachine> {
         if (block.changeToCommand) {
             letter = block.changeToCommand.value;
         }
-
-        return new TMChanger(nextState, letter, direction);
+        
+        return {
+            nextState, 
+            letter,
+            direction
+        };
     }
     
     public visitBasicBlock(block: BasicBlockContext): TuringMachine {
         this._blockIndex! ++;        
         const currentLabel = this._moduleLabel! + this._blockIndex!;
 
-        const changer = this._getTMChanger(currentLabel, block);
+        const changer = this._getTMChange(currentLabel, block);
         const state = new ConstantTMState(currentLabel, this._alphabet!, changer);
         this._turingMachine.addState(state);
 
@@ -104,7 +126,7 @@ export class CodeConverter extends BaseVisitor<TuringMachine> {
     public visitSwitchBlock(block: SwitchBlockContext): TuringMachine {
         this._blockIndex! ++;
         const currentLabel = this._moduleLabel! + this._blockIndex!;
-        const transitionMap = new Map<string, TMChanger>();
+        const transitionMap = new Map<string, IncompleteTMChange>();
         
         const state = new VariableTMState(currentLabel, transitionMap);
         this._turingMachine.addState(state);
@@ -116,7 +138,7 @@ export class CodeConverter extends BaseVisitor<TuringMachine> {
             } else {
                 blockToConsider = this._getFirstBlock(switchCase as IfCaseContext);
             }
-            const change = this._getTMChanger(currentLabel, blockToConsider);
+            const change = this._getTMChange(currentLabel, blockToConsider);
             switchCase.values.forEach((value) => {
                 transitionMap.set(value, change);
             });

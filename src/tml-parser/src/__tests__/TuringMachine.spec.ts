@@ -1,5 +1,5 @@
 import { Direction } from "../Context";
-import { ConstantTMState, TerminationTMState, TMChanger, TuringMachine, VariableTMState } from "../TuringMachine";
+import { ConstantTMState, TerminationTMState, IncompleteTMChange, TuringMachine, VariableTMState } from "../TuringMachine";
 
 const alphabet = new Set(["a", "b"]);
 const alphabetWithBlank = new Set(["a", "b", ""]);
@@ -11,21 +11,26 @@ test("TerminationTMState accept returns the alphabet given", () => {
 
 test("TMState cannot transition for the terminating state accept", () => {
     expect(() => {
-        acceptState.transition('a');
+        acceptState.transition("a");
     }).toThrowError(new Error("Cannot transition from a termination state."));
 });
 
 test("ConstantTMState returns the alphabet given", () => {
-    const changer = new TMChanger("q1", undefined, Direction.LEFT);
-    const state = new ConstantTMState("q0", alphabet, changer);
+    const change:IncompleteTMChange = {
+        nextState: "q1",
+        direction: Direction.LEFT
+    };
+    const state = new ConstantTMState("q0", alphabet, change);
     expect(state.alphabet).toEqual(alphabet);
 });
 
 test("ConstantTMState returns the original letter in the TMChange when the change value isn't given", () => {
-    const changer = new TMChanger("q1");
-    const state = new ConstantTMState("q0", alphabet, changer);
-    const change = state.transition("a");
-    expect(change).toEqual({
+    const change:IncompleteTMChange = {
+        nextState: "q1"
+    };
+    const state = new ConstantTMState("q0", alphabet, change);
+    const transitionChange = state.transition("a");
+    expect(transitionChange).toEqual({
         nextState: "q1",
         direction: Direction.LEFT,
         letter: "a"
@@ -33,20 +38,28 @@ test("ConstantTMState returns the original letter in the TMChange when the chang
 });
 
 test("ConstantTMState returns undefined for a letter not present in the alphabet", () => {
-    const changer = new TMChanger("q1");
-    const state = new ConstantTMState("q0", alphabet, changer);
+    const change:IncompleteTMChange = {
+        nextState: "q1"
+    };
+    const state = new ConstantTMState("q0", alphabet, change);
     expect(state.transition("x")).toBeUndefined();
 });
 
 test("ConstantTMState is defined for blank even though it is not present in the alphabet", () => {
-    const changer = new TMChanger("q1");
-    const state = new ConstantTMState("q0", alphabet, changer);
+    const change:IncompleteTMChange = {
+        nextState: "q1"
+    };
+    const state = new ConstantTMState("q0", alphabet, change);
     expect(state.transition("")).toBeDefined();
 });
 
 test("ConstantTMState returns the provided letter in the TMChange when the change value is given", () => {    
-    const changer = new TMChanger("q1", "", Direction.LEFT);
-    const state = new ConstantTMState("q0", alphabet, changer);
+    const change:IncompleteTMChange = {
+        nextState: "q1",
+        letter: "",
+        direction: Direction.LEFT
+    };
+    const state = new ConstantTMState("q0", alphabet, change);
     expect(state.transition("a")).toEqual({
         nextState: "q1",
         direction: Direction.LEFT,
@@ -54,10 +67,16 @@ test("ConstantTMState returns the provided letter in the TMChange when the chang
     });
 });
 
-const transitionMap = new Map<string, TMChanger>();
-transitionMap.set("a", new TMChanger("q1"));
-transitionMap.set("b", new TMChanger("q1", undefined, Direction.RIGHT));
-transitionMap.set("", new TMChanger("q2", "b"));
+const transitionMap = new Map<string, IncompleteTMChange>();
+transitionMap.set("a", {nextState: "q1"});
+transitionMap.set("b", {
+    nextState: "q1",
+    direction: Direction.RIGHT
+});
+transitionMap.set("", {
+    nextState: "q2",
+    letter: "b"
+});
 const variableState = new VariableTMState("q0", transitionMap);
 
 test("VariableTMState returns the expected transition value, for a letter in the alphabet", () => {
@@ -86,9 +105,9 @@ test("VariableTMState returns undefined as the transition value for a letter not
     expect(variableState.transition("x")).toBeUndefined();
 });
 
-const q0 = new ConstantTMState("q0", alphabet, new TMChanger("q1"));
-const q1 = new ConstantTMState("q1", alphabet, new TMChanger("accept"));
-const q2 = new ConstantTMState("q2", alphabet, new TMChanger("q0"));
+const q0 = new ConstantTMState("q0", alphabet, {nextState: "q1"});
+const q1 = new ConstantTMState("q1", alphabet, {nextState: "accept"});
+const q2 = new ConstantTMState("q2", alphabet, {nextState: "q0"});
 
 const turingMachine = new TuringMachine();
 turingMachine.alphabet = alphabet;

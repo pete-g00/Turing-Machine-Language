@@ -1,55 +1,61 @@
 import { Direction } from "./Context";
 
-export interface TMChange {
+/**
+ * The interface `IncompleteTMChange` represents a TM change for some fixed tapehead value and TM state.
+ * 
+ * It contains the letter to change the tapehead value to, the direction that the tape moves in, and the next TM state.
+ * 
+ * Only the next TM state needs to be provided; other values can be missing, in which case it will be filled in with default values:
+ * 
+ * - if letter to change is missing, then it stays the same as the tapehead value.
+ * - if the direction is missing, then it moves to the left.
+ */
+export interface IncompleteTMChange {
     /**
      * The letter we change the current value into. 
      * 
      * If the letter is not given, then the current value remains the same
      */
-     letter:string;
-
-     /**
-      * The direction the tape should move
-      */
-     direction:Direction;
- 
-     /**
-      * The label of the next TM state
-      */
-     nextState:string; 
-}
-
-export class TMChanger {
-    /**
-     * The letter we change the current value into. 
-     * 
-     * If the letter is not given, then the current value remains the same
-     */
-    private _letter?:string;
+    letter?:string;
 
     /**
      * The direction the tape should move
      */
-    private _direction?:Direction;
+    direction?:Direction;
 
     /**
      * The label of the next TM state
      */
-    private _nextState:string;
+    nextState:string;    
+}
 
-    public constructor(nextState:string, letter?:string, direction?:Direction) {
-        this._nextState = nextState;
-        this._letter = letter;
-        this._direction = direction;
-    }
+/**
+ * 
+ * Completes an incomplete TM change to a complete TM change by filling in the defaults.
+ * 
+ * @param change the change to complete
+ * @param letter the letter to transition through
+ * @returns the completed version of the incomplete TM change
+ */
+function completeChange(change:IncompleteTMChange, letter:string):TMChange {
+    return {
+        letter: change.letter ?? letter,
+        direction: change.direction ?? Direction.LEFT,
+        nextState: change.nextState
+    };
+}
 
-    public apply(letter:string) : TMChange {
-        return {
-            letter: this._letter ?? letter,
-            direction: this._direction ?? Direction.LEFT,
-            nextState: this._nextState
-        };
-    }
+/**
+ * The interface `TMChange` represents a (complete) TM change for some fixed tapehead value and TM state.
+ * 
+ * It contains the letter to change the tapehead value to, the direction that the tape moves in, and the next TM state.
+ */
+export interface TMChange extends IncompleteTMChange {
+    letter:string;
+
+    direction:Direction;
+ 
+    nextState:string; 
 }
 
 /**
@@ -110,10 +116,10 @@ export class TerminationTMState extends TMState {
 }
 
 export class ConstantTMState extends TMState {
-    private _changer:TMChanger;
+    private _changer:IncompleteTMChange;
     private _alphabet:Set<string>;
 
-    public constructor(label:string, alphabet:Set<string>, changer:TMChanger) {
+    public constructor(label:string, alphabet:Set<string>, changer:IncompleteTMChange) {
         super(label);
         this._changer = changer;
         this._alphabet = alphabet;
@@ -125,13 +131,13 @@ export class ConstantTMState extends TMState {
 
     public transition(letter: string): TMChange | undefined {
         return this.alphabet.has(letter) || letter === "" ? 
-            this._changer.apply(letter) :
+            completeChange(this._changer, letter) :
             undefined;
     }
 }
 
 export class VariableTMState extends TMState {
-    private _transitionMap:Map<string, TMChanger>;
+    private _transitionMap:Map<string, IncompleteTMChange>;
 
     /**
      * Constructs a `TMState` given the transition map corresponding to the state.
@@ -139,7 +145,7 @@ export class VariableTMState extends TMState {
      * @param transitionMap the transition map for a state
      * @param label the label for the state
      */
-    public constructor(label:string, transitionMap:Map<string, TMChanger>) {
+    public constructor(label:string, transitionMap:Map<string, IncompleteTMChange>) {
         super(label);
         this._transitionMap = transitionMap;
     }
@@ -151,7 +157,7 @@ export class VariableTMState extends TMState {
     public transition(letter:string) :TMChange|undefined {
         const changer = this._transitionMap.get(letter);
         if (changer) {
-            return changer.apply(letter);
+            return completeChange(changer, letter);
         } else {
             return undefined;
         }

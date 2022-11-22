@@ -80,7 +80,7 @@ test("CodeParser throws an error when the program is empty", () => {
 
     expect(() => {
         parser.parse();
-    }).toThrow(new SyntaxError("Ln 1:2, Col 1:1- Unexpected end of file."));
+    }).toThrow(new SyntaxError("Ln 1:2, Col 1:1- Empty file."));
 });
 
 test("CodeParser throws an error when the alphabet is not given", () => {

@@ -131,3 +131,16 @@
 * *0.5 hours* Created the class `TMTape`- a class to represent TM tapes.
 * *0.5 hours* Created tests for `TMTape`.
 * *0.5 hours* Added the agenda for the meeting.
+
+### 18 Nov 2022
+
+* *1 hour* Weekly meeting with Ornela.
+
+## Week 10
+
+### 22 Nov 2022
+
+* *1.5 hour* Created the class `TMExecutor`- a class to execute a tape on some TM, one step at a time.
+* *1.5 hour* Created tests for `TMExecutor`.
+* *0.5 hours* Added more documentation comments to the typescript files.
+* *1 hour* Added comment parsing
