@@ -80,7 +80,7 @@ test("CodeParser throws an error when the program is empty", () => {
 
     expect(() => {
         parser.parse();
-    }).toThrow(new SyntaxError("Ln 1:2, Col 1:1- Empty file."));
+    }).toThrow(new SyntaxError("Empty file."));
 });
 
 test("CodeParser throws an error when the alphabet is not given", () => {
@@ -88,7 +88,7 @@ test("CodeParser throws an error when the alphabet is not given", () => {
 
     expect(() => {
         parser.parse();
-    }).toThrow(new SyntaxError(`Ln 1:2, Col 1:7- Expected value "module" to be "alphabet".`));
+    }).toThrow(new SyntaxError(`Expected value "module" to be "alphabet".`));
 });
 
 test("CodeParser throws an error when the alphabet is empty", () => {
@@ -96,7 +96,7 @@ test("CodeParser throws an error when the alphabet is empty", () => {
 
     expect(() => {
         parser.parse();
-    }).toThrow(new SyntaxError(`Ln 1:2, Col 1:14- The alphabet must have at least one letter.`));
+    }).toThrow(new SyntaxError(`The alphabet must have at least one letter.`));
 });
 
 test("CodeParser throws an error when the alphabet contains an invalid letter", () => {
@@ -104,7 +104,7 @@ test("CodeParser throws an error when the alphabet contains an invalid letter", 
     
     expect(() => {
         parser.parse();
-    }).toThrow(new SyntaxError(`Ln 1:2, Col 13:14- The value "." must be a lowercase character or a number.`));
+    }).toThrow(new SyntaxError(`The value "." must be a lowercase character or a number.`));
 });
 
 test("CodeParser throws an error when a letter in the alphabet doesn't have length 1", () => {
@@ -112,7 +112,7 @@ test("CodeParser throws an error when a letter in the alphabet doesn't have leng
     
     expect(() => {
         parser.parse();
-    }).toThrow(new SyntaxError(`Ln 1:2, Col 13:15- The value "ab" must have length 1.`));
+    }).toThrow(new SyntaxError(`The value "ab" must have length 1.`));
 });
 
 test("CodeParser throws an error when a letter in the alphabet has no commas", () => {
@@ -120,7 +120,7 @@ test("CodeParser throws an error when a letter in the alphabet has no commas", (
     
     expect(() => {
         parser.parse();
-    }).toThrow(new SyntaxError(`Ln 1:2, Col 15:16- Expected value "b" to be "}".`));
+    }).toThrow(new SyntaxError(`Expected value "b" to be "}".`));
 });
 
 test("CodeParser throws an error when a bracket isn't finished", () => {
@@ -128,7 +128,7 @@ test("CodeParser throws an error when a bracket isn't finished", () => {
 
     expect(() => {
         parser.parse();
-    }).toThrow(new SyntaxError(`Ln 2:3, Col 13:14- Unexpected end of file.`));
+    }).toThrow(new SyntaxError(`Unexpected end of file.`));
 });
 
 test("CodeParser throws an error when a program has no modules", () => {
@@ -136,7 +136,7 @@ test("CodeParser throws an error when a program has no modules", () => {
 
     expect(() => {
         parser.parse();
-    }).toThrow(new SyntaxError(`Ln 1:2, Col 1:18- A program should have at least one module.`));
+    }).toThrow(new SyntaxError(`A program should have at least one module.`));
 });
 
 test("CodeParser throws an error when a module has no commands", () => {
@@ -144,7 +144,7 @@ test("CodeParser throws an error when a module has no commands", () => {
 
     expect(() => {
         parser.parse();
-    }).toThrow(new SyntaxError(`Ln 2:3, Col 1:15- A module must have at least one block/command.`));
+    }).toThrow(new SyntaxError(`A module must have at least one block/command.`));
 });
 
 test("CodeParser throws an error when the move direction isn't valid", () => {
@@ -152,7 +152,7 @@ test("CodeParser throws an error when the move direction isn't valid", () => {
 
     expect(() => {
         parser.parse();
-    }).toThrow(new SyntaxError(`Ln 3:4, Col 10:12- Invalid direction "up".`));
+    }).toThrow(new SyntaxError(`Invalid direction "up".`));
 });
 
 test("CodeParser throws an error when a command isn't valid", () => {
@@ -160,7 +160,7 @@ test("CodeParser throws an error when a command isn't valid", () => {
     
     expect(() => {
         parser.parse();
-    }).toThrow(new SyntaxError(`Ln 3:4, Col 5:9- Invalid basic command "stop".`));
+    }).toThrow(new SyntaxError(`Invalid basic command "stop".`));
 });
 
 test("CodeParser throws an error when a non-core command is given as a core command", () => {
@@ -168,7 +168,7 @@ test("CodeParser throws an error when a non-core command is given as a core comm
         
     expect(() => {
         parser.parse();
-    }).toThrow(new SyntaxError(`Ln 5:6, Col 13:19- Invalid core command "accept".`));
+    }).toThrow(new SyntaxError(`Invalid core command "accept".`));
 });
 
 test("CodeParser throws an error when a while block has multiple basic blocks", () => {
@@ -176,7 +176,7 @@ test("CodeParser throws an error when a while block has multiple basic blocks", 
 
     expect(() => {
         parser.parse();
-    }).toThrow(new SyntaxError(`Ln 6:7, Col 13:17- A while case cannot have more than one core block.`));    
+    }).toThrow(new SyntaxError(`A while case cannot have more than one core block.`));    
 });
 
 test("CodeParser throws an error when a switch command doesn't apply to any value", () => {
@@ -184,7 +184,7 @@ test("CodeParser throws an error when a switch command doesn't apply to any valu
 
     expect(() => {
         parser.parse();
-    }).toThrow(new SyntaxError(`Ln 3:4, Col 5:23- A switch block must have at least one case.`));    
+    }).toThrow(new SyntaxError(`A switch block must have at least one case.`));    
 });
 
 test("CodeParser throws an error when an if case doesn't apply to any value", () => {
@@ -192,7 +192,7 @@ test("CodeParser throws an error when an if case doesn't apply to any value", ()
 
     expect(() => {
         parser.parse();
-    }).toThrow(new SyntaxError(`Ln 4:5, Col 9:11- An if case must apply to at least one letter.`));
+    }).toThrow(new SyntaxError(`An if case must apply to at least one letter.`));
 });
 
 test("CodeParser throws an error when an if case doesn't have any commands", () => {
@@ -200,7 +200,7 @@ test("CodeParser throws an error when an if case doesn't have any commands", () 
 
     expect(() => {
         parser.parse();
-    }).toThrow(new SyntaxError(`Ln 4:7, Col 9:10- An if case must have at least one command.`));
+    }).toThrow(new SyntaxError(`An if case must have at least one command.`));
 });
 
 test("CodeParser throws an error when a while case doesn't apply to any value", () => {
@@ -208,7 +208,7 @@ test("CodeParser throws an error when a while case doesn't apply to any value", 
 
     expect(() => {
         parser.parse();
-    }).toThrow(new SyntaxError(`Ln 4:5, Col 9:14- A while case must apply to at least one letter.`));
+    }).toThrow(new SyntaxError(`A while case must apply to at least one letter.`));
 });
 
 test("CodeParser throws an error when a while case doesn't have any commands", () => {
@@ -216,7 +216,7 @@ test("CodeParser throws an error when a while case doesn't have any commands", (
 
     expect(() => {
         parser.parse();
-    }).toThrow(new SyntaxError(`Ln 4:5, Col 9:14- A while case must have at least one command.`));
+    }).toThrow(new SyntaxError(`A while case must have at least one command.`));
 });
 
 test("CodeParser throws an error when a case isn't an if or a while case", () => {
@@ -224,5 +224,5 @@ test("CodeParser throws an error when a case isn't an if or a while case", () =>
 
     expect(() => {
         parser.parse();
-    }).toThrow(new SyntaxError(`Ln 4:5, Col 9:13- Unexpected start of case: "when".`));
+    }).toThrow(new SyntaxError(`Unexpected start of case: "when".`));
 });

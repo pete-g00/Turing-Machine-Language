@@ -224,7 +224,7 @@ test("CodeValidator throws an error if there is an invalid goto reference", () =
 
     expect(() => {
         codeValidator.visit(goToInvalidProgram);
-    }).toThrow(new Error(`Ln 4:5, Col 5:11- Undefined module "b".`));
+    }).toThrow(new Error(`Undefined module "b".`));
 });
 
 test("CodeValidator does not throw an error if there is a recursive goto reference", () => {
@@ -244,7 +244,7 @@ test("CodeValidator throws an error if there is a switch case with a letter not 
 
     expect(() => {
         codeValidator.visit(switchInvalidProgram);
-    }).toThrow(new Error(`Ln 4:7, Col 9:10- The letter "x" is not part of the alphabet.`));
+    }).toThrow(new Error(`The letter "x" is not part of the alphabet.`));
 });
 
 test("CodeValidator throws an error if there are multiple switch cases applying to the same letter", () => {
@@ -254,7 +254,7 @@ test("CodeValidator throws an error if there are multiple switch cases applying 
 
     expect(() => {
         codeValidator.visit(switchDuplicateProgram);
-    }).toThrow(new Error(`Ln 3:10, Col 5:6- Multiple cases present for letter "a".`));
+    }).toThrow(new Error(`Multiple cases present for letter "a".`));
 });
 
 test("CodeValidator throws an error if there is no switch case applying to a letter in the alphabet", () => {
@@ -264,7 +264,7 @@ test("CodeValidator throws an error if there is no switch case applying to a let
 
     expect(() => {
         codeValidator.visit(switchIncompleteProgram);
-    }).toThrow(new Error(`Ln 3:8, Col 5:6- The switch block doesn't have a case for each letter in the alphabet.`));
+    }).toThrow(new Error(`The switch block doesn't have a case for each letter in the alphabet.`));
 });
 
 test("CodeValidator throws an error if there is no switch case applying to blank", () => {
@@ -274,7 +274,7 @@ test("CodeValidator throws an error if there is no switch case applying to blank
 
     expect(() => {
         codeValidator.visit(switchMissingBlankProgram);
-    }).toThrow(new Error(`Ln 3:10, Col 5:6- The switch block doesn't have a case for each letter in the alphabet.`));
+    }).toThrow(new Error(`The switch block doesn't have a case for each letter in the alphabet.`));
 });
 
 test("CodeValidator doesn't throw an error for a valid switch block", () => {
@@ -295,7 +295,7 @@ test("CodeParser throws an error if the non-final block has a flow command", () 
 
     expect(() => {
         codeValidator.visit(nonFinalModuleFlowProgram);
-    }).toThrow(new Error(`Ln 3:4, Col 5:9- A non-final block in a sequence of blocks cannot have a flow command.`));
+    }).toThrow(new Error(`A non-final block in a sequence of blocks cannot have a flow command.`));
 });
 
 test("CodeParser doesn't throw an error if the final block has a flow command", () => {
@@ -325,7 +325,7 @@ test("CodeParser throws an error if a non-final if body block has a flow command
 
     expect(() => {
         codeValidator.visit(nonFinalIfFlowProgram);
-    }).toThrow(new Error(`Ln 7:9, Col 13:17- A non-final block in a sequence of blocks cannot have a flow command.`));
+    }).toThrow(new Error(`A non-final block in a sequence of blocks cannot have a flow command.`));
 });
 
 test("CodeParser doesn't throw an error if the final if body block has a flow command", () => {
@@ -355,7 +355,7 @@ test("CodeParser throws an error for an invalid letter in a changeto command", (
 
     expect(() => {
         codeValidator.visit(changeToInvalidProgram);
-    }).toThrow(new Error(`Ln 3:4, Col 5:15- The letter "x" is not part of the alphabet.`));
+    }).toThrow(new Error(`The letter "x" is not part of the alphabet.`));
 });
 
 test("CodeParser doesn't throw an error for \"changeto blank\" command", () => {
@@ -385,7 +385,7 @@ test("CodeValidator throws an error if there are two modules with the same name.
 
     expect(() => {
         codeValidator.visit(duplicateModulesProgram);
-    }).toThrow(new Error(`Ln 5:8, Col 1:2- Duplicate module with name "a".`));
+    }).toThrow(new Error(`Duplicate module with name "a".`));
 });
 
 test("CodeValidator throws an error if a switch block is not a final block", () => {
@@ -395,7 +395,7 @@ test("CodeValidator throws an error if a switch block is not a final block", () 
 
     expect(() => {
         codeValidator.visit(nonFinalSwitchBlockProgram);
-    }).toThrow(new Error(`Ln 3:8, Col 5:6- A non-final block in a sequence of blocks cannot be a switch block.`));
+    }).toThrow(new Error(`A non-final block in a sequence of blocks cannot be a switch block.`));
 });
 
 test("CodeValidator throws an error if there is a module called accept", () => {
@@ -405,7 +405,7 @@ test("CodeValidator throws an error if there is a module called accept", () => {
 
     expect(() => {
         codeValidator.visit(moduleCalledAcceptProgram);
-    }).toThrow(new Error(`Ln 2:5, Col 1:2- A module cannot be called "accept".`));
+    }).toThrow(new Error(`A module cannot be called "accept".`));
 });
 
 test("CodeValidator throws an error if there is a module called reject", () => {
@@ -415,7 +415,7 @@ test("CodeValidator throws an error if there is a module called reject", () => {
 
     expect(() => {
         codeValidator.visit(moduleCalledRejectProgram);
-    }).toThrow(new Error(`Ln 2:5, Col 1:2- A module cannot be called "reject".`));
+    }).toThrow(new Error(`A module cannot be called "reject".`));
 });
 
 test("CodeValidator throws an error if the first block within an if block is a switch block", () => {
@@ -425,7 +425,7 @@ test("CodeValidator throws an error if the first block within an if block is a s
 
     expect(() => {
         codeValidator.visit(firstIfBlockSwitchProgram);
-    }).toThrow(new Error(`Ln 5:12, Col 13:14- The first block within an if case cannot be a switch block.`));
+    }).toThrow(new Error(`The first block within an if case cannot be a switch block.`));
 });
 
 test("CodeValidator doesn't throw an error in a valid program", () => {

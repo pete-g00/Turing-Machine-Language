@@ -1,23 +1,12 @@
 import { TerminationState } from "./Context";
-import { TMTape } from "./TMTape";
+import { TapeExecutor } from "./TapeExecutor";
 import { TMChange, TuringMachine } from "./TuringMachine";
 
-export class TMExecutor {
+export class TMExecutor extends TapeExecutor {
     private _currentState:string;
     private _turingMachine:TuringMachine;
     private _terminationStatus:TerminationState | undefined;
 
-    /**
-     * The tape being executed.
-     * 
-     */
-    public readonly tape:TMTape;
-    
-     /**
-      * The termination status of the execution.
-      * 
-      * @returns undefined if the execution has not finished; otherwise, the termination status (accept or reject).
-      */
     public get terminationStatus(): TerminationState | undefined {
         return this._terminationStatus;
     }
@@ -27,8 +16,7 @@ export class TMExecutor {
      */
     public get currentState(): string {
         return this._currentState;
-    }
-    
+    }    
     
     /**
      * Constructs an executor for the given Turing machine and the tape.
@@ -37,7 +25,7 @@ export class TMExecutor {
      * @param turingMachine the Turing machine
      */
     public constructor(value:string, turingMachine:TuringMachine) {
-        this.tape = new TMTape(value);
+        super(value);
         this._turingMachine = turingMachine;
         this._currentState = turingMachine.initialState;
     }
@@ -47,13 +35,6 @@ export class TMExecutor {
         this.tape.move(change.direction);
     }
     
-    /**
-     * Executes on the tape by one step.
-     * 
-     * Changes the tape as determined by the current configuration.
-     * 
-     * @returns false if the execution has terminated; true otherwise.
-     */
     public execute():boolean {
         if (this.terminationStatus !== undefined) {
             return false;

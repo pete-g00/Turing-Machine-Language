@@ -1,6 +1,6 @@
 import { BaseVisitor } from "./BaseVisitor";
+import { CodeError } from "./CodeError";
 import { ProgramContext, AlphabetContext, ModuleContext, BasicBlockContext, CoreBasicBlockContext, SwitchBlockContext, IfCaseContext, WhileCaseContext, ChangeToContext, GoToContext, BlockContext } from "./Context";
-
 
 /**
  * `CodeValidator` ensures that the parsed TM program is valid by performing multiple checks on it.
@@ -48,10 +48,10 @@ export class CodeValidator extends BaseVisitor<boolean> {
     private _addModuleNames(program: ProgramContext): void {
         for (const module of program.modules) {
             if (module.identifier === "accept" || module.identifier === "reject") {
-                throw new Error(`${module.position}- A module cannot be called "${module.identifier}".`);
+                throw new CodeError(module.position, `A module cannot be called "${module.identifier}".`);
             }
             if (this._moduleNames.has(module.identifier)) {
-                throw new Error(`${module.position}- Duplicate module with name "${module.identifier}".`);
+                throw new CodeError(module.position, `Duplicate module with name "${module.identifier}".`);
             }
             this._moduleNames.add(module.identifier);
         }
@@ -85,15 +85,15 @@ export class CodeValidator extends BaseVisitor<boolean> {
         let hasSwitch = false;
         for (let i = 0; i < blocks.length; i++) {
             if (hasSwitch) {
-                throw new Error(`${blocks[i-1].position}- A non-final block in a sequence of blocks cannot be a switch block.`);
+                throw new CodeError(blocks[i-1].position, `A non-final block in a sequence of blocks cannot be a switch block.`);
             }
             if (hasFlow) {
-                throw new Error(`${blocks[i-1].position}- A non-final block in a sequence of blocks cannot have a flow command.`);
+                throw new CodeError(blocks[i-1].position, `A non-final block in a sequence of blocks cannot have a flow command.`);
             } 
 
             if (blocks[i] instanceof SwitchBlockContext) {
                 if (isIfBlock && i === 0) {
-                    throw new Error(`${blocks[i].position}- The first block within an if case cannot be a switch block.`);
+                    throw new CodeError(blocks[i].position, `The first block within an if case cannot be a switch block.`);
                 }
                 hasSwitch = true;
             }
@@ -139,9 +139,9 @@ export class CodeValidator extends BaseVisitor<boolean> {
         for (const switchCase of block.cases) {
             switchCase.values.forEach((letter) => {
                 if (caseSet.has(letter)) {
-                    throw new Error(`${block.position}- Multiple cases present for letter "${letter}".`);
+                    throw new CodeError(block.position, `Multiple cases present for letter "${letter}".`);
                 } else if (letter !== "" && !this._alphabet!.has(letter)) {
-                    throw new Error(`${switchCase.position}- The letter "${letter}" is not part of the alphabet.`);
+                    throw new CodeError(switchCase.position, `The letter "${letter}" is not part of the alphabet.`);
                 }
                 caseSet.add(letter);
             });
@@ -152,7 +152,7 @@ export class CodeValidator extends BaseVisitor<boolean> {
         }
 
         if (caseSet.size != this._alphabet!.size+1) {
-            throw new Error(`${block.position}- The switch block doesn't have a case for each letter in the alphabet.`);
+            throw new CodeError(block.position, `The switch block doesn't have a case for each letter in the alphabet.`);
         }
         
         return hasFlow;
@@ -170,7 +170,7 @@ export class CodeValidator extends BaseVisitor<boolean> {
 
     public visitChangeTo(command: ChangeToContext): boolean {
         if (command.value != "" && !this._alphabet!.has(command.value)) {
-            throw new Error(`${command.position}- The letter "${command.value}" is not part of the alphabet.`);
+            throw new CodeError(command.position, `The letter "${command.value}" is not part of the alphabet.`);
         }
         
         return false;
@@ -182,7 +182,7 @@ export class CodeValidator extends BaseVisitor<boolean> {
 
     public visitGoTo(command: GoToContext): boolean {
         if (!this._moduleNames.has(command.identifier)) {
-            throw new Error(`${command.position}- Undefined module "${command.identifier}".`);
+            throw new CodeError(command.position, `Undefined module "${command.identifier}".`);
         }
         
         return true;
