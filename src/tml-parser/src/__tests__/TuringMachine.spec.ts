@@ -15,6 +15,12 @@ test("TMState cannot transition for the terminating state accept", () => {
     }).toThrowError(new Error("Cannot transition from a termination state."));
 });
 
+test("TMState cannot get transitions for the terminating state accept", () => {
+    expect(() => {
+        acceptState.transitions;
+    }).toThrowError(new Error("Cannot transition from a termination state."));
+});
+
 test("ConstantTMState returns the alphabet given", () => {
     const change:IncompleteTMChange = {
         nextState: "q1",
@@ -67,17 +73,30 @@ test("ConstantTMState returns the provided letter in the TMChange when the chang
     });
 });
 
-const transitionMap = new Map<string, IncompleteTMChange>();
-transitionMap.set("a", {nextState: "q1"});
-transitionMap.set("b", {
+test("ConstantTMState returns the correct state transitions.", () => {
+    const change:IncompleteTMChange = {
+        nextState: "q1"
+    };
+    const state = new ConstantTMState("q0", alphabet, change);
+    expect(state.transitions.length).toBe(1);
+    const transition = state.transitions[0];
+    
+    expect(transition.currentState).toBe('q0');
+    expect(transition.nextState).toBe('q1');
+    expect(transition.letters).toEqual(['a', 'b', '']);
+    expect(transition.label).toBe("a|b|#, L");
+});
+
+const variableState = new VariableTMState("q0");
+variableState.addTransition("a", {nextState: "q1"});
+variableState.addTransition("b", {
     nextState: "q1",
     direction: Direction.RIGHT
 });
-transitionMap.set("", {
+variableState.addTransition("", {
     nextState: "q2",
     letter: "b"
 });
-const variableState = new VariableTMState("q0", transitionMap);
 
 test("VariableTMState returns the expected transition value, for a letter in the alphabet", () => {
     expect(variableState.transition("a")).toEqual({
@@ -103,6 +122,16 @@ test("VariableTMState returns the expected alphabet", () => {
 
 test("VariableTMState returns undefined as the transition value for a letter not present in the alphabet", () => {
     expect(variableState.transition("x")).toBeUndefined();
+});
+
+test("VariableTMState returns the correct state transitions.", () => {
+    expect(variableState.transitions.length).toBe(3);
+    const transition = variableState.transitions[2];
+
+    expect(transition.currentState).toBe('q0');
+    expect(transition.nextState).toBe('q2');
+    expect(transition.letters).toEqual(['']);
+    expect(transition.label).toBe("#→b, L");
 });
 
 const q0 = new ConstantTMState("q0", alphabet, {nextState: "q1"});

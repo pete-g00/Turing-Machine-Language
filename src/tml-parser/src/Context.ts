@@ -1,10 +1,13 @@
-import { BaseVisitor } from "./BaseVisitor";
+import { CodeConverter } from "./CodeConverter";
 import { CodePosition } from "./CodePosition";
+import { CodeValidator } from "./CodeValidator";
 
 /**
  * The class `Context` is the base abstract class for all the other contexts.
  * 
- * Every context instance has a position to represent whether the code block is positioned in code (for error messages), and an accept method for any visitors.
+ * Every context instance has a position to represent whether the code block is positioned in code (for error messages).
+ * 
+ * Many context subclasses have visitor methods to enable double dispatch.
  */
 export abstract class Context {
     
@@ -18,13 +21,6 @@ export abstract class Context {
     public constructor(position:CodePosition) {
         this.position = position;
     }
-
-    /**
-     * Accepts the visitor and runs the relevant visitor method with respect to the context instance.
-     * 
-     * @param visitor the visitor to accept
-     */
-    public abstract accept<T>(visitor:BaseVisitor<T>): T;
 }
 
 /**
@@ -39,7 +35,11 @@ export abstract class CommandContext extends Context { }
  * 
  * It is solely used for grouping and requires no additional functionality.
  */
-export abstract class FlowChangeContext extends CommandContext { }
+export abstract class FlowChangeContext extends CommandContext { 
+    public abstract validate(validator:CodeValidator): void;
+
+    public abstract convert(converter:CodeConverter): string;
+}
 
 /**
  * The termination states for a program
@@ -48,12 +48,12 @@ export enum TerminationState {
     /**
      * The termination state reject
      */
-    REJECT,
+    REJECT = "reject",
 
     /**
      * The termination state accept
      */
-    ACCEPT
+    ACCEPT = "accept"
 }
 
 /**
@@ -71,8 +71,11 @@ export class TerminationContext extends FlowChangeContext {
         this.state = state;
     }
 
-    public accept<T>(visitor: BaseVisitor<T>): T {
-        return visitor.visitTermination(this);
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    public validate(): void {}
+
+    public convert(converter: CodeConverter): string {
+        return converter.convertTermination(this);
     }
 }
 
@@ -90,8 +93,12 @@ export class GoToContext extends FlowChangeContext {
         this.identifier = identifier;
     }
 
-    public accept<T>(visitor: BaseVisitor<T>): T {
-        return visitor.visitGoTo(this);
+    public validate(validator:CodeValidator) {
+        validator.validateGoTo(this);
+    }
+
+    public convert(converter: CodeConverter): string {
+        return converter.convertGoTo(this);
     }
 }
 
@@ -109,12 +116,12 @@ export enum Direction {
     /**
      * The move direction left
      */
-    LEFT,
+    LEFT = "L",
 
     /**
      * The move direction right
      */
-    RIGHT
+    RIGHT = "R"
 }
 
 /**
@@ -129,10 +136,6 @@ export class MoveContext extends CoreCommandContext {
     public constructor(position:CodePosition, direction:Direction) {
         super(position);
         this.direction = direction;
-    }
-
-    public accept<T>(visitor: BaseVisitor<T>): T {
-        return visitor.visitMove(this);
     }
 }
 
@@ -150,8 +153,8 @@ export class ChangeToContext extends CoreCommandContext {
         this.value = value;
     }
 
-    public accept<T>(visitor: BaseVisitor<T>): T {
-        return visitor.visitChangeTo(this);
+    public validate(validator:CodeValidator):void {
+        validator.validateChangeTo(this);
     }
 }
 
@@ -160,7 +163,9 @@ export class ChangeToContext extends CoreCommandContext {
  * 
  * It is solely used for grouping and requires no additional functionality.
  */
- export abstract class BlockContext extends CommandContext {}
+export abstract class BlockContext extends Context {
+    public abstract validate(validator:CodeValidator): boolean;
+}
 
 /**
  * The class `CoreBasicBlockContext` is the class used to represent core (basic) blocks.
@@ -175,7 +180,6 @@ export class ChangeToContext extends CoreCommandContext {
      */
     public readonly changeToCommand:ChangeToContext|undefined;
 
-
     /**
      * The *move* command in the block.
      * 
@@ -189,8 +193,12 @@ export class ChangeToContext extends CoreCommandContext {
         this.moveCommand = moveCommand;
     }
 
-    public accept<T>(visitor: BaseVisitor<T>): T {
-        return visitor.visitCoreBlock(this);
+    public validate(validator: CodeValidator): boolean {
+        return validator.validateCoreBlock(this);
+    }
+
+    public getNextLabel(label:string, converter:CodeConverter): string {
+        return converter.getNextLabelFromCoreBasicBlock(label);
     }
 }
 /**
@@ -198,8 +206,9 @@ export class ChangeToContext extends CoreCommandContext {
  * 
  * It is solely used for grouping and requires no additional functionality.
  */
- export abstract class NormalBlockContext extends BlockContext {}
-
+ export abstract class NormalBlockContext extends BlockContext {
+    public abstract convert(converter:CodeConverter): void;
+ }
 
 /**
  * The class `BasicBlockContext` is the class used to represent basic blocks.
@@ -236,8 +245,16 @@ export class BasicBlockContext extends NormalBlockContext {
         this.flowCommand = flowCommand;
     }
 
-    public accept<T>(visitor: BaseVisitor<T>): T {
-        return visitor.visitBasicBlock(this);
+    public validate(validator:CodeValidator): boolean {
+        return validator.validateBasicBlock(this);
+    }
+
+    public convert(converter: CodeConverter): void {
+        converter.convertBasicBlock(this);
+    }
+
+    public getNextLabel(label:string, converter:CodeConverter): string {
+        return converter.getNextLabelFromBasicBlock(label, this);
     }
 }
 
@@ -256,6 +273,8 @@ export abstract class CaseContext extends NormalBlockContext {
         super(position);
         this.values = values;
     }
+
+    public abstract getFirstBlock(converter:CodeConverter):BasicBlockContext | CoreBasicBlockContext;
 }
 
 /**
@@ -274,8 +293,16 @@ export class IfCaseContext extends CaseContext {
         this.blocks = blocks;
     }
     
-    public accept<T>(visitor: BaseVisitor<T>): T {
-        return visitor.visitIf(this);
+    public validate(validator:CodeValidator): boolean {
+        return validator.validateIf(this);
+    }
+
+    public convert(converter: CodeConverter): void {
+        converter.convertIf(this);
+    }
+
+    public getFirstBlock(converter: CodeConverter): BasicBlockContext {
+        return converter.getFirstBlockFromIf(this);
     }
 }
 
@@ -295,8 +322,15 @@ export class WhileCaseContext extends CaseContext {
         this.block = block;
     }
     
-    public accept<T>(visitor: BaseVisitor<T>): T {
-        return visitor.visitWhile(this);
+    public validate(validator:CodeValidator) {
+        return validator.validateWhile(this);
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    public convert(): void {}
+
+    public getFirstBlock(converter: CodeConverter): CoreBasicBlockContext {
+        return converter.getFirstBlockFromWhile(this);
     }
 }
 
@@ -316,8 +350,12 @@ export class SwitchBlockContext extends BlockContext {
         this.cases = cases;
     }   
 
-    public accept<T>(visitor: BaseVisitor<T>): T {
-        return visitor.visitSwitchBlock(this);
+    public validate(validator:CodeValidator): boolean {
+        return validator.validateSwitchBlock(this);
+    }
+
+    public convert(converter:CodeConverter) {
+        converter.convertSwitchBlock(this);
     }
 }
 
@@ -335,7 +373,7 @@ export class ModuleContext extends Context {
     /**
      * The blocks present in the module
      */
-    public readonly blocks:BlockContext[];
+    public readonly blocks:NormalBlockContext[];
 
     public constructor(position:CodePosition, identifier:string, blocks:NormalBlockContext[]) {
         super(position);
@@ -343,8 +381,12 @@ export class ModuleContext extends Context {
         this.blocks = blocks;
     }
 
-    public accept<T>(visitor: BaseVisitor<T>): T {
-        return visitor.visitModule(this);
+    public validate(validator:CodeValidator) {
+        validator.validateModule(this);
+    }
+
+    public convert(converter:CodeConverter) {
+        converter.convertModule(this);
     }
 }
 
@@ -357,10 +399,6 @@ export class AlphabetContext extends Context {
      public constructor(position:CodePosition, alphabet:Set<string>) {
         super(position);
         this.values = alphabet;
-     }
-
-     public accept<T>(visitor: BaseVisitor<T>): T {
-        return visitor.visitAlphabet(this);
      }
 }
 
@@ -386,7 +424,11 @@ export class ProgramContext extends Context {
         this.modules = modules;
     }
 
-    public accept<T>(visitor: BaseVisitor<T>): T {
-        return visitor.visitProgram(this);
+    public validate(validator:CodeValidator) {
+        validator.validateProgram(this);
+    }
+
+    public convert(converter:CodeConverter) {
+        converter.convertProgram(this);
     }
 }

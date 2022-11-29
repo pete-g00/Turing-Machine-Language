@@ -1,11 +1,10 @@
-import { BaseVisitor } from "./BaseVisitor";
-import { ProgramContext, AlphabetContext, ModuleContext, BasicBlockContext, CoreBasicBlockContext, SwitchBlockContext, IfCaseContext, WhileCaseContext, GoToContext, TerminationContext, TerminationState } from "./Context";
+import { ProgramContext,ModuleContext, BasicBlockContext, CoreBasicBlockContext, SwitchBlockContext, IfCaseContext, WhileCaseContext, GoToContext, TerminationContext } from "./Context";
 import { ConstantTMState, TuringMachine, VariableTMState, IncompleteTMChange } from "./TuringMachine";
 
 /**
  * The class `CodeConverter` converts a valid TM program into a valid TM.
  */
-export class CodeConverter extends BaseVisitor<TuringMachine> {
+export class CodeConverter {
     // the TM being created
     private _turingMachine: TuringMachine;
 
@@ -21,58 +20,102 @@ export class CodeConverter extends BaseVisitor<TuringMachine> {
     // the alphabet of the TM
     private _alphabet:Set<string>|undefined;
 
+    // the program
+    private _program:ProgramContext;
+
     /**
      * Creates a `CodeConverter`.
      * 
      * The class `CodeConverter` converts a valid TM program into a valid TM.
      * 
      */
-    public constructor() {
-        super();
+    public constructor(program:ProgramContext) {
+        this._program = program;
         this._turingMachine = new TuringMachine();
-    }
 
-    public visitProgram(program: ProgramContext): TuringMachine {
-        this.visit(program.alphabet);
-
-        this._turingMachine.initialState = program.modules[0].identifier + "0";
-        for (const module of program.modules) {
-            this.visit(module);
-        }
-        return this._turingMachine;
-    }
-
-    public visitAlphabet(alphabet: AlphabetContext): TuringMachine {
-        this._turingMachine.alphabet = alphabet.values;
-        this._alphabet = alphabet.values;
-        return this._turingMachine;
+        this._turingMachine.alphabet = program.alphabet.values;
+        this._alphabet = program.alphabet.values;
+        
     }
     
-    public visitModule(module: ModuleContext): TuringMachine {
+    /**
+     * 
+     * Converts the program into a Turing Machine.
+     * 
+     * @returns the turing machine
+     */
+    public convert(): TuringMachine {
+        this._program.convert(this);
+
+        return this._turingMachine;
+    }
+
+    /**
+     * Converts the program into a Turing Machine.
+     * 
+     * @param program the program
+     */
+    public convertProgram(program: ProgramContext) {
+        this._turingMachine.initialState = program.modules[0].identifier + "0";
+        for (const module of program.modules) {
+            module.convert(this);
+        }
+    }
+    
+    /**
+     * Converts a module into states within the Turing Machine.
+     * 
+     * @param module the module
+     */
+    public convertModule(module: ModuleContext) {
         this._blockIndex = -1;
         for (let i = 0; i < module.blocks.length; i++) {
             this._moduleLabel = module.identifier;
             this._isLastBlock = i === module.blocks.length-1;
-            this.visit(module.blocks[i]);
+            module.blocks[i].convert(this);
         }
-        return this._turingMachine;
     }
 
-    private _getNextLabel(block: BasicBlockContext): string {
+    /**
+     * Retrieves the nextState from the goto command
+     * 
+     * @param command the command
+     * @returns the label of the nextState
+     */
+    public convertGoTo(command: GoToContext): string {
+        return command.identifier + "0";
+    }
+
+    /**
+     * Retrieves the nextState from the termination command
+     * 
+     * @param command the termination command
+     * @returns the label of the nextState
+     */
+    public convertTermination(command: TerminationContext): string {
+        return command.state.toString();
+    }
+
+    /**
+     * Gets the next label from a core basic block
+     * 
+     * @param currentLabel the current label 
+     * @returns the next label
+     */
+    public getNextLabelFromCoreBasicBlock(currentLabel:string): string {
+        return currentLabel;
+    }
+    
+    /**
+     * Gets the next label for a basic block
+     * 
+     * @param block the basic block
+     * @returns the next label
+     */
+    public getNextLabelFromBasicBlock(_:string, block: BasicBlockContext): string {
         let nextLabel:string;
         if (block.flowCommand) {
-            if (block.flowCommand instanceof GoToContext) {
-                nextLabel = (block.flowCommand as GoToContext).identifier + "0";
-            } else {
-                switch ((block.flowCommand as TerminationContext).state) {
-                    case TerminationState.ACCEPT:
-                        nextLabel = "accept";
-                        break;
-                    case TerminationState.REJECT:
-                        nextLabel = "reject";
-                        break;
-                }
-            }            
+            nextLabel = block.flowCommand.convert(this);
         } else if (!this._isLastBlock!) {
             nextLabel = this._moduleLabel! + (this._blockIndex!+1).toString();
         } else {
@@ -81,98 +124,82 @@ export class CodeConverter extends BaseVisitor<TuringMachine> {
         return nextLabel;
     }
 
+    // generates the change for a specific states
     private _getTMChange(currentLabel:string, block:BasicBlockContext | CoreBasicBlockContext) :IncompleteTMChange {
         const direction = block.moveCommand?.direction;
+        const nextState:string = block.getNextLabel(currentLabel, this);
+        const letter = block.changeToCommand?.value;
 
-        let nextState:string;
-        if (block instanceof CoreBasicBlockContext) {
-            nextState = currentLabel;
-        } else {
-            nextState = this._getNextLabel(block);
-        }
-
-        let letter:string|undefined;
-        if (block.changeToCommand) {
-            letter = block.changeToCommand.value;
-        }
-        
-        return {
-            nextState, 
-            letter,
-            direction
-        };
+        return { nextState, letter, direction };
     }
     
-    public visitBasicBlock(block: BasicBlockContext): TuringMachine {
-        this._blockIndex! ++;        
+    /**
+     * Converts a basic block into a state.
+     * 
+     * @param block the basic block
+     */
+    public convertBasicBlock(block: BasicBlockContext) {
+        this._blockIndex! ++;
         const currentLabel = this._moduleLabel! + this._blockIndex!;
 
-        const changer = this._getTMChange(currentLabel, block);
-        const state = new ConstantTMState(currentLabel, this._alphabet!, changer);
+        const change = this._getTMChange(currentLabel, block);
+        const state = new ConstantTMState(currentLabel, this._alphabet!, change);
         this._turingMachine.addState(state);
-
-        return this._turingMachine;
     }
     
-    public visitCoreBlock(): TuringMachine {
-        return this._turingMachine;
+    /**
+     * Gets the first block from a while case.
+     * 
+     * @param whileCase the while case
+     * @returns the first block
+     */
+    public getFirstBlockFromWhile(whileCase:WhileCaseContext): CoreBasicBlockContext {
+        return whileCase.block;
     }
-
-    private _getFirstBlock(ifCase:IfCaseContext):BasicBlockContext {
-        this._isLastBlock = ifCase.blocks.length == 1;
+    
+    /**
+     * Gets the first block from an if case.
+     * 
+     * @param ifCase the if case
+     * @returns the first block
+     */
+    public getFirstBlockFromIf(ifCase:IfCaseContext):BasicBlockContext {
+        this._isLastBlock = ifCase.blocks.length === 1;
         return ifCase.blocks[0] as BasicBlockContext;
     }
 
-    public visitSwitchBlock(block: SwitchBlockContext): TuringMachine {
+    /**
+     * Converts a switch block into a state.
+     * 
+     * @param block the switch block
+     */
+    public convertSwitchBlock(block: SwitchBlockContext) {
         this._blockIndex! ++;
         const currentLabel = this._moduleLabel! + this._blockIndex!;
-        const transitionMap = new Map<string, IncompleteTMChange>();
         
-        const state = new VariableTMState(currentLabel, transitionMap);
+        const state = new VariableTMState(currentLabel);
         this._turingMachine.addState(state);
         
         let blockToConsider:BasicBlockContext | CoreBasicBlockContext;
         for (const switchCase of block.cases) {
-            if (switchCase instanceof WhileCaseContext) {
-                blockToConsider = switchCase.block;
-            } else {
-                blockToConsider = this._getFirstBlock(switchCase as IfCaseContext);
-            }
+            blockToConsider = switchCase.getFirstBlock(this);
             const change = this._getTMChange(currentLabel, blockToConsider);
             switchCase.values.forEach((value) => {
-                transitionMap.set(value, change);
+                state.addTransition(value, change);
             });
-            this.visit(switchCase);
+            switchCase.convert(this);
         }
-
-        return this._turingMachine;
     }
     
-    public visitIf(block: IfCaseContext): TuringMachine {
+    /**
+     * Converts an if block into states.
+     * 
+     * @param block the if block
+     */
+    public convertIf(block: IfCaseContext) {
         for (let i = 1; i < block.blocks.length; i++) {
             this._isLastBlock = i === block.blocks.length-1;
-            this.visit(block.blocks[i]);
+            block.blocks[i].convert(this);
         }
-        return this._turingMachine;
-    }
-    
-    public visitWhile(): TuringMachine {
-        return this._turingMachine;
-    }
-    
-    public visitChangeTo(): TuringMachine {
-        return this._turingMachine;
-    }
-    
-    public visitMove(): TuringMachine {
-        return this._turingMachine;
-    }
-    
-    public visitGoTo(): TuringMachine {
-        return this._turingMachine;
-    }
-    
-    public visitTermination(): TuringMachine {
-        return this._turingMachine;
     }
 }

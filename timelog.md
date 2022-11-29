@@ -140,7 +140,21 @@
 
 ### 22 Nov 2022
 
-* *1.5 hour* Created the class `TMExecutor`- a class to execute a tape on some TM, one step at a time.
-* *1.5 hour* Created tests for `TMExecutor`.
+* *1.5 hours* Created the class `TMExecutor`- a class to execute a tape on some TM, one step at a time.
+* *1.5 hours* Created tests for `TMExecutor`.
 * *0.5 hours* Added more documentation comments to the typescript files.
 * *1 hour* Added comment parsing
+
+### 23 Nov 2022
+
+* *1.5 hours* Created the class `CodeExecutor`- a class to execute a tape on some TM program, one step at a time.
+* *1 hour* Created tests for `CodeExecutor`.
+* *1 hour* Added the class `CodeError` for errors in code and changed the tests/syntax for parser errors
+* *0.5 hours* Added agenda for this week's work.
+
+## Week 11
+
+### 29 Nov 2022
+
+* *1.5 hours* Made use of the pedantic linter.
+* *1.5 hours* Updated the visitor methods- Part II is completed now!

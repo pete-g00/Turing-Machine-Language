@@ -210,80 +210,80 @@ module isDiv2 {
 test("CodeValidator does not throw an error in a valid program with a goto command", () => {
     const goToValidParser = new CodeParser(goToValid);
     const goToValidProgram = goToValidParser.parse();
-    const codeValidator = new CodeValidator();
+    const codeValidator = new CodeValidator(goToValidProgram);
 
     expect(() => {
-        codeValidator.visit(goToValidProgram);
+        codeValidator.validate();
     }).not.toThrow();
 });
 
 test("CodeValidator throws an error if there is an invalid goto reference", () => {
     const goToInvalidParser = new CodeParser(goToInvalid);
     const goToInvalidProgram = goToInvalidParser.parse();
-    const codeValidator = new CodeValidator();
+    const codeValidator = new CodeValidator(goToInvalidProgram);
 
     expect(() => {
-        codeValidator.visit(goToInvalidProgram);
+        codeValidator.validate();
     }).toThrow(new Error(`Undefined module "b".`));
 });
 
 test("CodeValidator does not throw an error if there is a recursive goto reference", () => {
     const goToRecursiveParser = new CodeParser(goToRecursive);
     const goToRecursiveProgram = goToRecursiveParser.parse();
-    const codeValidator = new CodeValidator();
+    const codeValidator = new CodeValidator(goToRecursiveProgram);
 
     expect(() => {
-        codeValidator.visit(goToRecursiveProgram);
+        codeValidator.validate();
     }).not.toThrow();
 });
 
 test("CodeValidator throws an error if there is a switch case with a letter not present in the alphabet", () => {
     const switchInvalidParser = new CodeParser(switchInvalid);
     const switchInvalidProgram = switchInvalidParser.parse();
-    const codeValidator = new CodeValidator();
+    const codeValidator = new CodeValidator(switchInvalidProgram);
 
     expect(() => {
-        codeValidator.visit(switchInvalidProgram);
+        codeValidator.validate();
     }).toThrow(new Error(`The letter "x" is not part of the alphabet.`));
 });
 
 test("CodeValidator throws an error if there are multiple switch cases applying to the same letter", () => {
     const switchDuplicateParser = new CodeParser(switchDuplicate);
     const switchDuplicateProgram = switchDuplicateParser.parse();
-    const codeValidator = new CodeValidator();
+    const codeValidator = new CodeValidator(switchDuplicateProgram);
 
     expect(() => {
-        codeValidator.visit(switchDuplicateProgram);
+        codeValidator.validate();
     }).toThrow(new Error(`Multiple cases present for letter "a".`));
 });
 
 test("CodeValidator throws an error if there is no switch case applying to a letter in the alphabet", () => {
     const switchIncompleteParser = new CodeParser(switchIncomplete);
     const switchIncompleteProgram = switchIncompleteParser.parse();
-    const codeValidator = new CodeValidator();
+    const codeValidator = new CodeValidator(switchIncompleteProgram);
 
     expect(() => {
-        codeValidator.visit(switchIncompleteProgram);
+        codeValidator.validate();
     }).toThrow(new Error(`The switch block doesn't have a case for each letter in the alphabet.`));
 });
 
 test("CodeValidator throws an error if there is no switch case applying to blank", () => {
     const switchMissingBlankParser = new CodeParser(switchMissingBlank);
     const switchMissingBlankProgram = switchMissingBlankParser.parse();
-    const codeValidator = new CodeValidator();
+    const codeValidator = new CodeValidator(switchMissingBlankProgram);
 
     expect(() => {
-        codeValidator.visit(switchMissingBlankProgram);
+        codeValidator.validate();
     }).toThrow(new Error(`The switch block doesn't have a case for each letter in the alphabet.`));
 });
 
 test("CodeValidator doesn't throw an error for a valid switch block", () => {
     const validSwitchParser = new CodeParser(validSwitch);
     const validSwitchProgram = validSwitchParser.parse();
-    const codeValidator = new CodeValidator();
+    const codeValidator = new CodeValidator(validSwitchProgram);
 
     expect(() => {
-        codeValidator.visit(validSwitchProgram);
+        codeValidator.validate();
     }).not.toThrow();
 });
 
@@ -291,149 +291,149 @@ test("CodeValidator doesn't throw an error for a valid switch block", () => {
 test("CodeParser throws an error if the non-final block has a flow command", () => {
     const nonFinalModuleFlowParser = new CodeParser(nonFinalModuleFlow);
     const nonFinalModuleFlowProgram = nonFinalModuleFlowParser.parse();
-    const codeValidator = new CodeValidator();
+    const codeValidator = new CodeValidator(nonFinalModuleFlowProgram);
 
     expect(() => {
-        codeValidator.visit(nonFinalModuleFlowProgram);
+        codeValidator.validate();
     }).toThrow(new Error(`A non-final block in a sequence of blocks cannot have a flow command.`));
 });
 
 test("CodeParser doesn't throw an error if the final block has a flow command", () => {
     const finalModuleFlowParser = new CodeParser(finalModuleFlow);
     const finalModuleFlowProgram = finalModuleFlowParser.parse();
-    const codeValidator = new CodeValidator();
+    const codeValidator = new CodeValidator(finalModuleFlowProgram);
 
     expect(() => {
-        codeValidator.visit(finalModuleFlowProgram);
+        codeValidator.validate();
     }).not.toThrow();
 });
 
 test("CodeParser doesn't throw an error if there are no flow commands present in a module", () => {
     const noFlowModuleParser = new CodeParser(noFlowModule);
     const noFlowModuleProgram = noFlowModuleParser.parse();
-    const codeValidator = new CodeValidator();
+    const codeValidator = new CodeValidator(noFlowModuleProgram);
 
     expect(() => {
-        codeValidator.visit(noFlowModuleProgram);
+        codeValidator.validate();
     }).not.toThrow();
 });
 
 test("CodeParser throws an error if a non-final if body block has a flow command", () => {
     const nonFinalIfFlowParser = new CodeParser(nonFinalIfFlow);
     const nonFinalIfFlowProgram = nonFinalIfFlowParser.parse();
-    const codeValidator = new CodeValidator();
+    const codeValidator = new CodeValidator(nonFinalIfFlowProgram);
 
     expect(() => {
-        codeValidator.visit(nonFinalIfFlowProgram);
+        codeValidator.validate();
     }).toThrow(new Error(`A non-final block in a sequence of blocks cannot have a flow command.`));
 });
 
 test("CodeParser doesn't throw an error if the final if body block has a flow command", () => {
     const finalIfFlowParser = new CodeParser(finalIfFlow);
     const finalIfFlowProgram = finalIfFlowParser.parse();
-    const codeValidator = new CodeValidator();
+    const codeValidator = new CodeValidator(finalIfFlowProgram);
 
     expect(() => {
-        codeValidator.visit(finalIfFlowProgram);
+        codeValidator.validate();
     }).not.toThrow();
 });
 
 test("CodeParser doesn't throw an error if the if block has no flow command", () => {
     const noFlowIfParser = new CodeParser(noFlowIf);
     const noFlowIfProgram = noFlowIfParser.parse();
-    const codeValidator = new CodeValidator();
+    const codeValidator = new CodeValidator(noFlowIfProgram);
 
     expect(() => {
-        codeValidator.visit(noFlowIfProgram);
+        codeValidator.validate();
     }).not.toThrow();
 });
 
 test("CodeParser throws an error for an invalid letter in a changeto command", () => {
     const changeToInvalidParser = new CodeParser(changeToInvalid);
     const changeToInvalidProgram = changeToInvalidParser.parse();
-    const codeValidator = new CodeValidator();
+    const codeValidator = new CodeValidator(changeToInvalidProgram);
 
     expect(() => {
-        codeValidator.visit(changeToInvalidProgram);
+        codeValidator.validate();
     }).toThrow(new Error(`The letter "x" is not part of the alphabet.`));
 });
 
 test("CodeParser doesn't throw an error for \"changeto blank\" command", () => {
     const changeToBlankParser = new CodeParser(changeToBlank);
     const changeToBlankProgram = changeToBlankParser.parse();
-    const codeValidator = new CodeValidator();
+    const codeValidator = new CodeValidator(changeToBlankProgram);
 
     expect(() => {
-        codeValidator.visit(changeToBlankProgram);
+        codeValidator.validate();
     }).not.toThrow();
 });
 
 test("CodeParser doesn't throw an error for a changeto command with a valid letter from the alphabet", () => {
     const changeToValidParser = new CodeParser(changeToValid);
     const changeToValidProgram = changeToValidParser.parse();
-    const codeValidator = new CodeValidator();
+    const codeValidator = new CodeValidator(changeToValidProgram);
 
     expect(() => {
-        codeValidator.visit(changeToValidProgram);
+        codeValidator.validate();
     }).not.toThrow();
 });
 
 test("CodeValidator throws an error if there are two modules with the same name.", () => {
     const duplicateModulesParser = new CodeParser(duplicateModules);
     const duplicateModulesProgram = duplicateModulesParser.parse();
-    const codeValidator = new CodeValidator();
+    const codeValidator = new CodeValidator(duplicateModulesProgram);
 
     expect(() => {
-        codeValidator.visit(duplicateModulesProgram);
+        codeValidator.validate();
     }).toThrow(new Error(`Duplicate module with name "a".`));
 });
 
 test("CodeValidator throws an error if a switch block is not a final block", () => {
     const nonFinalSwitchBlockParser = new CodeParser(nonFinalSwitchBlock);
     const nonFinalSwitchBlockProgram = nonFinalSwitchBlockParser.parse();
-    const codeValidator = new CodeValidator();
+    const codeValidator = new CodeValidator(nonFinalSwitchBlockProgram);
 
     expect(() => {
-        codeValidator.visit(nonFinalSwitchBlockProgram);
+        codeValidator.validate();
     }).toThrow(new Error(`A non-final block in a sequence of blocks cannot be a switch block.`));
 });
 
 test("CodeValidator throws an error if there is a module called accept", () => {
     const moduleCalledAcceptParser = new CodeParser(moduleCalledAccept);
     const moduleCalledAcceptProgram = moduleCalledAcceptParser.parse();
-    const codeValidator = new CodeValidator();
+    const codeValidator = new CodeValidator(moduleCalledAcceptProgram);
 
     expect(() => {
-        codeValidator.visit(moduleCalledAcceptProgram);
+        codeValidator.validate();
     }).toThrow(new Error(`A module cannot be called "accept".`));
 });
 
 test("CodeValidator throws an error if there is a module called reject", () => {
     const moduleCalledRejectParser = new CodeParser(moduleCalledReject);
     const moduleCalledRejectProgram = moduleCalledRejectParser.parse();
-    const codeValidator = new CodeValidator();
+    const codeValidator = new CodeValidator(moduleCalledRejectProgram);
 
     expect(() => {
-        codeValidator.visit(moduleCalledRejectProgram);
+        codeValidator.validate();
     }).toThrow(new Error(`A module cannot be called "reject".`));
 });
 
 test("CodeValidator throws an error if the first block within an if block is a switch block", () => {
     const firstIfBlockSwitchParser = new CodeParser(firstIfBlockSwitch);
     const firstIfBlockSwitchProgram = firstIfBlockSwitchParser.parse();
-    const codeValidator = new CodeValidator();
+    const codeValidator = new CodeValidator(firstIfBlockSwitchProgram);
 
     expect(() => {
-        codeValidator.visit(firstIfBlockSwitchProgram);
+        codeValidator.validate();
     }).toThrow(new Error(`The first block within an if case cannot be a switch block.`));
 });
 
 test("CodeValidator doesn't throw an error in a valid program", () => {
     const validProgramParser = new CodeParser(validProgram);
     const validProgramProgram = validProgramParser.parse();
-    const codeValidator = new CodeValidator();
+    const codeValidator = new CodeValidator(validProgramProgram);
 
     expect(() => {
-        codeValidator.visit(validProgramProgram);
+        codeValidator.validate();
     }).not.toThrow();
 });

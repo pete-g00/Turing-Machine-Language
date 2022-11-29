@@ -29,6 +29,28 @@ export interface IncompleteTMChange {
     nextState:string;    
 }
 
+export interface TransitionData {
+    /**
+     * The letters involved in the transition.
+     */
+    letters:string[];
+    
+    /**
+     * The label for this transition.
+     */
+    label:string;
+
+    /**
+     * The next state label for this transition.
+     */
+    nextState:string;
+    
+    /**
+     * The current state label for this transition.
+     */
+    currentState:string;
+}
+
 /**
  * 
  * Completes an incomplete TM change to a complete TM change by filling in the defaults.
@@ -56,6 +78,16 @@ export interface TMChange extends IncompleteTMChange {
     direction:Direction;
  
     nextState:string; 
+}
+
+function generateLabel(change:IncompleteTMChange, letters:string[]) {
+    const source = letters.map((letter) => letter === "" ? "#" : letter).join("|");
+    const dir = change.direction ?? Direction.LEFT;
+    if (change.letter) {
+        return source + "→" + change.letter + ", "+ dir;
+    } else {
+        return source + ", " + dir;
+    }
 }
 
 /**
@@ -88,6 +120,11 @@ export abstract class TMState {
      * undefined if the letter doesn't belong to the alphabet
      */
     public abstract transition(letter:string):TMChange|undefined;
+
+    /**
+     * Returns all the transitions present in the TM state.
+     */
+    public abstract get transitions():TransitionData[];
 }
 
 export class TerminationTMState extends TMState {
@@ -99,6 +136,10 @@ export class TerminationTMState extends TMState {
     }
 
     public transition(): TMChange | undefined {
+        throw Error("Cannot transition from a termination state.");
+    }
+
+    public get transitions(): TransitionData[] {
         throw Error("Cannot transition from a termination state.");
     }
 
@@ -116,12 +157,12 @@ export class TerminationTMState extends TMState {
 }
 
 export class ConstantTMState extends TMState {
-    private _changer:IncompleteTMChange;
+    private _change:IncompleteTMChange;
     private _alphabet:Set<string>;
 
-    public constructor(label:string, alphabet:Set<string>, changer:IncompleteTMChange) {
+    public constructor(label:string, alphabet:Set<string>, change:IncompleteTMChange) {
         super(label);
-        this._changer = changer;
+        this._change = change;
         this._alphabet = alphabet;
     }
 
@@ -131,36 +172,79 @@ export class ConstantTMState extends TMState {
 
     public transition(letter: string): TMChange | undefined {
         return this.alphabet.has(letter) || letter === "" ? 
-            completeChange(this._changer, letter) :
+            completeChange(this._change, letter) :
             undefined;
+    }
+
+    public get transitions(): TransitionData[] {
+        const letters = [...Array.from(this._alphabet), ""];
+        return [{
+            letters,
+            label: generateLabel(this._change, letters),
+            nextState: this._change.nextState,
+            currentState: this.label,
+        }];
     }
 }
 
 export class VariableTMState extends TMState {
-    private _transitionMap:Map<string, IncompleteTMChange>;
+    private _transitionIndexMap:Map<string, number>;
+    private _changes:IncompleteTMChange[];
 
     /**
      * Constructs a `TMState` given the transition map corresponding to the state.
      * 
-     * @param transitionMap the transition map for a state
      * @param label the label for the state
      */
-    public constructor(label:string, transitionMap:Map<string, IncompleteTMChange>) {
+    public constructor(label:string) {
         super(label);
-        this._transitionMap = transitionMap;
+        this._transitionIndexMap = new Map<string, number>();
+        this._changes = [];
+    }
+
+    public addTransition(letter:string, change:IncompleteTMChange) {
+        const i = this._changes.indexOf(change);
+        if (i === -1) {
+            this._transitionIndexMap.set(letter, this._changes.length);
+            this._changes.push(change);
+        } else {
+            this._transitionIndexMap.set(letter, i);
+        }
     }
 
     public get alphabet(): Set<string> {
-        return new Set(this._transitionMap.keys());
+        return new Set(this._transitionIndexMap.keys());
     }
 
     public transition(letter:string) :TMChange|undefined {
-        const changer = this._transitionMap.get(letter);
-        if (changer) {
-            return completeChange(changer, letter);
+        const i = this._transitionIndexMap.get(letter);
+        if (i !== undefined) {
+            const change = this._changes[i];
+            return completeChange(change, letter);
         } else {
             return undefined;
         }
+    }
+
+    public get transitions(): TransitionData[] {
+        const labels:TransitionData[] = [];
+        for (let i = 0; i < this._changes.length; i++) {
+            const letters:string[] = [];
+            this._transitionIndexMap.forEach((value, key) => {
+                if (value === i) {
+                    letters.push(key);
+                }
+            });
+            const label = generateLabel(this._changes[i], letters);
+            labels.push({
+                label,
+                letters,
+                nextState: this._changes[i].nextState,
+                currentState: this.label
+            });
+        }
+
+        return labels;
     }
 }
 

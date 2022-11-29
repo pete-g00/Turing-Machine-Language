@@ -94,8 +94,8 @@ module simple {
 test("CodeConverter can convert a single module with a single basic block and no goto", () => {
     const singleModuleSingleBasicBlockNoGotoParser = new CodeParser(singleModuleSingleBasicBlockNoGoto);
     const singleModuleSingleBasicBlockNoGotoProgram = singleModuleSingleBasicBlockNoGotoParser.parse();
-    const codeConverter = new CodeConverter();
-    const singleModuleSingleBasicBlockNoGotoTM = codeConverter.visit(singleModuleSingleBasicBlockNoGotoProgram);
+    const codeConverter = new CodeConverter(singleModuleSingleBasicBlockNoGotoProgram);
+    const singleModuleSingleBasicBlockNoGotoTM = codeConverter.convert();
 
     expect(singleModuleSingleBasicBlockNoGotoTM.initialState).toBe("simple0");
     expect(singleModuleSingleBasicBlockNoGotoTM.states.length).toBe(1);
@@ -114,8 +114,8 @@ test("CodeConverter can convert a single module with a single basic block and no
 test("CodeConverter can convert a single module with multiple basic blocks and a goto statement", () => {
     const singleModuleMultipleBasicBlockWithGotoParser = new CodeParser(singleModuleMultipleBasicBlockWithGoto);
     const singleModuleMultipleBasicBlockWithGotoProgram = singleModuleMultipleBasicBlockWithGotoParser.parse();
-    const codeConverter = new CodeConverter();
-    const singleModuleMultipleBasicBlockWithGotoTM = codeConverter.visit(singleModuleMultipleBasicBlockWithGotoProgram);
+    const codeConverter = new CodeConverter(singleModuleMultipleBasicBlockWithGotoProgram);
+    const singleModuleMultipleBasicBlockWithGotoTM = codeConverter.convert();
 
     expect(singleModuleMultipleBasicBlockWithGotoTM.states.length).toBe(2);
 
@@ -147,8 +147,8 @@ test("CodeConverter can convert a single module with multiple basic blocks and a
 test("CodeConverter can convert a single module with a switch block that has a single if case with a single basic block", () => {
     const singleModuleSingleIfCaseSingleIfBlockParser = new CodeParser(singleModuleSingleIfCaseSingleIfBlock);
     const singleModuleSingleIfCaseSingleIfBlockProgram = singleModuleSingleIfCaseSingleIfBlockParser.parse();
-    const codeConverter = new CodeConverter();
-    const singleModuleSingleIfCaseSingleIfBlockTM = codeConverter.visit(singleModuleSingleIfCaseSingleIfBlockProgram);
+    const codeConverter = new CodeConverter(singleModuleSingleIfCaseSingleIfBlockProgram);
+    const singleModuleSingleIfCaseSingleIfBlockTM = codeConverter.convert();
 
     expect(singleModuleSingleIfCaseSingleIfBlockTM.states.length).toBe(1);
 
@@ -174,8 +174,8 @@ test("CodeConverter can convert a single module with a switch block that has a s
 test("CodeConverter can convert a single module with a switch block that has a single if case with a single basic block", () => {
     const singleModuleMultipleIfCasesSingleIfBlockParser = new CodeParser(singleModuleMultipleIfCasesSingleIfBlock);
     const singleModuleMultipleIfCasesSingleIfBlockProgram = singleModuleMultipleIfCasesSingleIfBlockParser.parse();
-    const codeConverter = new CodeConverter();
-    const singleModuleMultipleIfCasesSingleIfBlockTM = codeConverter.visit(singleModuleMultipleIfCasesSingleIfBlockProgram);
+    const codeConverter = new CodeConverter(singleModuleMultipleIfCasesSingleIfBlockProgram);
+    const singleModuleMultipleIfCasesSingleIfBlockTM = codeConverter.convert();
 
     expect(singleModuleMultipleIfCasesSingleIfBlockTM.states.length).toBe(3);
 
@@ -219,8 +219,8 @@ test("CodeConverter can convert a single module with a switch block that has a s
 test("CodeConverter can convert a single module with a switch block that has multiple if cases with one fo them having multiple basic blocks", () => {
     const singleModuleMultipleIfCasesOneMultipleIfBlocksParser = new CodeParser(singleModuleMultipleIfCasesOneMultipleIfBlocks);
     const singleModuleMultipleIfCasesOneMultipleIfBlocksProgram = singleModuleMultipleIfCasesOneMultipleIfBlocksParser.parse();
-    const codeConverter = new CodeConverter();
-    const singleModuleMultipleIfCasesOneMultipleIfBlocksTM = codeConverter.visit(singleModuleMultipleIfCasesOneMultipleIfBlocksProgram);
+    const codeConverter = new CodeConverter(singleModuleMultipleIfCasesOneMultipleIfBlocksProgram);
+    const singleModuleMultipleIfCasesOneMultipleIfBlocksTM = codeConverter.convert();
 
     expect(singleModuleMultipleIfCasesOneMultipleIfBlocksTM.states.length).toBe(2);
 
@@ -258,8 +258,8 @@ test("CodeConverter can convert a single module with a switch block that has mul
 test("CodeConverter can convert a single module with a switch block that has multiple if cases with all of them having multiple basic blocks", () => {
     const singleModuleMultipleIfCasesTwoMultipleIfBlocksParser = new CodeParser(singleModuleMultipleIfCasesTwoMultipleIfBlocks);
     const singleModuleMultipleIfCasesTwoMultipleIfBlocksProgram = singleModuleMultipleIfCasesTwoMultipleIfBlocksParser.parse();
-    const codeConverter = new CodeConverter();
-    const singleModuleMultipleIfCasesTwoMultipleIfBlocksTM = codeConverter.visit(singleModuleMultipleIfCasesTwoMultipleIfBlocksProgram);
+    const codeConverter = new CodeConverter(singleModuleMultipleIfCasesTwoMultipleIfBlocksProgram);
+    const singleModuleMultipleIfCasesTwoMultipleIfBlocksTM = codeConverter.convert();
 
     expect(singleModuleMultipleIfCasesTwoMultipleIfBlocksTM.states.length).toBe(4);
 
@@ -319,8 +319,8 @@ test("CodeConverter can convert a single module with a switch block that has mul
 test("CodeConverter can convert multiple modules", () => {
     const multipleModulesParser = new CodeParser(multipleModules);
     const multipleModulesProgram = multipleModulesParser.parse();
-    const codeConverter = new CodeConverter();
-    const multipleModulesTM = codeConverter.visit(multipleModulesProgram);
+    const codeConverter = new CodeConverter(multipleModulesProgram);
+    const multipleModulesTM = codeConverter.convert();
 
     expect(multipleModulesTM.initialState).toBe("simple0");
     expect(multipleModulesTM.states).toEqual(["simple0", "basic0"]);

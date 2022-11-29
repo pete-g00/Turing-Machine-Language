@@ -74,7 +74,7 @@ export class CodeWrapper {
      * @returns whether the character at `code[index]` is whitespace
      */
     private _isCharWhitespace(index:number):boolean {
-        return this.code[index].trim().length == 0;
+        return this.code[index].trim().length === 0;
     }
 
     /**
@@ -94,7 +94,7 @@ export class CodeWrapper {
 
         while (nextStart < this.code.length && this._isCharWhitespace(nextStart)) {
             // if newline, increment the line number and the column offset
-            if (this.code[nextStart] == "\n") {
+            if (this.code[nextStart] === "\n") {
                 this._lineNumber ++;
                 this._colOffset = nextStart+1;
             }

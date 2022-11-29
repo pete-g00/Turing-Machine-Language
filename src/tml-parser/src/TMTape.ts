@@ -26,7 +26,7 @@ export class TMTape {
         this._currentIndex = 0;
 
         for (let i = 0; i < value.length; i++) {
-            if (value[i].trim().length != 0) {
+            if (value[i].trim().length !== 0) {
                 this._valueMap.set(i, value[i]);
             }
         }
@@ -38,7 +38,7 @@ export class TMTape {
      * @param letter the letter to change the tapehead value into
      */
     public change(letter:string):void {
-        if (letter.trim().length == 0) {
+        if (letter.trim().length === 0) {
             this._valueMap.delete(this._currentIndex);
         } else {
             this._valueMap.set(this._currentIndex, letter);

@@ -1,7 +1,7 @@
 import { CodeError } from "./CodeError";
 import { CodePosition } from "./CodePosition";
 import { CodeWrapper } from "./CodeWrapper";
-import { AlphabetContext, BasicBlockContext, BlockContext, CaseContext, ChangeToContext, CoreBasicBlockContext, Direction, FlowChangeContext, GoToContext, IfCaseContext, ModuleContext, MoveContext, NormalBlockContext, ProgramContext, SwitchBlockContext, TerminationContext, TerminationState, WhileCaseContext } from "./Context";
+import { AlphabetContext, BasicBlockContext, CaseContext, ChangeToContext, CoreBasicBlockContext, Direction, FlowChangeContext, GoToContext, IfCaseContext, ModuleContext, MoveContext, NormalBlockContext, ProgramContext, SwitchBlockContext, TerminationContext, TerminationState, WhileCaseContext } from "./Context";
 
 export class CodeParser {
     /**
@@ -145,15 +145,15 @@ export class CodeParser {
         const values:Set<string> = new Set();
         let noComma = false;
 
-        while (this._wrapper.currentValue != finishedValue) {
+        while (this._wrapper.currentValue !== finishedValue) {
             // if next character isn't comma => must have been past the last entry
             if (noComma) {
                 throw new CodeError(this._wrapper.currentPosition, `Expected value "${this._wrapper.currentValue}" to be "${finishedValue}".`);
             }
-            if (includesBlank && this._wrapper.currentValue == "blank") {
+            if (includesBlank && this._wrapper.currentValue === "blank") {
                 values.add("");
             } else {
-                if (this._wrapper.currentValue.length != 1) {
+                if (this._wrapper.currentValue.length !== 1) {
                     throw new CodeError(this._wrapper.currentPosition, `The value "${this._wrapper.currentValue}" must have length 1.`);
                 }
                 if (!this._wrapper.currentValue.match(/[a-z|0-9]/)) {
@@ -164,7 +164,7 @@ export class CodeParser {
             }
             
             this._moveNext();
-            if (this._wrapper.currentValue == ",") {
+            if (this._wrapper.currentValue === ",") {
                 this._moveNext();
             } else {
                 noComma = true;
@@ -232,7 +232,7 @@ export class CodeParser {
     }
 
     private _parseBlock(): NormalBlockContext {
-        if (this._wrapper.currentValue == "switch") {
+        if (this._wrapper.currentValue === "switch") {
             return this._parseSwitchBlock();
         } else {
             return this._parseBasicBlock();
@@ -254,9 +254,9 @@ export class CodeParser {
         const cases:CaseContext[] = [];
 
         this._doUntil("}", () => {
-            if (this._wrapper.currentValue == "if") {
+            if (this._wrapper.currentValue === "if") {
                 cases.push(this._parseIf());
-            } else if (this._wrapper.currentValue == "while") {
+            } else if (this._wrapper.currentValue === "while") {
                 cases.push(this._parseWhile());
             } else {
                 throw new CodeError(this._wrapper.currentPosition, `Unexpected start of case: "${this._wrapper.currentValue}".`);
@@ -266,7 +266,7 @@ export class CodeParser {
         const endPosition = this._wrapper.currentPosition;
         const position = CodePosition.combine(startPosition, endPosition);
 
-        if (cases.length == 0) {
+        if (cases.length === 0) {
             throw new CodeError(position, `A switch block must have at least one case.`);
         }
         
@@ -286,7 +286,7 @@ export class CodeParser {
         }
         this._moveNext();
         
-        const blocks:BlockContext[] = [];
+        const blocks:NormalBlockContext[] = [];
         this._doUntil("}", () => {
             blocks.push(this._parseBlock());
         }, false);
@@ -294,7 +294,7 @@ export class CodeParser {
         const endPosition = this._wrapper.currentPosition;
         const position = CodePosition.combine(startPosition, endPosition);
 
-        if (blocks.length == 0) {
+        if (blocks.length === 0) {
             throw new CodeError(position, `An if case must have at least one command.`);
         }
 
@@ -313,7 +313,7 @@ export class CodeParser {
         }
         this._moveNext();
 
-        if (this._wrapper.currentValue == "}") {
+        if (this._wrapper.currentValue === "}") {
             throw new CodeError(startPosition, `A while case must have at least one command.`);
         }
         
@@ -339,12 +339,12 @@ export class CodeParser {
         let moveCommand:MoveContext|undefined;
         let flowCommand:FlowChangeContext|undefined;
         
-        if (this._wrapper.currentValue == "changeto") {
+        if (this._wrapper.currentValue === "changeto") {
             endPosition = this._wrapper.currentPosition;
             changeToCommand = this._parseChangeTo();
             this._moveNext();
         } 
-        if (this._wrapper.currentValue == "move") {
+        if (this._wrapper.currentValue === "move") {
             endPosition = this._wrapper.currentPosition;
             moveCommand = this._parseMove();
             this._moveNext();
@@ -353,7 +353,7 @@ export class CodeParser {
             endPosition = this._wrapper.currentPosition;
             flowCommand = this._parseTermination();
             this._moveNext();
-        } else if (this._wrapper.currentValue == "goto") {
+        } else if (this._wrapper.currentValue === "goto") {
             endPosition = this._wrapper.currentPosition;
             flowCommand = this._parseGoTo();
             this._moveNext();
@@ -374,12 +374,12 @@ export class CodeParser {
         let changeToCommand:ChangeToContext|undefined;
         let moveCommand:MoveContext|undefined;
 
-        if (this._wrapper.currentValue == "changeto") {
+        if (this._wrapper.currentValue === "changeto") {
             endPosition = this._wrapper.currentPosition;
             changeToCommand = this._parseChangeTo();
             this._moveNext();
         } 
-        if (this._wrapper.currentValue == "move") {
+        if (this._wrapper.currentValue === "move") {
             endPosition = this._wrapper.currentPosition;
             moveCommand = this._parseMove();
             this._moveNext();

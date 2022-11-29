@@ -42,6 +42,7 @@ export class CodeExecutor extends TapeExecutor {
         if (this._terminationStatus === undefined) {
             return this._currentBlocks[this._currentBlockIndex];
         } 
+        return undefined;
     }
 
     private _change(block:BasicBlockContext | CoreBasicBlockContext, letter: string): void {

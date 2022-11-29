@@ -25,8 +25,8 @@ module q {
 
 const isDiv2Parser = new CodeParser(isDiv2);
 const isDiv2Program = isDiv2Parser.parse();
-const codeConverter = new CodeConverter();
-const isDiv2TM = codeConverter.visit(isDiv2Program);
+const codeConverter = new CodeConverter(isDiv2Program);
+const isDiv2TM = codeConverter.convert();
 
 test("TMExecutor initialises the tape as expected", () => {
     const executor = new TMExecutor("11", isDiv2TM);
