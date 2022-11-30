@@ -1,0 +1,88 @@
+\chapter{Incorrect TML Programs}
+
+Below is a selection of incorrect TML programs, along with an explanation as to why they are incorrect.
+\begin{itemize}
+    \item \textbf{Invalid while block (flow command)}
+\begin{lstlisting}[language=TML]
+alphabet = {a, b}
+module main {
+    switch tapehead {
+        while a, b {
+            accept
+        }
+    }
+}
+\end{lstlisting}
+    A while block cannot have a flow command. We know that the next block to be executed is the same block, so this doesn't make sense- are we meant to terminate or re-run the current block?
+
+    \item \textbf{Invalid while block (multiple blocks)}
+\begin{lstlisting}[language=TML]
+alphabet = {a, b}
+module main {
+    switch tapehead {
+        while blank {
+            move left
+            move right
+        }
+    }
+}
+\end{lstlisting}
+    A while block must be composed of a single basic block. We know that a while block corresponds to a self-loop, so if we have 2 blocks, we would need another state to link to the current state. This doesn't make sense, so we can only have one block. The block must also be a simple block since we have already fixed what character the while block applies to.
+
+    \item \textbf{Invalid switch block (first block not basic)}
+\begin{lstlisting}[language=TML]
+alphabet = {a, b}
+module main {
+    switch tapehead {
+        if a, blank {
+            accept
+        }
+    }
+}
+\end{lstlisting}
+    The first block in a switch block must be a basic block. A switch block corresponds to a state that branches to different states. So, the first block in a switch block must be a basic block so we know the transitions for the branch going into the new states.
+
+    \item \textbf{Invalid module (flow command not final)}
+\begin{lstlisting}[language=TML]
+alphabet = {a, b}
+module main {
+    goto simple
+    move left
+}
+module simple {
+    reject
+}
+\end{lstlisting}
+    If we have a \emph{flow}-command in a block, then it must be the final command. A \emph{flow}-command moves to terminating execution or executing a module from the start, so any command below it cannot be executed. In this case, we are moving to a different block called \texttt{simple}, so we never move \texttt{left}.
+
+    \item \textbf{Invalid module (switch block not final)}
+\begin{lstlisting}[language=TML]
+alphabet = {a, b}
+module a {
+    switch tapehead {
+        if a, b {
+            changeto blank
+            move right
+            move right
+            changeto b
+        } if blank {
+            move left
+            changeto a
+            reject
+        }
+    }
+    accept
+}
+\end{lstlisting}
+    If a module has a \textit{switch} block, it must be the final block. In this case, that is not the case. It is possible that the program is meant to accept if we execute the \textit{if}-block at line 4, but it is not possible to continue the \textit{if}-block at line 9- this block already ends with a flow command. So, the execution would be unclear if this was allowed.
+
+    \item \textbf{Invalid module (invalid name)}
+\begin{lstlisting}[language=TML]
+alphabet = {a, b}
+module accept {
+    move right
+}
+\end{lstlisting}
+    A module cannot be named \texttt{accept} or \texttt{reject}. It can be named any of the other keywords, but not \texttt{accept} or \texttt{reject}.
+
+\end{itemize}

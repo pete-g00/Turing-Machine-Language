@@ -1,0 +1,20 @@
+\chapter{TML EBNF}
+The following is the EBNF for the Turing Machine Language.
+\begin{align*}
+    \textit{program} &= \textit{alphabet} \ \textit{module}^+ \\
+    \textit{alphabet} &= \texttt{alphabet} \ \texttt{=} \ \texttt{\{} \ \textit{seq-val} \ \texttt{\}} \\
+    \textit{module} &= \texttt{module} \ \textit{id} \ \texttt{\{} \ \textit{block}^+ \ \texttt{\}} \\
+    \textit{block} &= \textit{basic-block} \ | \ \textit{switch-block} \\
+    \textit{switch-block} &= \texttt{switch tapehead \{} \ \textit{case-block}^+ \ \texttt{\}} \\
+    \textit{case-block} &= \textit{if-block} \ | \ \textit{while-block} \\
+    \textit{if-block} &= \texttt{if} \ \textit{seq-val} \ \texttt{\{} \textit{block}^+ \texttt{\}} \\
+    \textit{while-block} &= \texttt{while} \ \textit{seq-val} \ \texttt{\{} \ \textit{core-com}^+ \ \texttt{\}} \\
+    \textit{basic-block} &= (\textit{core-com} \ | \ \textit{flow-com})^+ \\
+    \textit{core-com} &= \texttt{move} \ \textit{direction} \ | \ \texttt{changeto} \ \textit{value} \\
+    \textit{flow-com} &= \texttt{goto} \ \textit{id} \ | \ \textit{terminate} \\
+    \textit{terminate} &= \texttt{reject} \ | \ \texttt{accept} \\
+    \textit{direction} &= \texttt{left} \ | \ \texttt{right} \\
+    \textit{seq-val} &= (\textit{value} \texttt{,})^* \ \textit{value} \\
+    \textit{value} &= \texttt{blank} \ | \ \texttt{a} \ | \ \texttt{b} \ | \ \texttt{c} \ | \ \dots \ | \ \texttt{z} \ | \ \texttt{0} \ | \ \texttt{1} \ | \ \dots \ | \ \texttt{9} \\
+    \textit{id} &= (\texttt{a} \ | \ \texttt{b} \ | \ \texttt{c} \ | \ \dots \ | \ \texttt{z} \ | \ \texttt{A} \ | \ \texttt{B} \ | \ \texttt{C} \ | \ \dots \ | \ \texttt{Z})^+
+\end{align*}

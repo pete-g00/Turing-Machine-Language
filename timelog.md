@@ -158,3 +158,10 @@
 
 * *1.5 hours* Made use of the pedantic linter.
 * *1.5 hours* Updated the visitor methods- Part II is completed now!
+
+### 30 Nov 2022
+
+* *0.5 hours* Reorganised the dissertation.
+* *1.5 hours* Added incorrect programs.
+* *0.5 hours* Expanded the MoSCoW for Part 3.
+* *0.5 hours* Added agenda for this week's work.

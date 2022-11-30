@@ -217,14 +217,7 @@
 % sensibly narrowed down to what you have done.
 
 %==================================================================================================================================
-\chapter{Design}
-% How is this problem to be approached, without reference to specific implementation details? 
-% \section{Guidance}
-% Design should cover the abstract design in such a way that someone else might be able to do what you did, 
-% but with a different language or library or tool. This might include overall system architecture diagrams,
-% user interface designs (wireframes/personas/etc.), protocol specifications, algorithms, data set design choices,
-% among others. Specific languages, technical choices, libraries and such like should not usually appear in the design. These are implementation details.
-
+\include{design}
 
 %==================================================================================================================================
 \chapter{Implementation}
@@ -509,7 +502,12 @@
 %==================================================================================================================================
 %  APPENDICES  
 
-\include{appendix}
+\begin{appendices}
+    \include{ebnf}
+    \include{incorrect-programs}
+    \include{examples}
+    \include{proofs}
+\end{appendices}
 
 %==================================================================================================================================
 %   BIBLIOGRAPHY   

@@ -3,30 +3,43 @@
 ## Part I: Developing TML
 
 ### Must Have
-- A specification for TML (completed)
-- A proof of equivalence between TMs and TMLs (completed)
+- Specification for TML (completed)
+- Proof of equivalence between TMs and TMLs (completed)
 
 ### Should Have
-- Examples of valid programs in the specification (completed; could add more)
-- Examples of invalid programs in the specification
-- Examples in the proof illustrating the equivalence proof (completed; could add more)
+- Examples of valid programs in the specification (completed)
+- Examples of invalid programs in the specification (completed)
+- Examples in the proof illustrating the equivalence proof (completed)
 
 ### Could Have
 - Connection with the Church-Turing Thesis (in particular lambda-calculus)
 
 ## Part II: TML parser, converter to TM and tape executor
 ### Must Have
-- Parsing a string representation of a program to an object representation
-- Validating the object representation of a program
-- Executing the object representation of a program on a tape
+- Parsing a string representation of a program to an object representation (completed)
+- Validating the object representation of a program (completed)
+- Executing the object representation of a program on a tape (completed)
 
 ### Should Have
-- Converting the object representation of a program to an object representation of a Turing Machine
+- Converting the object representation of a program to an object representation of a Turing Machine (completed)
 
 ### Could Have
-- Executing an object representation of a Turing Machine on a tape
+- Executing an object representation of a Turing Machine on a tape (completed)
 
 ## Part III: TML Website
-- Code the program on the website
-- Convert the program to a Turing Machine (FSM)
-- Execute the program on a tape
+### Must Have
+- Code editor for TML language
+- Convert a program to a FSM representation of a TM (basic positioning of states) 
+- Execute a program on a valid tape 
+
+### Should Have
+- Syntax highlighting in the code editor
+- Ability to drag the states in the FSM so that they can be better positioned in the frame
+
+### Could Have
+- Error detection in the code editor
+- Configurations (change code editor theme, speed of tape execution, etc.)
+- Programmatically positioning the states so that they are positioned in a visually appealing way
+
+### Will Not Have
+- Executing a TM on a valid tape
