@@ -165,3 +165,13 @@
 * *1.5 hours* Added incorrect programs.
 * *0.5 hours* Expanded the MoSCoW for Part 3.
 * *0.5 hours* Added agenda for this week's work.
+
+## Week 12 (Crunch Period)
+
+### 05 Dec 2022 
+
+* *0.5 hours* Planned Part 3- created a prototype diagram for the editor.
+* *1 hour* Initialised a react project (with javascript) and tried designing the website (added toolbar).
+* *1.5 hour* Initialised a webpack project and tried designing the website- more flexible, but challenging to get the basic set up (using `material.io`), so will just use the react project.
+* *0.5 hours* Changed from a react project from javascript to typescript.
+* *0.5 hours* Added linter/deploy to gh-pages.
