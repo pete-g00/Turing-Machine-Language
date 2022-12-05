@@ -2,7 +2,7 @@
     "name": "website",
     "version": "0.1.0",
     "private": true,
-    "homepage": "pete-g00.github.com/Turing-Machine-Language",
+    "homepage": "https://pete-g00.github.com/Turing-Machine-Language",
     "dependencies": {
       "@emotion/react": "^11.10.0",
       "@emotion/styled": "^11.10.0",
@@ -22,7 +22,8 @@
       "react-dom": "^18.2.0",
       "react-scripts": "5.0.1",
       "typescript": "^4.7.4",
-      "web-vitals": "^2.1.4"
+      "web-vitals": "^2.1.4",
+      "gh-pages": "^4.0.0"
     },
     "scripts": {
       "predeploy": "npm run build",
@@ -50,8 +51,5 @@
         "last 1 firefox version",
         "last 1 safari version"
       ]
-    },
-    "devDependencies": {
-      "gh-pages": "^4.0.0"
     }
   }
