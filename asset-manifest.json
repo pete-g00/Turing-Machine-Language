@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/pete-g00.github.com/Turing-Machine-Language/static/css/main.bfed1ffd.css",
-    "main.js": "/pete-g00.github.com/Turing-Machine-Language/static/js/main.b75b3669.js",
-    "static/js/787.71e672d5.chunk.js": "/pete-g00.github.com/Turing-Machine-Language/static/js/787.71e672d5.chunk.js",
-    "index.html": "/pete-g00.github.com/Turing-Machine-Language/index.html",
-    "main.bfed1ffd.css.map": "/pete-g00.github.com/Turing-Machine-Language/static/css/main.bfed1ffd.css.map",
-    "main.b75b3669.js.map": "/pete-g00.github.com/Turing-Machine-Language/static/js/main.b75b3669.js.map",
-    "787.71e672d5.chunk.js.map": "/pete-g00.github.com/Turing-Machine-Language/static/js/787.71e672d5.chunk.js.map"
+    "main.css": "/Turing-Machine-Language/static/css/main.bfed1ffd.css",
+    "main.js": "/Turing-Machine-Language/static/js/main.faa0859d.js",
+    "static/js/787.71e672d5.chunk.js": "/Turing-Machine-Language/static/js/787.71e672d5.chunk.js",
+    "index.html": "/Turing-Machine-Language/index.html",
+    "main.bfed1ffd.css.map": "/Turing-Machine-Language/static/css/main.bfed1ffd.css.map",
+    "main.faa0859d.js.map": "/Turing-Machine-Language/static/js/main.faa0859d.js.map",
+    "787.71e672d5.chunk.js.map": "/Turing-Machine-Language/static/js/787.71e672d5.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.bfed1ffd.css",
-    "static/js/main.b75b3669.js"
+    "static/js/main.faa0859d.js"
   ]
 }
