@@ -4,6 +4,6 @@ import App from './App';
 
 test('renders title in the app', () => {
   render(<App />);
-  const linkElement = screen.getByText(/TM Program Executor/);
+  const linkElement = screen.getByText(/TML/);
   expect(linkElement).toBeInTheDocument();
 });
