@@ -6,7 +6,7 @@ function AppToolbar():ReactElement {
         <Box sx={{display: 'flex'}}>
             <AppBar color="primary" variant="elevation" position="sticky">
                 <Toolbar>
-                    <Typography align='left' color='inherit' variant="h6" sx={{flexGrow: 1}}>TM Program Executor</Typography>
+                    <Typography align='left' color='inherit' variant="h6" sx={{flexGrow: 1}}>TML</Typography>
                     <div>
                         <Button color='inherit'>Documentation</Button>
                         <Button color='inherit'>Examples</Button>

@@ -2,6 +2,7 @@
     "name": "website",
     "version": "0.1.0",
     "private": true,
+    "homepage": "pete-g00.github.com/Turing-Machine-Language",
     "dependencies": {
       "@emotion/react": "^11.10.0",
       "@emotion/styled": "^11.10.0",
@@ -24,6 +25,7 @@
       "web-vitals": "^2.1.4"
     },
     "scripts": {
+      "predeploy": "npm run build",
       "start": "react-scripts start",
       "build": "react-scripts build",
       "lint": "eslint . --ext .ts",
