@@ -175,3 +175,11 @@
 * *1.5 hour* Initialised a webpack project and tried designing the website- more flexible, but challenging to get the basic set up (using `material.io`), so will just use the react project.
 * *0.5 hours* Changed from a react project from javascript to typescript.
 * *0.5 hours* Added linter/deploy to gh-pages.
+
+
+### 06 Dec 2022
+
+* *1 hour* added monaco editor to the website, and added the language TM Program and its keywords.
+* *1 hour* added tokens for TM Program.
+* *1 hour* set up dark theme on the editor using the dracula theme.
+* *0.5 hours* set up autocompletion for the editor

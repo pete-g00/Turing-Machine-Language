@@ -1,55 +1,60 @@
 {
-    "name": "website",
-    "version": "0.1.0",
-    "private": true,
-    "homepage": "https://pete-g00.github.com/Turing-Machine-Language",
-    "dependencies": {
-      "@emotion/react": "^11.10.0",
-      "@emotion/styled": "^11.10.0",
-      "@mui/material": "^5.9.2",
-      "@testing-library/jest-dom": "^5.16.4",
-      "@testing-library/react": "^13.3.0",
-      "@testing-library/user-event": "^13.5.0",
-      "@types/jest": "^27.5.2",
-      "@types/node": "^16.11.47",
-      "@types/react": "^18.0.15",
-      "@types/react-dom": "^18.0.6",
-      "@typescript-eslint/eslint-plugin": "^5.31.0",
-      "@typescript-eslint/parser": "^5.31.0",
-      "eslint": "^8.20.0",
-      "monaco-editor": "^0.33.0",
-      "react": "^18.2.0",
-      "react-dom": "^18.2.0",
-      "react-scripts": "5.0.1",
-      "typescript": "^4.7.4",
-      "web-vitals": "^2.1.4",
-      "gh-pages": "^4.0.0"
-    },
-    "scripts": {
-      "predeploy": "npm run build",
-      "start": "react-scripts start",
-      "build": "react-scripts build",
-      "lint": "eslint . --ext .ts",
-      "test": "react-scripts test",
-      "eject": "react-scripts eject",
-      "deploy": "gh-pages -d build"
-    },
-    "eslintConfig": {
-      "extends": [
-        "react-app",
-        "react-app/jest"
-      ]
-    },
-    "browserslist": {
-      "production": [
-        ">0.2%",
-        "not dead",
-        "not op_mini all"
-      ],
-      "development": [
-        "last 1 chrome version",
-        "last 1 firefox version",
-        "last 1 safari version"
-      ]
+  "name": "website",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": "https://pete-g00.github.com/Turing-Machine-Language",
+  "dependencies": {
+    "@emotion/react": "^11.10.0",
+    "@emotion/styled": "^11.10.0",
+    "@mui/material": "^5.9.2",
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^13.3.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^16.11.47",
+    "@types/react": "^18.0.15",
+    "@types/react-dom": "^18.0.6",
+    "@typescript-eslint/eslint-plugin": "^5.31.0",
+    "@typescript-eslint/parser": "^5.31.0",
+    "eslint": "^8.20.0",
+    "monaco-editor": "^0.33.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1",
+    "typescript": "^4.7.4",
+    "web-vitals": "^2.1.4",
+    "gh-pages": "^4.0.0"
+  },
+  "scripts": {
+    "predeploy": "npm run build",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "lint": "eslint . --ext .ts",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "deploy": "gh-pages -d build"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "monaco-editor": "<rootDir>/src/__mocks__/monacoMock.js"
     }
   }
+}
