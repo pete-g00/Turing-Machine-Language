@@ -27,6 +27,7 @@ function Editor() {
     let editor: monaco.editor.IStandaloneCodeEditor;
     useEffect(() => {
         if (divEl.current) {
+            // eslint-disable-next-line react-hooks/exhaustive-deps
             editor = monaco.editor.create(divEl.current, {
                 value: code,
                 language: 'TMProgram',
