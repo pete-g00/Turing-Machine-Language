@@ -183,3 +183,10 @@
 * *1 hour* added tokens for TM Program.
 * *1 hour* set up dark theme on the editor using the dracula theme.
 * *0.5 hours* set up autocompletion for the editor
+
+### 07 Dec 2022
+
+* *0.5 hours* created the logo and added it to the website.
+* *1.5 hours* researched the package `d3` and drawing shapes.
+* *1 hour* added circles/texts to the website for Turing Machine.
+* *1 hour* added arrows to the website for Turing Machine.

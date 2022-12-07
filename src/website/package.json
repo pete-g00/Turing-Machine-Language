@@ -16,17 +16,17 @@
     "@types/react-dom": "^18.0.6",
     "@typescript-eslint/eslint-plugin": "^5.31.0",
     "@typescript-eslint/parser": "^5.31.0",
+    "d3": "^7.6.1",
     "eslint": "^8.20.0",
+    "gh-pages": "^4.0.0",
     "monaco-editor": "^0.33.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
     "typescript": "^4.7.4",
-    "web-vitals": "^2.1.4",
-    "gh-pages": "^4.0.0"
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "predeploy": "npm run build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "lint": "eslint . --ext .ts",
@@ -56,5 +56,8 @@
     "moduleNameMapper": {
       "monaco-editor": "<rootDir>/src/__mocks__/monacoMock.js"
     }
+  },
+  "devDependencies": {
+    "@types/d3": "^7.4.0"
   }
 }

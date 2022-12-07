@@ -1,0 +1,8 @@
+text {
+    pointer-events: none;
+    user-select: none;
+}
+
+circle {
+    cursor: all-scroll;
+}

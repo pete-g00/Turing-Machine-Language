@@ -1,9 +1,10 @@
 import React, { ReactElement } from 'react';
 import { purple, green } from '@mui/material/colors';
-import Editor from './components/Editor';
+import Editor from './components/Editor/Editor';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import AppToolbar from './components/Apptoolbar';
+import AppToolbar from './components/Apptoolbar/Apptoolbar';
 import { Grid } from '@mui/material';
+import TMPanel from './components/TMPanel/TMPanel';
 
 const theme = createTheme({
   palette: {
@@ -20,14 +21,16 @@ const theme = createTheme({
 function App():ReactElement {
   return (
     <ThemeProvider theme={theme}>
-      <div className="App">
-        <AppToolbar></AppToolbar>
-        <div>
-          <Grid container>
-            <Grid item xs={6}><Editor></Editor></Grid>
-            <Grid item xs={6}></Grid>
-          </Grid>
+      <div className="app">
+        <div className="toolbar">
+          <AppToolbar></AppToolbar>
         </div>
+        <Grid container className="code-section">
+            <Grid item xs={12} md={6} className="editor"><Editor></Editor></Grid>
+            <Grid item xs={12} md={6} className="tm">
+              <div className="tm-panel"><TMPanel></TMPanel></div>
+            </Grid>
+          </Grid>
       </div>
     </ThemeProvider>
   );
