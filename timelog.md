@@ -190,3 +190,12 @@
 * *1.5 hours* researched the package `d3` and drawing shapes.
 * *1 hour* added circles/texts to the website for Turing Machine.
 * *1 hour* added arrows to the website for Turing Machine.
+
+### 08 Dec 2022
+
+* *0.5 hours* researched dragging in `d3`.
+* *1 hour* experimented with `d3.drag`.
+* *1.5 hours* added dragging of circles and text within it.
+* *1 hour* changed dragging of circles to move arrows with them.
+* *0.5 hours* added mock for `d3`.
+* *0.5 hours* added the status report.
