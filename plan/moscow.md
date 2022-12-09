@@ -28,18 +28,19 @@
 
 ## Part III: TML Website
 ### Must Have
-- Code editor for TML language
+- Code editor for TML language (completed)
 - Convert a program to a FSM representation of a TM (basic positioning of states) 
 - Execute a program on a valid tape 
 
 ### Should Have
-- Syntax highlighting in the code editor
-- Ability to drag the states in the FSM so that they can be better positioned in the frame
+- Syntax highlighting in the code editor (completed)
+- Ability to drag the states in the FSM so that they can be better positioned in the frame (completed)
 
 ### Could Have
 - Error detection in the code editor
 - Configurations (change code editor theme, speed of tape execution, etc.)
 - Programmatically positioning the states so that they are positioned in a visually appealing way
+- Convert a program to its formal representation.
 
 ### Will Not Have
 - Executing a TM on a valid tape

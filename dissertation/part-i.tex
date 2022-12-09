@@ -1,4 +1,4 @@
-\chapter{Design}
+\chapter{Turing Machine Language}
 In this chapter, we define the Turing Machine Language (TML) as an alternative to Turing Machines (TM). We will define the syntax of a TML program and how it can be executed on a tape in a similar manner to TMs. We will then prove that there is an equivalence between TML programs and TMs in terms of their execution on a tape.
 
 \section{Turing Machine Language Program}
@@ -8,20 +8,16 @@ Consider the following TML program.
 \begin{lstlisting}[language=TML]
 alphabet = {"0", "1"}
 module isEven {
-    switch tapehead {
-        while 0, 1 {
-            move right
-        } if blank {
-            move left
-            switch tapehead {
-                if 0 {
-                    changeto blank
-                    accept
-                } if 1, blank {
-                    changeto blank
-                    reject
-                }
-            }
+    while 0, 1 {
+        move right
+    } if blank {
+        move left
+        if 0 {
+            changeto blank
+            accept
+        } if 1, blank {
+            changeto blank
+            reject
         }
     }
 }
@@ -30,11 +26,11 @@ A program in TML will be used to execute on a tape, so the syntax used guides us
 \begin{itemize}
     \item A valid TML \emph{program} is composed of the \emph{alphabet}, followed by one or more \emph{modules}. In the example above, the alphabet of the program is $\{0, 1\}$, and the program has a single module called \texttt{isEven}.
     \item A module contains one or more \emph{blocks} (a specific sequence of commands). There are two types of blocks- \emph{basic blocks} and \emph{switch blocks}.
-    \item A basic block consists of \emph{basic commands} (\textit{changeto}, \textit{move} or \textit{flow} command). A basic block consists of at least one basic command, but it is not necessary for a basic block to be composed of all the basic commands. If multiple commands are present in a basic block, they must be in the following order- \textit{changeto}, \textit{move} and \textit{flow} command. In the program above, there is are many basic blocks, e.g. at lines 5, 7, 10-11 and 13-14. We do not say that line 10 is a basic block by itself; we want the basic block to be as long as possible.
-    \item A \emph{switch block} consists of a single switch statement. A switch statement must contain precisely one case (\textit{if} or \textit{while} command) for each of the letter in the alphabet, including the \texttt{blank} letter. The first block of a case block must be a basic block. In the program above, there is a switch block at lines 8-16.
-    \item The body of an \textit{if} command can be composed of multiple blocks. These blocks can be both basic blocks and switch blocks. We can see this at lines 6-17; the \textit{if} block has a basic block at line 7 and then a switch block.
+    \item A basic block consists of \emph{basic commands} (\textit{changeto}, \textit{move} or \textit{flow} command). A basic block consists of at least one basic command, but it is not necessary for a basic block to be composed of all the basic commands. If multiple commands are present in a basic block, they must be in the following order- \textit{changeto}, \textit{move} and \textit{flow} command. In the program above, there is are many basic blocks, e.g. at lines 4, 6, 8-9 and 11-12. We do not say that line 8 is a basic block by itself; we want the basic block to be as long as possible.
+    \item A \emph{switch block} consists of cases (\textit{if} or \textit{while} commands), each of which corresponds to one or more letters. A switch block must contain precisely one case for each of the letter in the alphabet, including the \texttt{blank} letter. The first block within a case block cannot be another switch block. In the program above, there is a switch block at lines 3-14 and a nested switch block at lines 7-13.
+    \item The body of an \textit{if} command can be composed of multiple blocks. These blocks can be both basic blocks and switch blocks. We can see this at lines 5-13; the \textit{if} block has a basic block at line 6 and then a switch block.
     \item The body of a \textit{while} command must be composed of a single basic block. The basic block cannot have a \textit{flow} command. This is because when we execute a \textit{while} block, the next block to run is the switch block it is in; we cannot accept, reject or go to another module.
-    \item A switch block must be the final block present; it cannot be followed by any other block, basic or switch.
+    \item A switch block must be the final block present; it cannot be followed by a basic block.
 \end{itemize}
 The EBNF for the TML and examples of syntax errors are given in the appendix. 
 
@@ -84,32 +80,28 @@ Consider the following complete program.
 alphabet = {"0", "1"}
 module isOdd {
     // move to the end
-    switch tapehead {
-        while 0 {
-            changeto 0
-            move right
-        } while 1 {
-            changeto 1
-            move right
-        } if blank {
-            changeto blank
-            move left
-            goto isOddCheck
-        }
+    while 0 {
+        changeto 0
+        move right
+    } while 1 {
+        changeto 1
+        move right
+    } if blank {
+        changeto blank
+        move left
+        goto isOddCheck
     }
 }
 module isOddCheck {
     // accept if and only if the value is 1
-    switch tapehead {
-        if 0, blank {
-            changeto 0
-            move left
-            reject
-        } if 1 {
-            changeto blank
-            move left
-            accept
-        }
+    if 0, blank {
+        changeto 0
+        move left
+        reject
+    } if 1 {
+        changeto blank
+        move left
+        accept
     }
 }
 \end{lstlisting}
@@ -161,19 +153,17 @@ Then, its corresponding TML program is the following:
 \begin{lstlisting}[language=TML]
 alphabet = {"0", "1"}
 module has0 {
-    switch tapehead {
-        while 1 {
-            changeto 1
-            move right
-        } if 0 {
-            changeto 1
-            move right
-            accept
-        } if blank {
-            changeto blank
-            move left
-            reject
-        }
+    while 1 {
+        changeto 1
+        move right
+    } if 0 {
+        changeto 0
+        move right
+        accept
+    } if blank {
+        changeto blank
+        move left
+        reject
     }
 }
 \end{lstlisting}

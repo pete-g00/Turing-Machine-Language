@@ -19,66 +19,58 @@ module simple {
 
 const singleModuleSingleIfCaseSingleIfBlock = `alphabet = {a, b}
 module simple {
-    switch tapehead {
-        while a, b {
-            move right
-        } if blank {
-            move left
-            accept
-        }
+    while a, b {
+        move right
+    } if blank {
+        move left
+        accept
     }
 }`;
 
 const singleModuleMultipleIfCasesSingleIfBlock = `alphabet = {a, b}
 module simple {
-    switch tapehead {
-        if blank {
-            changeto b
-            move left
-            changeto blank
-            move right
-            changeto a
-            move left
-        } while a, b {
-            changeto blank
-            move right
-        }
+    if blank {
+        changeto b
+        move left
+        changeto blank
+        move right
+        changeto a
+        move left
+    } while a, b {
+        changeto blank
+        move right
     }
 }`;
 
 const singleModuleMultipleIfCasesOneMultipleIfBlocks = `alphabet = {a, b}
 module simple {
-    switch tapehead {
-        if a {
-            move left
-        } while b {
-            move right
-        } if blank {
-            move right
-            changeto b
-            move left
-            goto simple
-        }
+    if a {
+        move left
+    } while b {
+        move right
+    } if blank {
+        move right
+        changeto b
+        move left
+        goto simple
     }
 }`;
 
 const singleModuleMultipleIfCasesTwoMultipleIfBlocks = `alphabet = {a, b}
 module simple {
     changeto blank
-    switch tapehead {
-        if a {
-            move left
-            changeto a
-            move left
-            reject
-        } while b {
-            move right
-        } if blank {
-            move right
-            changeto b
-            move right
-            goto simple
-        }
+    if a {
+        move left
+        changeto a
+        move left
+        reject
+    } while b {
+        move right
+    } if blank {
+        move right
+        changeto b
+        move right
+        goto simple
     }
 }`;
 

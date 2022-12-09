@@ -5,63 +5,51 @@ import { CodeExecutor } from "../CodeExecutor";
 
 const palindrome = `alphabet = {a, b}
 module palindrome {
-    switch tapehead {
-        if blank {
-            accept
-        } if a {
-            changeto blank
+    if blank {
+        accept
+    } if a {
+        changeto blank
+        move right
+        while a, b {
             move right
-            switch tapehead {
-                while a, b {
-                    move right
-                } if blank {
-                    move left
-                    switch tapehead {
-                        if a, blank {
-                            changeto blank
-                            move left
-                            goto goToStart
-                        } if b {
-                            changeto blank
-                            move left
-                            move right
-                        }
-                    }
-                }
+        } if blank {
+            move left
+            if a, blank {
+                changeto blank
+                move left
+                goto goToStart
+            } if b {
+                changeto blank
+                move left
+                move right
             }
-        } if b {
-            changeto blank
+        }
+    } if b {
+        changeto blank
+        move right
+        while a, b {
             move right
-            switch tapehead {
-                while a, b {
-                    move right
-                } if blank {
-                    move left
-                    switch tapehead {
-                        if b, blank {
-                            changeto blank
-                            move left
-                            goto goToStart
-                        } if a {
-                            changeto blank
-                            move left
-                            move right
-                            reject
-                        }
-                    }
-                }
+        } if blank {
+            move left
+            if b, blank {
+                changeto blank
+                move left
+                goto goToStart
+            } if a {
+                changeto blank
+                move left
+                move right
+                reject
             }
         }
     }
 }
 module goToStart {
-    switch tapehead {
-        while a, b {
-            move left
-        } if blank {
-            move right
-            goto palindrome
-        }
+    while a, b {
+        move left
+    } if blank {
+        move right
+        goto palindrome
     }
 }`;
 

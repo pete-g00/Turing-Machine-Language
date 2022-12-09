@@ -199,3 +199,8 @@
 * *1 hour* changed dragging of circles to move arrows with them.
 * *0.5 hours* added mock for `d3`.
 * *0.5 hours* added the status report.
+
+### 09 Dec 2022
+
+* *2 hours* Meeting with Ornela
+* *2 hours* Changed the syntax of TML to remove `switch tapehead`.

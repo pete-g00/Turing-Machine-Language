@@ -21,58 +21,50 @@ module main {
 }`;
 const invalidCoreCommand = `alphabet = {a, b}
 module main {
-    switch tapehead {
-        while a, b {
-            accept
-        }
+    while a, b {
+        accept
     }
 }`;
 const whileNoLetter = `alphabet = {a, b}
 module main {
-    switch tapehead {
-        while {}
-    }
+    while {}
 }`;
 const whileNoCommand = `alphabet = {a, b}
 module main {
-    switch tapehead {
         while a {}
-    }
 }`;
 const whileMultipleBlocks = `alphabet = {a, b}
 module main {
-    switch tapehead {
         while blank {
             move left
             move right
         }
-    }
-}`;
-const emptySwitch = `alphabet = {a, b}
-module main {
-    switch tapehead {}
 }`;
 const ifNoLetter = `alphabet = {a, b}
 module main {
-    switch tapehead {
-        if {}
-    }
+    if {}
 }`;
 const ifNoBody = `alphabet = {a, b}
 module main {
-    switch tapehead {
-        if a {
+    if a {
 
-        }
     }
 }`;
 const invalidCase = `alphabet = {a, b}
 module main {
-    switch tapehead {
-        when x {
-            move right
-        }
+    if a {
+        move left
+    } when x {
+        move right
     }
+}`;
+
+const nonFinalSwitchBlock = `alphabet = {a, b}
+module a {
+    if a, b, blank {
+        changeto blank
+    }
+    accept
 }`;
 
 test("CodeParser throws an error when the program is empty", () => {
@@ -179,14 +171,6 @@ test("CodeParser throws an error when a while block has multiple basic blocks", 
     }).toThrow(new SyntaxError(`A while case cannot have more than one core block.`));    
 });
 
-test("CodeParser throws an error when a switch command doesn't apply to any value", () => {
-    const parser = new CodeParser(emptySwitch);
-
-    expect(() => {
-        parser.parse();
-    }).toThrow(new SyntaxError(`A switch block must have at least one case.`));    
-});
-
 test("CodeParser throws an error when an if case doesn't apply to any value", () => {
     const parser = new CodeParser(ifNoLetter);
 
@@ -225,4 +209,12 @@ test("CodeParser throws an error when a case isn't an if or a while case", () =>
     expect(() => {
         parser.parse();
     }).toThrow(new SyntaxError(`Unexpected start of case: "when".`));
+});
+
+test("CodeParser throws an error if a switch block is not a final block", () => {
+    const nonFinalSwitchBlockParser = new CodeParser(nonFinalSwitchBlock);
+
+    expect(() => {
+        nonFinalSwitchBlockParser.parse();
+    }).toThrow(new Error(`Unexpected start of case: "accept".`));
 });

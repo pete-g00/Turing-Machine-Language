@@ -24,53 +24,43 @@ module a {
 
 const switchInvalid = `alphabet = {a, b}
 module a {
-    switch tapehead {
-        if x {
-            accept
-        }
+    if x {
+        accept
     }
 }`;
 
 const switchDuplicate = `alphabet = {a, b}
 module a {
-    switch tapehead {
-        if a {
-            accept
-        } if a {
-            reject
-        }
+    if a {
+        accept
+    } if a {
+        reject
     }
 }`;
 
 const switchIncomplete = `alphabet = {a, b}
 module a {
-    switch tapehead {
-        if a, blank {
-            accept
-        }
+    if a, blank {
+        accept
     }
 }`;
 
 const switchMissingBlank = `alphabet = {a, b}
 module a {
-    switch tapehead {
-        if a {
-            accept
-        } if b {
-            reject
-        }
+    if a {
+        accept
+    } if b {
+        reject
     }
 }`;
 
 const validSwitch = `alphabet = {a, b}
 module a {
-    switch tapehead {
-        if a, blank {
-            accept
-        } while b {
-            changeto a
-            move right
-        }
+    if a, blank {
+        accept
+    } while b {
+        changeto a
+        move right
     }
 }`;
 
@@ -96,36 +86,30 @@ module a {
 
 const nonFinalIfFlow = `alphabet = {a, b}
 module a {
-    switch tapehead {
-        if a, b, blank {
-            changeto b
-            move left
-            changeto a
-            goto a
-            move left
-        }
+    if a, b, blank {
+        changeto b
+        move left
+        changeto a
+        goto a
+        move left
     }
 }`;
 
 const finalIfFlow = `alphabet = {a, b}
 module a {
-    switch tapehead {
-        if a, b, blank {
-            move left
-            move right
-            reject
-        }
+    if a, b, blank {
+        move left
+        move right
+        reject
     }
 }`;
 
 const noFlowIf = `alphabet = {a, b}
 module a {
-    switch tapehead {
-        if a, b, blank {
-            move left
-            move right
-            changeto blank
-        }
+    if a, b, blank {
+        move left
+        move right
+        changeto blank
     }
 }`;
 
@@ -152,16 +136,6 @@ module a {
     goto a
 }`;
 
-const nonFinalSwitchBlock = `alphabet = {a, b}
-module a {
-    switch tapehead {
-        if a, b, blank {
-            changeto blank
-        }
-    }
-    accept
-}`;
-
 const moduleCalledAccept = `alphabet = {a, b}
 module accept {
     move right
@@ -174,35 +148,27 @@ module reject {
 
 const firstIfBlockSwitch = `alphabet = {a, b}
 module simple {
-    switch tapehead {
+    if a, b {
         if a, b {
-            switch tapehead {
-                if a, b {
-                    move right
-                } if blank {
-                    reject
-                }
-            }
+            move right
         } if blank {
             reject
         }
+    } if blank {
+        reject
     }
 }`;
 
 const validProgram = `alphabet = {0, 1}
 module isDiv2 {
-    switch tapehead {
-        while 0, 1 {
-            move right
-        } if blank {
-            move left
-            switch tapehead {
-                if 0 {
-                    accept
-                } if 1, blank {
-                    reject
-                }
-            }
+    while 0, 1 {
+        move right
+    } if blank {
+        move left
+        if 0 {
+            accept
+        } if 1, blank {
+            reject
         }
     }
 }`;
@@ -386,16 +352,6 @@ test("CodeValidator throws an error if there are two modules with the same name.
     expect(() => {
         codeValidator.validate();
     }).toThrow(new Error(`Duplicate module with name "a".`));
-});
-
-test("CodeValidator throws an error if a switch block is not a final block", () => {
-    const nonFinalSwitchBlockParser = new CodeParser(nonFinalSwitchBlock);
-    const nonFinalSwitchBlockProgram = nonFinalSwitchBlockParser.parse();
-    const codeValidator = new CodeValidator(nonFinalSwitchBlockProgram);
-
-    expect(() => {
-        codeValidator.validate();
-    }).toThrow(new Error(`A non-final block in a sequence of blocks cannot be a switch block.`));
 });
 
 test("CodeValidator throws an error if there is a module called accept", () => {

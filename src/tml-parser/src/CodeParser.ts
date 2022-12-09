@@ -99,6 +99,7 @@ export class CodeParser {
     /**
      * Keeps executing the callback until the current value is the given value.
      *  
+     * @param needToMove whether we move to the next character at the end 
      */
     private _doUntil(value:string, callback: () => void, needToMove:boolean) {
         while (this._wrapper.currentValue !== value) {
@@ -232,7 +233,7 @@ export class CodeParser {
     }
 
     private _parseBlock(): NormalBlockContext {
-        if (this._wrapper.currentValue === "switch") {
+        if (this._wrapper.currentValue === "if" || this._wrapper.currentValue === "while") {
             return this._parseSwitchBlock();
         } else {
             return this._parseBasicBlock();
@@ -241,16 +242,6 @@ export class CodeParser {
 
     private _parseSwitchBlock(): SwitchBlockContext {
         const startPosition = this._wrapper.currentPosition;
-        
-        this._matchValue("switch");
-        this._moveNext();
-        
-        this._matchValue("tapehead");
-        this._moveNext();
-        
-        this._matchValue("{");
-        this._moveNext();
-
         const cases:CaseContext[] = [];
 
         this._doUntil("}", () => {
@@ -261,16 +252,11 @@ export class CodeParser {
             } else {
                 throw new CodeError(this._wrapper.currentPosition, `Unexpected start of case: "${this._wrapper.currentValue}".`);
             }
-        }, true);
+        }, false);
         
         const endPosition = this._wrapper.currentPosition;
         const position = CodePosition.combine(startPosition, endPosition);
-
-        if (cases.length === 0) {
-            throw new CodeError(position, `A switch block must have at least one case.`);
-        }
         
-        this._moveNext();
         return new SwitchBlockContext(CodePosition.combine(position, endPosition), cases);
     }
 
@@ -297,6 +283,7 @@ export class CodeParser {
         if (blocks.length === 0) {
             throw new CodeError(position, `An if case must have at least one command.`);
         }
+        this._moveNext();
 
         return new IfCaseContext(position, values, blocks);
     }
@@ -327,6 +314,8 @@ export class CodeParser {
 
         const endPosition = this._wrapper.currentPosition;
         const position = CodePosition.combine(startPosition, endPosition);
+        
+        this._moveNext();
 
         return new WhileCaseContext(position, values, block);
     }

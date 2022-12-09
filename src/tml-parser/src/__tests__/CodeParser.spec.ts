@@ -9,14 +9,12 @@ module block1 {
     goto block2
 } 
 module block2 {
-    switch tapehead {
-        while 0 {
-            changeto b
-            move left
-        } if 1, blank {
-            changeto a
-            accept
-        }
+    while 0 {
+        changeto b
+        move left
+    } if 1, blank {
+        changeto a
+        accept
     }
 }`;
 
@@ -24,47 +22,37 @@ const isDiv2Iterative = `// checks whether a binary number is a multiple of 2 it
 alphabet = {0, 1} // only binary values allowed
 module isDiv2 {
     // move to the end first
-    switch tapehead {
-        while 0, 1 {
-            move right
-        } if blank {
-            // check the last letter is 0
-            move left
-            switch tapehead {
-                if 0 {
-                    accept
-                } if 1, blank {
-                    reject
-                }
-            }
+    while 0, 1 {
+        move right
+    } if blank {
+        // check the last letter is 0
+        move left
+        if 0 {
+            accept
+        } if 1, blank {
+            reject
         }
     }
 }`;
 
 const isDiv2Recursive = `alphabet = {0, 1}
 module isDiv2 {
-    switch tapehead {
+    if blank {
+        move right
+        reject
+    } if 0 {
+        move right
         if blank {
-            move right
+            accept
+        } if 0, 1 {
+            goto isDiv2
+        }
+    } if 1 {
+        move right
+        if blank {
             reject
-        } if 0 {
-            move right
-            switch tapehead {
-                if blank {
-                    accept
-                } if 0, 1 {
-                    goto isDiv2
-                }
-            }
-        } if 1 {
-            move right
-            switch tapehead {
-                if blank {
-                    reject
-                } if 0, 1 {
-                    goto isDiv2
-                }
-            }
+        } if 0, 1 {
+            goto isDiv2
         }
     }
 }`;
@@ -93,7 +81,7 @@ test("CodeParser parses a module correctly", () => {
     expect(modules[0].blocks.length).toBe(2);
     
     expect(modules[0].position).toEqual(new CodePosition(1, 6, 0, 1));
-    expect(modules[1].position).toEqual(new CodePosition(6, 17, 0, 1));
+    expect(modules[1].position).toEqual(new CodePosition(6, 15, 0, 1));
 });
 
 test("CodeParser parses a basic block correctly", () => {
@@ -106,7 +94,7 @@ test("CodeParser parses a basic block correctly", () => {
     expect(basicBlock.moveCommand).toBeUndefined();
     expect(basicBlock.flowCommand).toBeDefined();
     
-    expect(basicBlock.position).toEqual(new CodePosition(12, 14, 12, 18));
+    expect(basicBlock.position).toEqual(new CodePosition(11, 13, 8, 14));
 });
 
 test("CodeParser parses a while command correctly", () => {
@@ -119,7 +107,7 @@ test("CodeParser parses a while command correctly", () => {
     expect(whileCase.block.changeToCommand).toBeUndefined();
     expect(whileCase.block.moveCommand).toBeDefined();
 
-    expect(whileCase.position).toEqual(new CodePosition(5, 8, 8, 9));
+    expect(whileCase.position).toEqual(new CodePosition(4, 7, 4, 5));
 });
 
 test("CodeParser parses an if command correctly", () => {
@@ -133,7 +121,7 @@ test("CodeParser parses an if command correctly", () => {
     expect(ifCase.blocks[0]).toBeInstanceOf(BasicBlockContext);
     expect(ifCase.blocks[1]).toBeInstanceOf(SwitchBlockContext);
 
-    expect(ifCase.position).toEqual(new CodePosition(7, 18, 10, 9));
+    expect(ifCase.position).toEqual(new CodePosition(6, 15, 6, 5));
 });
 
 test("CodeParser parses a switch block correctly", () => {
@@ -150,7 +138,7 @@ test("CodeParser parses a switch block correctly", () => {
     expect(switchBlock.cases[2]).toBeInstanceOf(IfCaseContext);
     expect(switchBlock.cases[2].values).toEqual(new Set(["1"]));
 
-    expect(switchBlock.position).toEqual(new CodePosition(2, 26, 4, 5));
+    expect(switchBlock.position).toEqual(new CodePosition(2, 21, 4, 1));
 });
 
 test("CodeParser parses a move command correctly", () => {
@@ -160,7 +148,7 @@ test("CodeParser parses a move command correctly", () => {
     const moveCommand = whileCase.block.moveCommand!;
 
     expect(moveCommand.direction).toBe(Direction.RIGHT);
-    expect(moveCommand.position).toEqual(new CodePosition(6, 7, 12, 22));
+    expect(moveCommand.position).toEqual(new CodePosition(5, 6, 8, 18));
 });
 
 test("CodeParser parses a changeto command correctly", () => {
@@ -170,7 +158,7 @@ test("CodeParser parses a changeto command correctly", () => {
     const changeToCommand = whileBlock.block.changeToCommand!;
 
     expect(changeToCommand.value).toBe("b");
-    expect(changeToCommand.position).toEqual(new CodePosition(9, 10, 12, 22));
+    expect(changeToCommand.position).toEqual(new CodePosition(8, 9, 8, 18));
 });
 
 test("CodeParser parses an accept command correctly", () => {
@@ -181,7 +169,7 @@ test("CodeParser parses an accept command correctly", () => {
     const terminationCommand = basicBlock.flowCommand! as TerminationContext;
 
     expect(terminationCommand.state).toBe(TerminationState.ACCEPT);
-    expect(terminationCommand.position).toEqual(new CodePosition(13, 14, 12, 18));
+    expect(terminationCommand.position).toEqual(new CodePosition(12, 13, 8, 14));
 });
 
 test("CodeParser parses a reject command correctly", () => {
@@ -192,7 +180,7 @@ test("CodeParser parses a reject command correctly", () => {
     const terminationCommand = basicBlock.flowCommand! as TerminationContext;
     
     expect(terminationCommand.state).toBe(TerminationState.REJECT);
-    expect(terminationCommand.position).toEqual(new CodePosition(5, 6, 12, 18));
+    expect(terminationCommand.position).toEqual(new CodePosition(4, 5, 8, 14));
 });
 
 test("CodeParser parses a goto command correctly", () => {
@@ -205,5 +193,5 @@ test("CodeParser parses a goto command correctly", () => {
     const goToCommand = basicBlock.flowCommand! as GoToContext;
 
     expect(goToCommand.identifier).toBe("isDiv2");
-    expect(goToCommand.position).toEqual(new CodePosition(12, 13, 20, 31));
+    expect(goToCommand.position).toEqual(new CodePosition(10, 11, 12, 23));
 });

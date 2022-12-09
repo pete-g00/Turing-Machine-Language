@@ -7,18 +7,14 @@ import { ConstantTMState, TuringMachine } from "../TuringMachine";
 
 const isDiv2 = `alphabet = {0, 1}
 module q {
-    switch tapehead {
-        while 0, 1 {
-            move right
-        } if blank {
-            move left
-            switch tapehead {
-                if 1, blank {
-                    reject
-                } if 0 {
-                    accept
-                }
-            }
+    while 0, 1 {
+        move right
+    } if blank {
+        move left
+        if 1, blank {
+            reject
+        } if 0 {
+            accept
         }
     }
 }`;

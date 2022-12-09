@@ -6,10 +6,8 @@ Below is a selection of incorrect TML programs, along with an explanation as to 
 \begin{lstlisting}[language=TML]
 alphabet = {a, b}
 module main {
-    switch tapehead {
-        while a, b {
-            accept
-        }
+    while a, b {
+        accept
     }
 }
 \end{lstlisting}
@@ -19,11 +17,9 @@ module main {
 \begin{lstlisting}[language=TML]
 alphabet = {a, b}
 module main {
-    switch tapehead {
-        while blank {
-            move left
-            move right
-        }
+    while blank {
+        move left
+        move right
     }
 }
 \end{lstlisting}
@@ -33,14 +29,14 @@ module main {
 \begin{lstlisting}[language=TML]
 alphabet = {a, b}
 module main {
-    switch tapehead {
-        if a, blank {
-            accept
+    if a, blank {
+        if a {
+            move right
         }
     }
 }
 \end{lstlisting}
-    The first block in a switch block must be a basic block. A switch block corresponds to a state that branches to different states. So, the first block in a switch block must be a basic block so we know the transitions for the branch going into the new states.
+    The first block in a switch block must be a basic block. That is, we cannot have nested if blocks without an intermediate command. This does not make sense semantically- in the case above, we should just have a single if block for \texttt{a}.
 
     \item \textbf{Invalid module (flow command not final)}
 \begin{lstlisting}[language=TML]
@@ -59,22 +55,20 @@ module simple {
 \begin{lstlisting}[language=TML]
 alphabet = {a, b}
 module a {
-    switch tapehead {
-        if a, b {
-            changeto blank
-            move right
-            move right
-            changeto b
-        } if blank {
-            move left
-            changeto a
-            reject
-        }
+    if a, b {
+        changeto blank
+        move right
+        move right
+        changeto b
+    } if blank {
+        move left
+        changeto a
+        reject
     }
     accept
 }
 \end{lstlisting}
-    If a module has a \textit{switch} block, it must be the final block. In this case, that is not the case. It is possible that the program is meant to accept if we execute the \textit{if}-block at line 4, but it is not possible to continue the \textit{if}-block at line 9- this block already ends with a flow command. So, the execution would be unclear if this was allowed.
+    If a module has a \textit{switch} block, it must be the final block. In this case, that is not the case. It is possible that the program is meant to accept if we execute the \textit{if}-block at line 3, but it is not possible to continue the \textit{if}-block at line 8- this block already ends with a flow command. So, the execution would be unclear if this was allowed.
 
     \item \textbf{Invalid module (invalid name)}
 \begin{lstlisting}[language=TML]

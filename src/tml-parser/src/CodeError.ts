@@ -7,4 +7,8 @@ export class CodeError extends Error {
         super(message);
         this.position = position;
     }
+
+    public toString() :string {
+        return this.position.toString() + ": " + this.message;
+    }
 }

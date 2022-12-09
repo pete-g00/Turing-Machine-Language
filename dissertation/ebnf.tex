@@ -5,7 +5,7 @@ The following is the EBNF for the Turing Machine Language.
     \textit{alphabet} &= \texttt{alphabet} \ \texttt{=} \ \texttt{\{} \ \textit{seq-val} \ \texttt{\}} \\
     \textit{module} &= \texttt{module} \ \textit{id} \ \texttt{\{} \ \textit{block}^+ \ \texttt{\}} \\
     \textit{block} &= \textit{basic-block} \ | \ \textit{switch-block} \\
-    \textit{switch-block} &= \texttt{switch tapehead \{} \ \textit{case-block}^+ \ \texttt{\}} \\
+    \textit{switch-block} &= \textit{case-block}^+ \\
     \textit{case-block} &= \textit{if-block} \ | \ \textit{while-block} \\
     \textit{if-block} &= \texttt{if} \ \textit{seq-val} \ \texttt{\{} \textit{block}^+ \texttt{\}} \\
     \textit{while-block} &= \texttt{while} \ \textit{seq-val} \ \texttt{\{} \ \textit{core-com}^+ \ \texttt{\}} \\
