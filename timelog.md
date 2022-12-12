@@ -176,7 +176,6 @@
 * *0.5 hours* Changed from a react project from javascript to typescript.
 * *0.5 hours* Added linter/deploy to gh-pages.
 
-
 ### 06 Dec 2022
 
 * *1 hour* added monaco editor to the website, and added the language TM Program and its keywords.
@@ -204,3 +203,12 @@
 
 * *2 hours* Meeting with Ornela
 * *2 hours* Changed the syntax of TML to remove `switch tapehead`.
+
+## Week 13 (Crunch Period)
+
+### 12 Dec 2022
+
+* *1.5 hours* added tape drawing- a tape entry and the tapehead pointer.
+* *1 hour* experimented with `d3.transform`.
+* *1.5 hour* used `d3.transform` to allow the tape to move right with a click.
+
