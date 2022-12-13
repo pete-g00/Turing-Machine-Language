@@ -1,0 +1,19 @@
+.editor, .tm {
+    height: 100%;
+}
+
+.editor {
+    height: 600px;
+}
+
+.tm-panel {
+    height: 400px;
+}
+
+.tm-tape {
+    height: 200px;
+}
+
+.code-section {
+    border-bottom: 5px solid black;
+}

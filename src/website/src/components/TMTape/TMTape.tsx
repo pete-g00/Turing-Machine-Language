@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import TapeEntry from './../TapeEntry/TapeEntry';
-import './TMTape.css';
+import TapeEntry from '../TapeEntry/TapeEntry';
 import * as d3 from 'd3';
 
 function moveLeft(rectRef:React.RefObject<SVGRectElement>, lineRef:React.RefObject<SVGLineElement>, textRef:React.RefObject<SVGTextElement>) {

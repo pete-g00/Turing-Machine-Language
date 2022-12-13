@@ -1,14 +1,23 @@
 import React, { ReactElement } from 'react';
-import { AppBar, Button, Toolbar, Typography, Box } from '@mui/material';
+import { AppBar, Button, Toolbar, Typography, Box, Link } from '@mui/material';
+import {Link as RouterLink } from 'react-router-dom';
 
-function AppToolbar():ReactElement {
+interface AppToolbarProps {
+    isDocumentation?:boolean;
+}
+
+function AppToolbar({isDocumentation}: AppToolbarProps):ReactElement {
     return (
         <Box sx={{display: 'flex'}}>
-            <AppBar color="primary" variant="elevation" position="sticky">
+            <AppBar color="primary" variant="elevation" position="fixed">
                 <Toolbar>
                     <Typography align='left' color='inherit' variant="h6" sx={{flexGrow: 1}}>TML</Typography>
                     <div>
-                        <Button color='inherit'>Documentation</Button>
+                        <Button color='inherit'>
+                            {isDocumentation === true ? 
+                                <Link component={RouterLink} color='inherit' to="/" underline='none'>Home</Link> : 
+                                <Link component={RouterLink} color='inherit' to="/documentation" underline='none'>Documentation</Link>}
+                        </Button>
                         <Button color='inherit'>Examples</Button>
                     </div>
                 </Toolbar>

@@ -1,3 +1,4 @@
-.tm-tape {
-    background-color: rgb(240, 240, 240);
+.tm-panel {
+    width: 100%;
+    border-bottom: 5px solid black;
 }

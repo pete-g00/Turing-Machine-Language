@@ -212,3 +212,9 @@
 * *1 hour* experimented with `d3.transform`.
 * *1.5 hour* used `d3.transform` to allow the tape to move right with a click.
 
+### 13 Dec 2022
+
+* *1 hour* researched routing in react.
+* *1 hour* created documentation page and added routing to the website.
+* *0.5 hours* researched testing in react.
+* *0.5 hours* added tests for the toolbar.

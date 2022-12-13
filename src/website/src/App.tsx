@@ -1,11 +1,15 @@
 import React, { ReactElement } from 'react';
 import { purple, green } from '@mui/material/colors';
-import Editor from './components/Editor/Editor';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import AppToolbar from './components/Apptoolbar/Apptoolbar';
-import { Grid } from '@mui/material';
-import TMPanel from './components/TMPanel/TMPanel';
-import TMTape from "./components/TMTape/TMTape";
+import { Link as RouterLink, LinkProps as RouterLinkProps, Route,   BrowserRouter as Router, Routes } from 'react-router-dom';
+import HomePage from './components/Homepage/Homepage';
+import Documentation from './components/Documentation/Documentation';
+import { LinkProps } from '@mui/material';
+
+const LinkBehavior = React.forwardRef<HTMLAnchorElement, Omit<RouterLinkProps, 'to'> & { href: RouterLinkProps['to'] }>((props, ref) => {
+    const { href, ...other } = props;
+    return <RouterLink ref={ref} to={href} {...other} />;
+});
 
 const theme = createTheme({
   palette: {
@@ -17,26 +21,33 @@ const theme = createTheme({
       main: green[300]
     }
   },
+  components: {
+    MuiLink: {
+      defaultProps: {
+        component: LinkBehavior,
+      } as LinkProps,
+    },
+    MuiButtonBase: {
+      defaultProps: {
+        LinkComponent: LinkBehavior,
+      },
+    },
+  },
 });
 
 function App():ReactElement {
   return (
     <ThemeProvider theme={theme}>
       <div className="app">
-        <div className="toolbar">
-          <AppToolbar></AppToolbar>
-        </div>
-        <Grid container className="code-section">
-            <Grid item xs={12} md={6} className="editor"><Editor></Editor></Grid>
-            <Grid item xs={12} md={6} className="tm">
-              <div className="tm-panel"><TMPanel></TMPanel></div>
-              <div className="tm-tape"><TMTape></TMTape></div>
-            </Grid>
-          </Grid>
+        <Router>
+          <Routes>
+            <Route path='/' element={<HomePage/>}></Route>
+            <Route path='/documentation' element={<Documentation/>}></Route>
+          </Routes>
+        </Router>
       </div>
     </ThemeProvider>
   );
 }
-
 
 export default App;
