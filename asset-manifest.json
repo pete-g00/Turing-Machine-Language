@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/Turing-Machine-Language/static/css/main.74bfa7e1.css",
-    "main.js": "/Turing-Machine-Language/static/js/main.3ce195e7.js",
+    "main.css": "/Turing-Machine-Language/static/css/main.91779b5a.css",
+    "main.js": "/Turing-Machine-Language/static/js/main.4c7ae2b3.js",
     "static/js/312.2bbb9490.chunk.js": "/Turing-Machine-Language/static/js/312.2bbb9490.chunk.js",
     "static/js/4877.31cfb44e.chunk.js": "/Turing-Machine-Language/static/js/4877.31cfb44e.chunk.js",
     "static/js/1074.9676db91.chunk.js": "/Turing-Machine-Language/static/js/1074.9676db91.chunk.js",
@@ -86,8 +86,8 @@
     "static/js/787.71e672d5.chunk.js": "/Turing-Machine-Language/static/js/787.71e672d5.chunk.js",
     "static/media/codicon.ttf": "/Turing-Machine-Language/static/media/codicon.ade705761eb7e702770d.ttf",
     "index.html": "/Turing-Machine-Language/index.html",
-    "main.74bfa7e1.css.map": "/Turing-Machine-Language/static/css/main.74bfa7e1.css.map",
-    "main.3ce195e7.js.map": "/Turing-Machine-Language/static/js/main.3ce195e7.js.map",
+    "main.91779b5a.css.map": "/Turing-Machine-Language/static/css/main.91779b5a.css.map",
+    "main.4c7ae2b3.js.map": "/Turing-Machine-Language/static/js/main.4c7ae2b3.js.map",
     "312.2bbb9490.chunk.js.map": "/Turing-Machine-Language/static/js/312.2bbb9490.chunk.js.map",
     "4877.31cfb44e.chunk.js.map": "/Turing-Machine-Language/static/js/4877.31cfb44e.chunk.js.map",
     "1074.9676db91.chunk.js.map": "/Turing-Machine-Language/static/js/1074.9676db91.chunk.js.map",
@@ -172,7 +172,7 @@
     "787.71e672d5.chunk.js.map": "/Turing-Machine-Language/static/js/787.71e672d5.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.74bfa7e1.css",
-    "static/js/main.3ce195e7.js"
+    "static/css/main.91779b5a.css",
+    "static/js/main.4c7ae2b3.js"
   ]
 }
