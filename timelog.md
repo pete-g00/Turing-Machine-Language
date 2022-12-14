@@ -218,3 +218,11 @@
 * *1 hour* created documentation page and added routing to the website.
 * *0.5 hours* researched testing in react.
 * *0.5 hours* added tests for the toolbar.
+
+### 14 Dec 2022
+
+* *0.5 hours* Fixed logo not showing.
+* *0.5 hours* Fixed issue with url.
+* *0.5 hours* added more pages to the the website.
+* *1 hour* created the error pages
+* *1 hour* used JSON to create specific error pages

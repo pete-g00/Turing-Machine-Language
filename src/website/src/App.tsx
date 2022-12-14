@@ -1,10 +1,14 @@
 import React, { ReactElement } from 'react';
 import { purple, green } from '@mui/material/colors';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { Link as RouterLink, LinkProps as RouterLinkProps, Route,   BrowserRouter as Router, Routes } from 'react-router-dom';
+import { Link as RouterLink, LinkProps as RouterLinkProps, Route,   BrowserRouter as Router, Routes, Navigate } from 'react-router-dom';
 import HomePage from './components/Homepage/Homepage';
 import Documentation from './components/Documentation/Documentation';
 import { LinkProps } from '@mui/material';
+import PreciseErrorDocumentation from './components/PreciseErrorDocumentation/PreciseErrorDocumentation';
+import ErrorDocumentation from './components/ErrorDocumentation/ErrorDocumentation';
+import ExecutionDocumentation from './components/ExecutionDocumentation/ExecutionDocumentation';
+import SpecificationDocumentation from './components/SpecificationDocumentation/SpecificationDocumentation';
 
 const LinkBehavior = React.forwardRef<HTMLAnchorElement, Omit<RouterLinkProps, 'to'> & { href: RouterLinkProps['to'] }>((props, ref) => {
     const { href, ...other } = props;
@@ -41,8 +45,13 @@ function App():ReactElement {
       <div className="app">
         <Router>
           <Routes>
-            <Route path='/' element={<HomePage/>}></Route>
-            <Route path='/documentation' element={<Documentation/>}></Route>
+            <Route path='/Turing-Machine-Language' element={<HomePage/>}></Route>
+            <Route path='/Turing-Machine-Language/documentation' element={<Documentation/>}></Route>
+            <Route path='/Turing-Machine-Language/documentation/errors/:label' element={<PreciseErrorDocumentation/>}></Route>
+            <Route path='/Turing-Machine-Language/documentation/errors' element={<ErrorDocumentation/>}></Route>
+            <Route path='/Turing-Machine-Language/documentation/execution' element={<ExecutionDocumentation/>}></Route>
+            <Route path='/Turing-Machine-Language/documentation/specification' element={<SpecificationDocumentation/>}></Route>
+            <Route path='*' element={<Navigate replace to='/Turing-Machine-Language'></Navigate>}></Route>
           </Routes>
         </Router>
       </div>
