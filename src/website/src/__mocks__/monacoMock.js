@@ -5,9 +5,13 @@ const emptyFun = () => {
 export const editor = {
     defineTheme: emptyFun,
     create: () => {
-        return {dispose: emptyFun};
+        return {
+            dispose: emptyFun,
+            onDidChangeModelContent: emptyFun
+        };
     },
-    dispose: emptyFun
+    dispose: emptyFun,
+    setModelMarkers: emptyFun
 };
 
 export const languages =  {
