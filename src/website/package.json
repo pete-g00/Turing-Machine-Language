@@ -20,6 +20,7 @@
     "eslint": "^8.20.0",
     "gh-pages": "^4.0.0",
     "monaco-editor": "^0.33.0",
+    "parser-tml": "^1.0.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.3.0",
@@ -41,18 +42,11 @@
       "react-app/jest"
     ]
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not op_mini all"
+  ],
   "jest": {
     "moduleNameMapper": {
       "monaco-editor": "<rootDir>/src/__mocks__/monacoMock.js",

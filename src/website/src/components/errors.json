@@ -1,4 +1,5 @@
 {
+  "parser": {   
     "empty-file": {
       "title": "Empty File",
       "description": "The program contains no code and cannot be parsed.",
@@ -83,7 +84,9 @@
       "title": "Invalid Case Command",
       "description": "Within a switch block of a program, there is an invalid case command. A case command must start with <code>if</code> or <code>while</code>.",
       "fix": "Remove the invalid case value and replace it with an <code>if</code> or a <code>while</code> block."
-    },
+    }
+  },
+  "validator": {
     "undefined-module": {
       "title": "Undefined Module",
       "description": "There is a reference to a module that does not exist.",
@@ -93,6 +96,11 @@
       "title": "Switch case for a Letter not in the Alphabet",
       "description": "A case within the switch block applies to a letter that does not exist in the alphabet. A switch case can only apply to a letter present in the alphabet.",
       "fix": "Either add the letter to the alphabet, or remove it from the case."
+    },
+    "switch-multiple-cases": {
+      "title": "Multiple switch cases for a letter",
+      "description": "There are multiple cases that apply to a letter within the same switch block.",
+      "fix": "Remove the letter from some of the cases."
     },
     "incomplete-switch": {
       "title": "Incomplete Switch Block",
@@ -134,4 +142,5 @@
       "description": "The first block within a sequence of blocks within an if block is a switch block. The first block must be a basic block.",
       "fix": "Change the if block into a basic block."
     }
+  }
 }

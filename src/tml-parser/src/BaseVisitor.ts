@@ -1,19 +1,9 @@
-import { AlphabetContext, BasicBlockContext, ChangeToContext, Context, CoreBasicBlockContext, GoToContext, IfCaseContext, ModuleContext, MoveContext, ProgramContext, SwitchBlockContext, TerminationContext, WhileCaseContext } from "./Context";
+import { AlphabetContext, BasicBlockContext, ChangeToContext, CoreBasicBlockContext, GoToContext, IfCaseContext, ModuleContext, MoveContext, ProgramContext, SwitchBlockContext, TerminationContext, WhileCaseContext } from "./Context";
 
 /**
  * The base visitor allows for a TM Program to be visited and a value shared/accumulated
  */
 export abstract class BaseVisitor<T> {
-    /**
-     * Visits the relevant context value
-     * 
-     * @param context the context to visit
-     * @returns the visited value
-     */
-    public visit(context:Context): T {
-        return context.accept(this);
-    }
-
     /**
      * The code run for the entire program
      * 

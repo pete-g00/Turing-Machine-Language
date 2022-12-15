@@ -1,23 +1,19 @@
 import React, { useEffect, useRef } from 'react';
 import './Editor.css';
 import * as monaco from 'monaco-editor';
-import './../MonacoConfig';
+import { showErrors } from './../MonacoConfig';
 
 const code = `// checks whether a binary number is divisible by 2
 alphabet = {0, 1}
 module isDiv2 {
-    switch tapehead {
-        while 0, 1 {
-            move right
-        } if blank {
-            move left
-            switch tapehead {
-                if 0 {
-                    accept
-                } if 1, blank {
-                    reject
-                }
-            }
+    while 0, 1 {
+        move right
+    } if blank {
+        move left
+        if 0 {
+            accept
+        } if 1, blank {
+            reject
         }
     }
 }`;
@@ -25,6 +21,7 @@ module isDiv2 {
 function Editor() {
     const divEl = useRef<HTMLDivElement>(null);
     let editor: monaco.editor.IStandaloneCodeEditor;
+    const markers:monaco.editor.IMarkerData[] = [];
     useEffect(() => {
         if (divEl.current) {
             editor = monaco.editor.create(divEl.current, {
@@ -33,6 +30,11 @@ function Editor() {
                 theme: "TMProgramTheme-dark",
                 automaticLayout: true,
                 wordWrap: "on",
+            });
+            editor.onDidChangeModelContent(() => {
+                showErrors(editor.getValue(), markers);
+                console.log(markers);
+                monaco.editor.setModelMarkers(editor.getModel()!, "validate-TMP", markers);
             });
         }
         return () => {

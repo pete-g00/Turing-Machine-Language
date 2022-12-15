@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 import { purple, green } from '@mui/material/colors';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { Link as RouterLink, LinkProps as RouterLinkProps, Route,   BrowserRouter as Router, Routes, Navigate } from 'react-router-dom';
+import { Link as RouterLink, LinkProps as RouterLinkProps, Route, HashRouter as Router, Routes, Navigate } from 'react-router-dom';
 import HomePage from './components/Homepage/Homepage';
 import Documentation from './components/Documentation/Documentation';
 import { LinkProps } from '@mui/material';

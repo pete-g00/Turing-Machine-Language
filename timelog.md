@@ -226,3 +226,11 @@
 * *0.5 hours* added more pages to the the website.
 * *1 hour* created the error pages
 * *1 hour* used JSON to create specific error pages
+
+### 15 Dec 2022
+
+* *1.5 hours* published the tml-parser package as parser-tml.
+* *1 hour* imported the package into the website and added the code parser ability to show markers.
+* *0.5 hours* tried to add links within error messages to the error pages in documentation- doesn't seem like there is support for this :(
+* *1 hour* copied code from `CodeParser` and `CodeValidator` as examples for code errors.
+* *0.5 hours* amended the error documentation page to include the code examples.

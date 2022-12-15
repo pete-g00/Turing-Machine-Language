@@ -1,11 +1,17 @@
 {
-  "name": "tml-parser",
-  "version": "0.0.0",
+  "name": "parser-tml",
+  "version": "1.0.7",
   "description": "A parser for TML program",
-  "main": "build/src/index.js",
-  "types": "build/src/index.d.ts",
+  "homepage": "https://github.com/pete-g00/Turing-Machine-Language/src/tml-parser",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pete-g00/Turing-Machine-Language.git"
+  },
+  "main": "index.js",
+  "types": "index.d.ts",
   "files": [
-    "build/src"
+    "src/",
+    "index.d.ts"
   ],
   "license": "Apache-2.0",
   "keywords": [],

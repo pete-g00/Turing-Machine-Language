@@ -1,4 +1,5 @@
 import * as monaco from 'monaco-editor';
+import { CodeError, CodeParser, CodeValidator } from 'parser-tml';
 
 monaco.languages.register({id: "TMProgram"});
 
@@ -80,7 +81,7 @@ monaco.languages.registerCompletionItemProvider("TMProgram", {
 // @ts-ignore
 // eslint-disable-next-line no-restricted-globals
 self.MonacoEnvironment = {
-	getWorkerUrl: function (_moduleId:unknown, label:string) {
+	getWorkerUrl: function (_moduleId:any, label:string) {
 		if (label === 'json') {
 			return './json.worker.bundle.js';
 		}
@@ -112,3 +113,35 @@ monaco.languages.setLanguageConfiguration('TMProgram', {
         lineComment: "//"
     }
 });
+
+function catchError(source:string, error:unknown, markers:monaco.editor.IMarkerData[]) {
+    try {
+        markers.push({
+            endColumn: (error as CodeError).position.endColNumber+1,
+            endLineNumber: (error as CodeError).position.endLineNumber,
+            message: (error as CodeError).message,
+            severity: monaco.MarkerSeverity.Error,
+            startColumn: (error as CodeError).position.startColNumber+1,
+            startLineNumber: (error as CodeError).position.startLineNumber+1,
+            source,
+        });
+    } catch (_) {
+        console.log("Not a CodeError!");
+    }
+}
+
+export function showErrors(program:string, markers:monaco.editor.IMarkerData[]) {
+    markers.pop();
+    const parser = new CodeParser(program);
+    try {
+        const code = parser.parse();
+        const validator = new CodeValidator(code);
+        try {
+            validator.validate();
+        } catch (error) {
+            catchError("TMValidator", error, markers);
+        }
+    } catch (error) {
+        catchError("TMParser", error, markers);
+    }
+}
