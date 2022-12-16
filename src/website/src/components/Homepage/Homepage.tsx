@@ -8,10 +8,8 @@ import AppToolbar from '../Apptoolbar/Apptoolbar';
 
 function HomePage() {
     return (
-        <div>
-            <div className="toolbar">
-                <AppToolbar></AppToolbar>
-            </div>
+        <div className='homepage'>
+            <AppToolbar></AppToolbar>
             <Grid container className="code-section">
                 <Grid item xs={12} md={6} className="editor">
                     <Editor></Editor>

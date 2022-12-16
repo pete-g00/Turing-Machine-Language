@@ -9,4 +9,4 @@ The current directory structure is:
 
 More detail will appear as I continue working on the project.
 
-[Click here](pete-g00.github.io/Turing-Machine-Language/) to go to the website created as part of the project.
+[Click here](https://pete-g00.github.io/Turing-Machine-Language/) to go to the website created as part of the project.

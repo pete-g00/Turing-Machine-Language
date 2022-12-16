@@ -45,13 +45,13 @@ function App():ReactElement {
       <div className="app">
         <Router>
           <Routes>
-            <Route path='/Turing-Machine-Language' element={<HomePage/>}></Route>
-            <Route path='/Turing-Machine-Language/documentation' element={<Documentation/>}></Route>
-            <Route path='/Turing-Machine-Language/documentation/errors/:label' element={<PreciseErrorDocumentation/>}></Route>
-            <Route path='/Turing-Machine-Language/documentation/errors' element={<ErrorDocumentation/>}></Route>
-            <Route path='/Turing-Machine-Language/documentation/execution' element={<ExecutionDocumentation/>}></Route>
-            <Route path='/Turing-Machine-Language/documentation/specification' element={<SpecificationDocumentation/>}></Route>
-            <Route path='*' element={<Navigate replace to='/Turing-Machine-Language'></Navigate>}></Route>
+            <Route path='/' element={<HomePage/>}></Route>
+            <Route path='/documentation' element={<Documentation/>}></Route>
+            <Route path='/documentation/errors/:label' element={<PreciseErrorDocumentation/>}></Route>
+            <Route path='/documentation/errors' element={<ErrorDocumentation/>}></Route>
+            <Route path='/documentation/execution' element={<ExecutionDocumentation/>}></Route>
+            <Route path='/documentation/specification' element={<SpecificationDocumentation/>}></Route>
+            <Route path='*' element={<Navigate replace to='/'></Navigate>}></Route>
           </Routes>
         </Router>
       </div>

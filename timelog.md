@@ -234,3 +234,11 @@
 * *0.5 hours* tried to add links within error messages to the error pages in documentation- doesn't seem like there is support for this :(
 * *1 hour* copied code from `CodeParser` and `CodeValidator` as examples for code errors.
 * *0.5 hours* amended the error documentation page to include the code examples.
+
+### 16 Dec 2022
+
+* *0.5 hours* wrote and sent this week's update to Ornela
+* *1.5 hour* Researched how to make the arrows in the Turing machine move more naturally as we drag the states- found the function `Math.atan2`.
+* *1 hour* Added code to drag the arrows naturally as the states get dragged.
+* *0.5 hours* Added text to arrows- need to develop how the text is displayed.
+* *1 hour* Added support for loops- arrows from a state back to itself.

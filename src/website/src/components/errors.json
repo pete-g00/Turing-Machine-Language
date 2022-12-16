@@ -1,146 +1,195 @@
 {
-  "parser": {   
-    "empty-file": {
-      "title": "Empty File",
-      "description": "The program contains no code and cannot be parsed.",
-      "fix": "Start coding to fix the issue!"
-    },
-    "expected-value": {
-      "title": "Expected Value",
-      "description": "At a line in the program, it does not have the expected value.",
-      "fix": "Change the current value to the expected value."
-    },
-    "empty-alphabet": {
-      "title": "Empty Alphabet",
-      "description": "The program has an empty alphabet.",
-      "fix": "Add a letter to the alphabet."
-    },
-    "invalid-alphabet-letter": {
-      "title": "Invalid Letter in the Alphabet",
-      "description": "The alphabet in the program has an invalid letter.",
-      "fix": "Only use valid letters in the alphabet. The program accepts any English letter and a number."
-    },
-    "alphabet-length-greater-than-1": {
-      "title": "Letter in the Alphabet with Length Greater than 1",
-      "description": "A value in the alphabet is longer than a single letter.",
-      "fix": "Only use English letters in the alphabet."
-    },
-    "unexpected-eof": {
-      "title": "Unexpected End Of File",
-      "description": "The program ends unexpectedly.",
-      "fix": "Complete the program. This issue normally occurs when there is an incomplete bracket."
-    },
-    "no-modules": {
-      "title": "No Modules",
-      "description": "The program has no modules.",
-      "fix": "Add a module to the program!"
-    },
-    "no-commands": {
-      "title": "No Commands",
-      "description": "A module in the program does not have any commands.",
-      "fix": "Add a command to the module!"
-    },
-    "invalid-direction": {
-      "title": "Invalid Direction",
-      "description": "The given direction in the move command is invalid.",
-      "fix": "Use valid directions- <code>left</code> or <code>right</code>."
-    },
-    "invalid-basic-command": {
-      "title": "Invalid Basic Command",
-      "description": "A basic command given is invalid.",
-      "fix": "Use a valid basic command- <code>changeto</code>, <code>move</code>, <code>goto</code>, <code>accept</code> or <code>reject</code>"
-    },
-    "invalid-core-command": {
-      "title": "Invalid Core Command",
-      "description": "A core command given is invalid.",
-      "fix": "Use a valid core command- <code>changeto</code> or <code>move</code>"
-    },
-    "multiple-basic-blocks-in-while": {
-      "title": "Multiple Basic Blocks in a While Command",
-      "description": "There are multiple basic blocks in a while command. There must be precisely one basic block in a while command.",
-      "fix": "Remove some of the basic blocks so that there is precisely one."
-    },
-    "empty-if-value": {
-      "title": "Empty If Value",
-      "description": "There is an if block in the program that does not apply to any letter in the alphabet. An if block must apply to at least one block.",
-      "fix": "Either remove the if block or apply a value to the if block."
-    },
-    "empty-if-body": {
-      "title": "Empty If Body",
-      "description": "There is an if block in the program without any command. An if block must have at least one command.",
-      "fix": "Either remove the if block or add a command to it."
-    },
-    "empty-while-value": {
-      "title": "Empty While Value",
-      "description": "There is a while block in the program that does not apply to any letter in the alphabet. A while block must apply to at least one block.",
-      "fix": "Either remove the while block or apply a value to the while block."
-    },
-    "empty-while-body": {
-      "title": "Empty While Body",
-      "description": "There is a while block in the program without any command. A while block must have at least one command.",
-      "fix": "Either remove the while block or add a command to it."
-    },
-    "invalid-case-command": {
-      "title": "Invalid Case Command",
-      "description": "Within a switch block of a program, there is an invalid case command. A case command must start with <code>if</code> or <code>while</code>.",
-      "fix": "Remove the invalid case value and replace it with an <code>if</code> or a <code>while</code> block."
-    }
+  "parser": {
+     "alphabet-length-greater-than-1": {
+        "title": "Letter in the Alphabet with Length Greater than 1",
+        "description": "A value in the alphabet is longer than a single letter.",
+        "fix": "Only use English letters in the alphabet.",
+        "code": "alphabet = {ab}",
+        "caption": "A program where the alphabet has an entry of length 2."
+     },
+     "empty-alphabet": {
+        "title": "Empty Alphabet",
+        "description": "The program has an empty alphabet.",
+        "fix": "Add a letter to the alphabet.",
+        "code": "alphabet = {}",
+        "caption": "A program where the alphabet has no entries."
+     },
+     "empty-file": {
+        "title": "Empty File",
+        "description": "The program contains no code and cannot be parsed.",
+        "fix": "Start coding to fix the issue!",
+        "code": "",
+        "caption": "An empty program."
+     },
+     "empty-if-body": {
+        "title": "Empty If Body",
+        "description": "There is an if block in the program without any command. An if block must have at least one command.",
+        "fix": "Either remove the if block or add a command to it.",
+        "code": "alphabet = {a, b}\nmodule main {\n    if a {}\n}",
+        "caption": "A program with an if block with no body."
+     },
+     "empty-if-value": {
+        "title": "Empty If Value",
+        "description": "There is an if block in the program that does not apply to any letter in the alphabet. An if block must apply to at least one block.",
+        "fix": "Either remove the if block or apply a value to the if block.",
+        "code": "alphabet = {a, b}\nmodule main {\n    if {}\n}",
+        "caption": "A program with an if block without no values."
+     },
+     "empty-while-body": {
+        "title": "Empty While Body",
+        "description": "There is a while block in the program without any command. A while block must have at least one command.",
+        "fix": "Either remove the while block or add a command to it.",
+        "code": "alphabet = {a, b}\nmodule main {\n    while a {}\n}",
+        "caption": "A program with an if block with no body."
+     },
+     "empty-while-value": {
+        "title": "Empty While Value",
+        "description": "There is a while block in the program that does not apply to any letter in the alphabet. A while block must apply to at least one block.",
+        "fix": "Either remove the while block or apply a value to the while block.",
+        "code": "alphabet = {a, b}\nmodule main {\n    while {}\n}",
+        "caption": "A program with a where block without no values."
+     },
+     "expected-value": {
+        "title": "Expected Value",
+        "description": "At a line in the program, it does not have the expected value.",
+        "fix": "Change the current value to the expected value.",
+        "code": "module main {}",
+        "caption": "An invalid program- should start with \"alphabet\" instead of \"module\"."
+     },
+     "invalid-alphabet-letter": {
+        "title": "Invalid Letter in the Alphabet",
+        "description": "The alphabet in the program has an invalid letter.",
+        "fix": "Only use valid letters in the alphabet. The program accepts any English letter and a number.",
+        "code": "alphabet = {a, .}",
+        "caption": "A program where the alphabet contains an invalid letter."
+     },
+     "invalid-basic-command": {
+        "title": "Invalid Basic Command",
+        "description": "A basic command given is invalid.",
+        "fix": "Use a valid basic command- <code>changeto</code>, <code>move</code>, <code>goto</code>, <code>accept</code> or <code>reject</code>",
+        "code": "alphabet = {a, b}\nmodule main {\n    stop\n}",
+        "caption": "A program with an invalid basic command- \"stop\"."
+     },
+     "invalid-case-command": {
+        "title": "Invalid Case Command",
+        "description": "Within a switch block of a program, there is an invalid case command. A case command must start with <code>if</code> or <code>while</code>.",
+        "fix": "Remove the invalid case value and replace it with an <code>if</code> or a <code>while</code> block.",
+        "code": "alphabet = {a, b}\nmodule main {\n    when x {\n        move right\n    }\n}",
+        "caption": "A program with an invalid case command- \"when\"."
+     },
+     "invalid-core-command": {
+        "title": "Invalid Core Command",
+        "description": "A core command given is invalid.",
+        "fix": "Use a valid core command- <code>changeto</code> or <code>move</code>",
+        "code": "alphabet = {a, b}\nmodule main {\n    while a, b {\n        accept\n    }\n}",
+        "caption": "A program with an invalid core command- \"accept\". Note that although the command \"accept\" is a valid basic command, it is not a core command."
+     },
+     "invalid-direction": {
+        "title": "Invalid Direction",
+        "description": "The given direction in the move command is invalid.",
+        "fix": "Use valid directions- <code>left</code> or <code>right</code>.",
+        "code": "alphabet = {a, b}\nmodule main {\n    move up\n}",
+        "caption": "A program with a <code>move<code> command going in an invalid direction- \"up\"."
+     },
+     "multiple-basic-blocks-in-while": {
+        "title": "Multiple Basic Blocks in a While Command",
+        "description": "There are multiple basic blocks in a while command. There must be precisely one basic block in a while command.",
+        "fix": "Remove some of the basic blocks so that there is precisely one.",
+        "code": "alphabet = {a, b}\nmodule main {\n    while blank {\n        move left\n        move right\n    }\n}",
+        "caption": "A program with a while block that has two blocks- a while block must have precisely one core block."
+     },
+     "no-commands": {
+        "title": "No Commands",
+        "description": "A module in the program does not have any commands.",
+        "fix": "Add a command to the module!",
+        "code": "alphabet = {a, b}\nmodule main {}",
+        "caption": "A program where a module has no commands."
+     },
+     "no-modules": {
+        "title": "No Modules",
+        "description": "The program has no modules.",
+        "fix": "Add a module to the program!",
+        "code": "alphabet = {a, b}",
+        "caption": "A program without any modules."
+     },
+     "unexpected-eof": {
+        "title": "Unexpected End Of File",
+        "description": "The program ends unexpectedly.",
+        "fix": "Complete the program. This issue normally occurs when there is an incomplete bracket.",
+        "code": "alphabet = {a, b}\nmodule main {",
+        "caption": "A program with an incomplete bracket- the file ends abruptly with an incomplete bracket."
+     }
   },
   "validator": {
-    "undefined-module": {
-      "title": "Undefined Module",
-      "description": "There is a reference to a module that does not exist.",
-      "fix": "Create the module that is being referred to, or change the reference to a defined module."
-    },
-    "switch-for-letter-not-in-alphabet": {
-      "title": "Switch case for a Letter not in the Alphabet",
-      "description": "A case within the switch block applies to a letter that does not exist in the alphabet. A switch case can only apply to a letter present in the alphabet.",
-      "fix": "Either add the letter to the alphabet, or remove it from the case."
-    },
-    "switch-multiple-cases": {
-      "title": "Multiple switch cases for a letter",
-      "description": "There are multiple cases that apply to a letter within the same switch block.",
-      "fix": "Remove the letter from some of the cases."
-    },
-    "incomplete-switch": {
-      "title": "Incomplete Switch Block",
-      "description": "There is a switch block that does not have a case for every letter in the alphabet, including the <code>blank</code> value.",
-      "fix": "Add more cases that apply to the remaining letters, or add more values to the existing cases."
-    },
-    "non-final-block-with-flow": {
-      "title": "Non-final block with a flow command",
-      "description": "Within a sequence of blocks (within a module or an if block), a non-final block contains a flow command (<code>goto</code>, <code>accept</code> or <code>reject</code>). Only the final block should have these commands.",
-      "fix": "Remove the flow command from the block."
-    },
-    "non-final-block-if": {
-      "title": "Non-final if block",
-      "description": "Within a sequence of blocks (within a module or an if block), a non-final block is an if block. Only the final block can be an if block.",
-      "fix": "Remove all the blocks after it- they will not be executed."
-    },
-    "letter-not-in-alphabet": {
-      "title": "Letter Not in Alphabet",
-      "description": "There is a <code>changeto</code> command that changes the tapehead value to a letter that is not present in the alphabet (or <code>blank</code>).",
-      "fix": "Replace the letter with a letter in the alphabet or <code>blank</code>."
-    },
-    "duplicate-module-definition": {
-      "title": "Duplicate Module Definition",
-      "description": "There are two modules present in the program with the same name. All the modules must have different names.",
-      "fix": "Change the name of one of the modules so that they are all unique."
-    },
-    "switch-block-not-final": {
-      "title": "Switch Block Not Final",
-      "description": "Within a sequence of blocks (within a module or an if block), there is a switch block that is not the final block. A switch block, if present, must be the final block present in a sequence of blocks.",
-      "fix": "Remove all the blocks after the switch block."
-    },
-    "invalid-module-name": {
-      "title": "Invalid Module Name",
-      "description": "There is a module named <code>accept</code> or <code>reject</code>",
-      "fix": "Rename the module to a valid name."
-    },
-    "first-if-block-switch": {
-      "title": "First If Block Switch",
-      "description": "The first block within a sequence of blocks within an if block is a switch block. The first block must be a basic block.",
-      "fix": "Change the if block into a basic block."
-    }
+     "duplicate-module-definition": {
+        "title": "Duplicate Module Definition",
+        "description": "There are two modules present in the program with the same name. All the modules must have different names.",
+        "fix": "Change the name of one of the modules so that they are all unique.",
+        "code": "alphabet = {a, b}\nmodule a {\n    goto a\n} \nmodule a {\n    goto a\n}",
+        "caption": "A program with two modules, both named \"a\"."
+     },
+     "first-if-block-switch": {
+        "title": "First If Block Switch",
+        "description": "The first block within a sequence of blocks within an if block is a switch block. The first block must be a basic block.",
+        "fix": "Change the if block into a basic block.",
+        "code": "alphabet = {a, b}\nmodule simple {\n    if a, b {\n        if a, b {\n            move right\n        } if blank {\n            reject\n        }\n    } if blank {\n        reject\n    }\n}",
+        "caption": "A program where the first if block is a switch block. This isn't allowed since the first block within a switch block undermines the parent switch block."
+     },
+     "incomplete-switch": {
+        "title": "Incomplete Switch Block",
+        "description": "There is a switch block that does not have a case for every letter in the alphabet, including the <code>blank</code> value.",
+        "fix": "Add more cases that apply to the remaining letters, or add more values to the existing cases.",
+        "code": "alphabet = {a, b}\nmodule a {\n    if a {\n        accept\n    } if b {\n        reject\n    }\n}",
+        "caption": "A program with an incomplete switch block- it is missing a case for the letter \"blank\"."
+     },
+     "invalid-module-name": {
+        "title": "Invalid Module Name",
+        "description": "There is a module named <code>accept</code> or <code>reject</code>",
+        "fix": "Rename the module to a valid name.",
+        "code": "alphabet = {a, b}\nmodule accept {\n    move right\n}",
+        "caption": "A program with a module called an invalid name- \"accept\". The values \"accept\" and \"reject\" are keywords."
+     },
+     "letter-not-in-alphabet": {
+        "title": "Letter Not in Alphabet",
+        "description": "There is a <code>changeto</code> command that changes the tapehead value to a letter that is not present in the alphabet (or <code>blank</code>).",
+        "fix": "Replace the letter with a letter in the alphabet or <code>blank</code>.",
+        "code": "alphabet = {a, b}\nmodule a {\n    changeto x\n}",
+        "caption": "A program with a changeto command that refers to a value not present in the alphabet- \"x\"."
+     },
+     "non-final-block-if": {
+        "title": "Non-final if block",
+        "description": "Within a sequence of blocks (within a module or an if block), a non-final block is an if block. Only the final block can be an if block.",
+        "fix": "Remove all the blocks after it- they will not be executed.",
+        "code": "alphabet = {a, b}\nmodule a {\n    if a, b, blank {\n        changeto b\n        move left\n        changeto a\n        goto a\n    }\n    move left\n}",
+        "caption": "A program with an if block where the second last block within it contains the flow command \"goto\". After the \"if\" command, it is not possible to reach the final command \"move left\"."
+     },
+     "non-final-block-with-flow": {
+        "title": "Non-final block with a flow command",
+        "description": "Within a sequence of blocks (within a module or an if block), a non-final block contains a flow command (<code>goto</code>, <code>accept</code> or <code>reject</code>). Only the final block should have these commands.",
+        "fix": "Remove the flow command from the block.",
+        "code": "alphabet = {a, b}\nmodule a {\n    goto a\n    move left\n}",
+        "caption": "A program with a module where the second last block within it contains the flow command \"goto\". After the \"goto\" command is executed, we restart executing this module and so the command \"move left\" is not reached."
+     },
+     "switch-for-letter-not-in-alphabet": {
+        "title": "Switch case for a Letter not in the Alphabet",
+        "description": "A case within the switch block applies to a letter that does not exist in the alphabet. A switch case can only apply to a letter present in the alphabet.",
+        "fix": "Either add the letter to the alphabet, or remove it from the case.",
+        "code": "alphabet = {a, b}\nmodule a {\n    if x {\n        accept\n    }\n}",
+        "caption": "A program with a switch block that has a case for a letter not part of the alphabet- \"x\"."
+     },
+     "switch-multiple-cases": {
+        "title": "Multiple switch cases for a letter",
+        "description": "There are multiple cases that apply to a letter within the same switch block.",
+        "fix": "Remove the letter from some of the cases.",
+        "code": "alphabet = {a, b}\nmodule a {\n    if a {\n        accept\n    } if a {\n        reject\n    }\n}",
+        "caption": "A program wth a switch block that has two cases corresponding to the letter \"a\"."
+     },
+     "undefined-module": {
+        "title": "Undefined Module",
+        "description": "There is a reference to a module that does not exist.",
+        "fix": "Create the module that is being referred to, or change the reference to a defined module.",
+        "code": "alphabet = {a, b}\nmodule a {\n    move left\n    goto b\n}",
+        "caption": "A program with a goto command referring to a module that does not exist- \"b\"."
+     }
   }
 }

@@ -9,6 +9,8 @@ export interface ErrorData {
     title:string;
     description:string;
     fix:string;
+    code:string;
+    caption:string;
 }
 
 export interface ErrorInterface {

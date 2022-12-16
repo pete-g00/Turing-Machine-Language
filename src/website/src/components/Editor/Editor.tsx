@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import './Editor.css';
 import * as monaco from 'monaco-editor';
-import { showErrors } from './../MonacoConfig';
+import { showErrors } from '../MonacoConfig';
 
 const code = `// checks whether a binary number is divisible by 2
 alphabet = {0, 1}
@@ -33,7 +33,6 @@ function Editor() {
             });
             editor.onDidChangeModelContent(() => {
                 showErrors(editor.getValue(), markers);
-                console.log(markers);
                 monaco.editor.setModelMarkers(editor.getModel()!, "validate-TMP", markers);
             });
         }

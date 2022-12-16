@@ -15,8 +15,8 @@ function AppToolbar({isDocumentation}: AppToolbarProps):ReactElement {
                     <div>
                         <Button color='inherit'>
                             {isDocumentation === true ? 
-                                <Link component={RouterLink} color='inherit' to="/Turing-Machine-Language/" underline='none'>Home</Link> : 
-                                <Link component={RouterLink} color='inherit' to="/Turing-Machine-Language/documentation" underline='none'>Documentation</Link>}
+                                <Link component={RouterLink} color='inherit' to="/" underline='none'>Home</Link> : 
+                                <Link component={RouterLink} color='inherit' to="/documentation" underline='none'>Documentation</Link>}
                         </Button>
                         <Button color='inherit'>Examples</Button>
                     </div>
