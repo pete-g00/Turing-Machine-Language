@@ -3,7 +3,7 @@ import * as d3 from 'd3';
 import './TMCircle.css';
 import { generatePath } from '../TMArrow/TMArrow';
 
-interface CircleLine {
+export interface CircleLine {
     line:React.RefObject<SVGLineElement>|React.RefObject<SVGPathElement>;
     text:React.RefObject<SVGTextElement>;
     fromCircle:React.RefObject<SVGCircleElement>;
@@ -16,8 +16,7 @@ interface CircleProps {
     edgesTo:CircleLine[];
     circleRef:React.RefObject<SVGCircleElement>;
     textRef:React.RefObject<SVGTextElement>;
-    accept?:boolean;
-    reject?:boolean;
+    label:string;
     x:number;
     y:number;
     r:number;
@@ -37,16 +36,7 @@ function getArrowOffset(fromCircleEl:React.RefObject<SVGCircleElement>, toCircle
     };
 }
 
-function TMCircle({text, edgesFrom, edgesTo, circleRef, textRef, accept, reject, x, y, r}:CircleProps) {
-    let fillColor:'white'|'red'|'green';
-    if (accept) {
-        fillColor = 'green';
-    } else if (reject) {
-        fillColor = 'red';
-    } else {
-        fillColor = 'white';
-    }
-
+function TMCircle({text, edgesFrom, edgesTo, circleRef, textRef, x, y, r, label}:CircleProps) {
     useEffect(() => {
         if (circleRef.current) {
             const handleDrag = d3.drag()
@@ -127,13 +117,11 @@ function TMCircle({text, edgesFrom, edgesTo, circleRef, textRef, accept, reject,
                 });
                 // @ts-ignore
                 handleDrag(d3.select(circleRef.current));
-                // @ts-ignore
-                handleDrag(d3.select(textRef.current));
         }
     }, []);
     return (
         <g>
-            <circle fill={fillColor} ref={circleRef} stroke='black' strokeWidth={1} cx={x} cy={y} r={r}></circle>
+            <circle ref={circleRef} id={label} stroke='black' strokeWidth={1} cx={x} cy={y} r={r}></circle>
             <text ref={textRef} x={x} y={y} dominantBaseline="middle" textAnchor="middle">{text}</text>
         </g>
     );

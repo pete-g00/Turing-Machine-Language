@@ -125,19 +125,20 @@ function catchError(source:string, error:unknown, markers:monaco.editor.IMarkerD
             startLineNumber: (error as CodeError).position.startLineNumber+1,
             source,
         });
-    } catch (_) {
+    } catch {
         console.log("Not a CodeError!");
     }
 }
 
-export function showErrors(program:string, markers:monaco.editor.IMarkerData[]) {
+export function getProgram(code:string, markers:monaco.editor.IMarkerData[]) {
     markers.pop();
-    const parser = new CodeParser(program);
+    const parser = new CodeParser(code);
     try {
-        const code = parser.parse();
-        const validator = new CodeValidator(code);
+        const program = parser.parse();
+        const validator = new CodeValidator(program);
         try {
             validator.validate();
+            return program;
         } catch (error) {
             catchError("TMValidator", error, markers);
         }

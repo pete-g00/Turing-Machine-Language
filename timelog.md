@@ -242,3 +242,10 @@
 * *1 hour* Added code to drag the arrows naturally as the states get dragged.
 * *0.5 hours* Added text to arrows- need to develop how the text is displayed.
 * *1 hour* Added support for loops- arrows from a state back to itself.
+
+## Week 1 
+
+### 10 Jan 2023
+
+* *1 hour* Added a label to each `TMState` so that this value can be displayed on the website and changed other relevant code.
+* *1.5 hours* Made use of the TM program on the editor to create the TM on the screen- currently updates every time there is a change in code.

@@ -1,86 +1,111 @@
 import React, { useRef } from 'react';
 import './TMPanel.css';
-import TMCircle from '../TMCircle/TMCircle';
+import TMCircle, { CircleLine } from '../TMCircle/TMCircle';
 import TMArrow from '../TMArrow/TMArrow';
+import { TransitionData, TuringMachine } from 'parser-tml';
 
-function TMPanel() {
-    const circle0 = useRef<SVGCircleElement>(null);
-    const circle1 = useRef<SVGCircleElement>(null);
-    const circle2 = useRef<SVGCircleElement>(null);
-    const circle3 = useRef<SVGCircleElement>(null);
+interface TMPanelProps {
+    turingMachine:TuringMachine|undefined;
+}
 
-    const circleText0 = useRef<SVGTextElement>(null);
-    const circleText1 = useRef<SVGTextElement>(null);
-    const circleText2 = useRef<SVGTextElement>(null);
-    const circleText3 = useRef<SVGTextElement>(null);
+function TMPanel({turingMachine}:TMPanelProps) {
+    if (turingMachine) {
+        const states = [...turingMachine.states, "accept", "reject"];
+        const statesIndex:{[key:string]:number} = {};
+        for (let i = 0; i < states.length; i++) {
+            statesIndex[states[i]] = i;
+        }
 
-    const line0 = useRef<SVGPathElement>(null);
-    const line1 = useRef<SVGLineElement>(null);
-    const line2 = useRef<SVGLineElement>(null);
-    const line3 = useRef<SVGLineElement>(null);
+        const circleRefs:React.RefObject<SVGCircleElement>[] = [];
+        const circleTextRefs:React.RefObject<SVGTextElement>[] = [];
+        for (let i = 0; i < states.length; i++) {
+            // eslint-disable-next-line react-hooks/rules-of-hooks
+            circleRefs.push(useRef<SVGCircleElement>(null));
+            // eslint-disable-next-line react-hooks/rules-of-hooks
+            circleTextRefs.push(useRef<SVGTextElement>(null));
+        }
 
+        const transitions:TransitionData[] = [];
+        const arrowTextRefs:React.RefObject<SVGTextElement>[] = [];
+        const arrowRefs:React.RefObject<SVGPathElement | SVGLineElement>[] = [];
+        const edgesFromMap:{[key:string]: CircleLine[]} = {};
+        const edgesToMap:{[key:string]: CircleLine[]} = {};
+        for (let i = 0; i < states.length-2; i++) {
+            const tmState = turingMachine.getState(states[i])!;
+            for (let j = 0; j < tmState.transitions.length; j++) {
+                arrowRefs.push(
+                    states[i] === tmState.transitions[j].nextState 
+                        // eslint-disable-next-line react-hooks/rules-of-hooks
+                        ? useRef<SVGPathElement>(null) 
+                        // eslint-disable-next-line react-hooks/rules-of-hooks
+                        : useRef<SVGLineElement>(null)
+                );
+                // eslint-disable-next-line react-hooks/rules-of-hooks
+                arrowTextRefs.push(useRef<SVGTextElement>(null));
+                transitions.push(tmState.transitions[j]);
 
-    const lineText0 = useRef<SVGTextElement>(null);
-    const lineText1 = useRef<SVGTextElement>(null);
-    const lineText2 = useRef<SVGTextElement>(null);
-    const lineText3 = useRef<SVGTextElement>(null);
+                const fromIndex = statesIndex[tmState.transitions[j].currentState];
+                const toIndex = statesIndex[tmState.transitions[j].nextState];
+                const circleData = {
+                    fromCircle: circleRefs[fromIndex],
+                    line: arrowRefs[arrowRefs.length-1],
+                    text: arrowTextRefs[arrowTextRefs.length-1],
+                    toCircle: circleRefs[toIndex]
+                };
+                
+                const edgesFrom = edgesFromMap[tmState.transitions[j].currentState] ?? [];
+                edgesFrom.push(circleData);
+                edgesFromMap[tmState.transitions[j].currentState] = edgesFrom;
+                
+                const edgesTo = edgesToMap[tmState.transitions[j].nextState] ?? [];
+                edgesTo.push(circleData);
+                edgesToMap[tmState.transitions[j].nextState] = edgesTo;
+            }
+        }
+        
+        return (
+            <div className='tm-panel'>
+                <svg viewBox='0 0 800 420'>
+                    <defs><marker id="arrow" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" />
+                    </marker></defs>
+                    {states.map((state, i) => {
+                        let circleLabel:string;
+                        switch (state) {
+                            case "accept":
+                                circleLabel = "A";
+                                break;
+                            case "reject":
+                                circleLabel = "R";
+                                break;
+                            default:
+                                circleLabel = "q"+i;
+                                break;
+                        }
+                        return <TMCircle label={state} circleRef={circleRefs[i]} edgesFrom={edgesFromMap[state] ?? []} edgesTo={edgesToMap[state]} 
+                            r={25} text={circleLabel} textRef={circleTextRefs[i]} x={50+150*i} y={150} key={i}/>;
+                    })}
+                    {transitions.map((transition, i) => {
+                        // get index of transition.currentState in states
+                        const j = statesIndex[transition.currentState];
+                        const x1 = 50 + 150*j;
+                        const y1 = 150;
 
-    const line0Data = {
-        line: line0,
-        fromCircle: circle0,
-        toCircle: circle0,
-        text: lineText0
-    };
-    const line1Data = {
-        line: line1,
-        fromCircle: circle0,
-        toCircle: circle1,
-        text: lineText1
-    };
-    const line2Data = {
-        line: line2,
-        fromCircle: circle1,
-        toCircle: circle2,
-        text: lineText2
-    };
-    const line3Data = {
-        line: line3,
-        fromCircle: circle1,
-        toCircle: circle3,
-        text: lineText3
-    };
-
-    const edgesFrom = {
-        circle0: [line0Data, line1Data],
-        circle1: [line2Data, line3Data],
-        circle2: [],
-        circle3: []
-    };
-    
-    const edgesTo = {
-        circle0: [line0Data],
-        circle1: [line1Data],
-        circle2: [line2Data],
-        circle3: [line3Data]
-    };
-    
-    return (
-        <div className='tm-panel'>
-            <svg viewBox='0 0 800 420'>
-                <defs><marker id="arrow" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
-                    <polygon points="0 0, 10 3.5, 0 7" />
-                </marker></defs>
-                <TMCircle edgesFrom={edgesFrom.circle0} edgesTo={edgesTo.circle0} text='q0' textRef={circleText0} x={100} y={150} r={25} circleRef={circle0}></TMCircle>
-                <TMCircle edgesFrom={edgesFrom.circle1} edgesTo={edgesTo.circle1} text='q1' textRef={circleText1} x={250} y={150} r={25} circleRef={circle1}></TMCircle>
-                <TMCircle edgesFrom={edgesFrom.circle2} edgesTo={edgesTo.circle2} text='A' textRef={circleText2} x={400} y={150} r={25} circleRef={circle2} accept ></TMCircle>
-                <TMCircle edgesFrom={edgesFrom.circle3} edgesTo={edgesTo.circle3} text='R' textRef={circleText3} x={550} y={150} r={25} circleRef={circle3} reject></TMCircle>
-                <TMArrow lineRef={line0} x1={100} y1={150} x2={100} y2={150} text='1|2, R' textRef={lineText0}></TMArrow>
-                <TMArrow lineRef={line1} x1={100} y1={150} x2={250} y2={150} text='#, L' textRef={lineText1}></TMArrow>
-                <TMArrow lineRef={line2} x1={250} y1={150} x2={400} y2={150} text='0, L' textRef={lineText2}></TMArrow>
-                <TMArrow lineRef={line3} x1={250} y1={150} x2={550} y2={150} text='1, L' textRef={lineText3}></TMArrow>
-            </svg>
-        </div>
-    );
+                        // get index of transition.nextState in states
+                        const k = statesIndex[transition.nextState];
+                        const x2 = 50 + 150*k;
+                        const y2 = 150;
+                        return <TMArrow key={i} textRef={arrowTextRefs[i]} lineRef={arrowRefs[i]} 
+                            text={transition.label} x1={x1} x2={x2} y1={y1} y2={y2}/>;
+                    })}
+                </svg>
+            </div>
+        );
+    } else {
+        return (
+            <p>No TM provided!</p>
+        );
+    }
 }
 
 export default TMPanel;

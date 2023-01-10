@@ -1,7 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 import './Editor.css';
 import * as monaco from 'monaco-editor';
-import { showErrors } from '../MonacoConfig';
+import { getProgram } from '../MonacoConfig';
+import { TuringMachine, CodeConverter } from 'parser-tml';
+
+interface EditorProps {
+    setTuringMachine: React.Dispatch<React.SetStateAction<TuringMachine | undefined>>;
+}
 
 const code = `// checks whether a binary number is divisible by 2
 alphabet = {0, 1}
@@ -18,7 +23,7 @@ module isDiv2 {
     }
 }`;
 
-function Editor() {
+function Editor({setTuringMachine}:EditorProps) {
     const divEl = useRef<HTMLDivElement>(null);
     let editor: monaco.editor.IStandaloneCodeEditor;
     const markers:monaco.editor.IMarkerData[] = [];
@@ -32,8 +37,13 @@ function Editor() {
                 wordWrap: "on",
             });
             editor.onDidChangeModelContent(() => {
-                showErrors(editor.getValue(), markers);
+                const program = getProgram(editor.getValue(), markers);
                 monaco.editor.setModelMarkers(editor.getModel()!, "validate-TMP", markers);
+                if (markers.length === 0) {
+                    const converter = new CodeConverter(program!);
+                    const turingMachine = converter.convert();
+                    setTuringMachine(turingMachine);
+                }
             });
         }
         return () => {
