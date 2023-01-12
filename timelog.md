@@ -249,3 +249,11 @@
 
 * *1 hour* Added a label to each `TMState` so that this value can be displayed on the website and changed other relevant code.
 * *1.5 hours* Made use of the TM program on the editor to create the TM on the screen- currently updates every time there is a change in code.
+
+## 11 Jan 2023
+
+* *1 hour* Made some of the TM program on the editor so that it updates after clicking the button- currently only works when clicking it the first time and as long as we don't make major changes to code (introducing/removing pre-existing states); need to refactor the code from the d3 standard being used to the react standard
+* *0.5 hours* Refactored `TMPanel` code involving `d3` into functions for dragging different components.
+* *1 hour* Refactored `TMPanel` code using states in react to follow react standard- currently dragging states changes its coordinate temporarily (when we drag another state, it goes back to its original position).
+* *1 hour* Researched how a component in React can receive data both from the parent component and the child component- use setState in the parent component and pass it to both components.
+* *1 hour* Refactored code so that we can drag states with expected position.
