@@ -257,3 +257,10 @@
 * *1 hour* Refactored `TMPanel` code using states in react to follow react standard- currently dragging states changes its coordinate temporarily (when we drag another state, it goes back to its original position).
 * *1 hour* Researched how a component in React can receive data both from the parent component and the child component- use setState in the parent component and pass it to both components.
 * *1 hour* Refactored code so that we can drag states with expected position.
+
+## Week 2
+
+### 16 Jan 2023
+
+* *0.5 hours* Moved some code from Homepage to TMPanel
+* *1.5 hours* Added the ability to step on TapePanel- currently just randomly steps to the left or the right, with equal probability.

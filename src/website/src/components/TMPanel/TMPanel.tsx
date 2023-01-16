@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './TMPanel.css';
 import TMCircle from '../TMCircle/TMCircle';
 import TMArrow from '../TMArrow/TMArrow';
@@ -7,25 +7,66 @@ import { Button } from '@mui/material';
 import { Box } from '@mui/system';
 
 interface TMPanelProps {
-    states:string[];
-    coords:{x:number, y:number}[];
     turingMachine: TuringMachine|undefined;
-    updateTM: () => void;
-    btnEnabled: boolean;
-    getUpdateDragCoord: () => (i:number, x:number, y:number) => void;
 }
 
-function TMPanel({ states, coords, getUpdateDragCoord, turingMachine, updateTM, btnEnabled }:TMPanelProps) {
+function generateStateAndCoords(turingMachine:TuringMachine|undefined) {
+    let states:string[] = [];
+    const coords:{x:number, y:number}[] = [];
+
+    if (turingMachine) {
+        states = [...turingMachine.states, "accept", "reject"];
+        for (let i = 0; i < turingMachine.states.length+2; i++) {
+            coords[i] = {
+                x: 50+150*i, 
+                y: 150
+            };
+        }
+    }
+
+    return {states, coords};
+}
+
+
+function TMPanel({ turingMachine }:TMPanelProps) {
+    // whether the convert button is enabled
+    const [isConvertEnabled, setIsConvertEnabled] = useState(true);
+    
+    // the TM actually being shown
+    const [currentTM, setCurrentTM] = useState<TuringMachine|undefined>(undefined);
+    
+    // the states within the TM
+    const [states, setStates] = useState<string[]>([]);
+
+    // the coords within the TM
+    const [coords, setCoords] = useState<{x:number, y:number}[]>([]);
+
+    useEffect(() => {
+        setIsConvertEnabled(turingMachine !== undefined);
+    }, [turingMachine]);
+
+    function updateTuringMachine() {
+        const { coords, states } = generateStateAndCoords(turingMachine);
+        setCurrentTM(turingMachine);
+        setStates(states);
+        setCoords(coords);
+    }
+
+    function updateDragCoord(i:number, x:number, y:number) {
+        const newCoords = coords.map((value, j) => i === j ? {x, y} : {x: value.x, y: value.y});
+        setCoords(newCoords);
+    }
+    
     const statesIndex:{[key:string]: number} = {};
     const transitions:TransitionData[] = [];
 
-    if (turingMachine) {
+    if (currentTM) {
         for (let i = 0; i < states.length; i++) {
             statesIndex[states[i]] = i;
         }
         
         for (let i = 0; i < states.length-2; i++) {
-            const tmState = turingMachine.getState(states[i])!;
+            const tmState = currentTM.getState(states[i])!;
             for (let j = 0; j < tmState.transitions.length; j++) {
                 transitions.push(tmState.transitions[j]);
             }
@@ -53,7 +94,7 @@ function TMPanel({ states, coords, getUpdateDragCoord, turingMachine, updateTM, 
                             circleLabel = "q"+i;
                             break;
                     }
-                    return <TMCircle label={state} getUpdateDragCoord={getUpdateDragCoord} r={25} coords={coords} i={i} key={i} text={circleLabel}/>;
+                    return <TMCircle label={state} updateDragCoord={updateDragCoord} r={25} coords={coords} i={i} key={i} text={circleLabel}/>;
                 })}
                 {transitions.map((transition, i) => {
                     const fromStateIndex = statesIndex[transition.currentState];
@@ -68,7 +109,7 @@ function TMPanel({ states, coords, getUpdateDragCoord, turingMachine, updateTM, 
             </svg>
             <div>
                 <Box textAlign="center"><p>Convert the Code into the Turing Machine</p></Box>
-                <Box textAlign="center"><Button variant="contained" onClick={updateTM} disabled={!btnEnabled}>Convert</Button></Box>
+                <Box textAlign="center"><Button variant="contained" onClick={updateTuringMachine} disabled={!isConvertEnabled}>Convert</Button></Box>
             </div>
         </div>
         );

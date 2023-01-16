@@ -6,12 +6,12 @@ interface CircleProps {
     text: string;
     label:string;
     coords:{x:number, y:number}[];
-    getUpdateDragCoord: () => (i:number, x:number, y:number) => void;
+    updateDragCoord: (i:number, x:number, y:number) => void;
     r:number;
     i:number;
 }
 
-function TMCircle({ text, coords, getUpdateDragCoord, r, label, i }:CircleProps) {
+function TMCircle({ text, coords, updateDragCoord, r, label, i }:CircleProps) {
     const coord = coords[i];
     const circleRef = useRef<SVGCircleElement>(null);
     useEffect(() => {
@@ -27,13 +27,12 @@ function TMCircle({ text, coords, getUpdateDragCoord, r, label, i }:CircleProps)
                 })
                 // drags the elements
                 .on("drag", function (this, event) {
-                    const updateDragCoord = getUpdateDragCoord();
                     updateDragCoord(i, event.x, event.y);
                 });
                 // @ts-ignore
                 handleDrag(d3.select(circleRef.current));
         }
-    }, coords);
+    });
     return (
         <g>
             <circle ref={circleRef} id={label} stroke='black' strokeWidth={1} cx={coord.x} cy={coord.y} r={r}></circle>
