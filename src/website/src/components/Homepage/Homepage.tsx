@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Grid } from '@mui/material';
 import Editor, { code } from '../Editor/Editor';
 import TMPanel from '../TMPanel/TMPanel';
-import TMTape from '../TMTape/TMTape';
+import TapePanel from '../TapePanel/TapePanel';
 import './Homepage.css';
 import AppToolbar from '../Apptoolbar/Apptoolbar';
 import { TuringMachine, CodeParser, CodeConverter } from 'parser-tml';
@@ -16,15 +16,15 @@ function HomePage() {
     const [turingMachine, setTuringMachine] = useState<TuringMachine|undefined>(firstTM);
     
     return (
-        <div>
+        <div className="homepage">
             <AppToolbar></AppToolbar>
-            <Grid container className="code-section">
-                <Grid item xs={12} md={6} className="editor">
-                    <Editor setTuringMachine={setTuringMachine}></Editor>
+            <Grid container>
+                <Grid item xs={12} md={6}>
+                    <Editor setTuringMachine={setTuringMachine}/>
                 </Grid>
-                <Grid item xs={12} md={6} className="tm">
-                    <div className="tm-panel"><TMPanel turingMachine={turingMachine} /></div>
-                    <div className="tm-tape"><TMTape></TMTape></div>
+                <Grid item xs={12} md={6}>
+                    <TMPanel turingMachine={turingMachine}/>
+                    <TapePanel turingMachine={turingMachine}/>
                 </Grid>
             </Grid>
         </div>

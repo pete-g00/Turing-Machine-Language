@@ -1,19 +1,19 @@
 .editor, .tm {
     height: 100%;
+    padding-bottom: 20px;
 }
 
 .editor {
-    height: 600px;
+    height: 675px;
+    padding-bottom: 20px;
 }
 
 .tm-panel {
     height: 400px;
+    padding-bottom: 20px;
 }
 
-.tm-tape {
+.tape-panel {
     height: 200px;
-}
-
-.code-section {
-    border-bottom: 5px solid black;
+    padding-bottom: 20px;
 }
