@@ -1,4 +1,4 @@
-# Week 14 Agenda
+# Week 1 Agenda
 
 ## Work Completed This Week (and final week of Sem 1)
 * Changed the syntax of TML using Mate's feedback- I had made 2 changes to the code, making one of them redundant!

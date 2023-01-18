@@ -264,3 +264,12 @@
 
 * *0.5 hours* Moved some code from Homepage to TMPanel
 * *1.5 hours* Added the ability to step on TapePanel- currently just randomly steps to the left or the right, with equal probability.
+
+### 17 Jan 2023
+
+* *1.5 hours* Connected `TapePanel` with the step functionality created- currently only works when moving the first time; `CodeExecutor` seems to be treated as an immutable object.
+* *0.5 hours* Fixed `TapePanel` execution using refs.
+
+### 18 Jan 2023
+
+* *0.5 hours* Added agenda for tomorrow's meeting.
