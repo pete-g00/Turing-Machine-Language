@@ -273,3 +273,8 @@
 ### 18 Jan 2023
 
 * *0.5 hours* Added agenda for tomorrow's meeting.
+
+### 19 Jan 2023
+
+* *1 hour* Meeting with Ornela
+
