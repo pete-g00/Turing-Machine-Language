@@ -12,13 +12,13 @@ test('renders link to documentation in homescreen', () => {
 test('doesn\'t render link to homescreen in homescreen', () => {
     render(<MemoryRouter><AppToolbar/></MemoryRouter>);
     expect(() => {
-        screen.getByText(/Home/);
+        screen.getByText(/Editor/);
     }).toThrow();
 });
 
 test('renders link to homescreen in documentation', () => {
     render(<MemoryRouter><AppToolbar isDocumentation/></MemoryRouter>);
-    const editorLinkElement = screen.getByText(/Home/);
+    const editorLinkElement = screen.getByText(/Editor/);
     expect(editorLinkElement).toBeInTheDocument();
 });
 
