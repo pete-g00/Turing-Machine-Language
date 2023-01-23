@@ -70,7 +70,7 @@ function getCompletionItem(model:monaco.editor.ITextModel, position:monaco.Posit
 
 monaco.languages.registerCompletionItemProvider("TMProgram", {
     provideCompletionItems: (model, position) => {
-        const suggestions = [
+        const suggestions:monaco.languages.CompletionItem[] = [
             ...keywords.map(keyword => getCompletionItem(model, position, keyword)),
             ...typeKeywords.map(keyword => getCompletionItem(model, position, keyword))
         ];
@@ -126,7 +126,7 @@ function catchError(source:string, error:unknown, markers:monaco.editor.IMarkerD
             source,
         });
     } catch {
-        console.log("Not a CodeError!");
+        console.error("Not a CodeError!");
     }
 }
 
