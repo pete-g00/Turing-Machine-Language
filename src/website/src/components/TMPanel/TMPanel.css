@@ -1,4 +1,13 @@
 .tm-panel {
-    width: 100%;
+    padding: 0 25px 25px 0;
     border-bottom: 5px solid black;
+}
+
+.tm svg {
+    margin: auto;
+}
+
+div.tm-fsm {
+    height: 250px;
+    margin: 0 25px;
 }

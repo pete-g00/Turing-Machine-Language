@@ -18,6 +18,7 @@ function PreciseErrorDocumentation() {
         navigate('/');
     }
     
+    document.title = `TMP Errors- ${errorData.title}`;
     const navArray = [
         {name: "Documentation", link: "/documentation"},
         {name: "Errors", link: "/documentation/errors"},
@@ -35,7 +36,9 @@ function PreciseErrorDocumentation() {
                 automaticLayout: true,
                 wordWrap: "on",
                 readOnly: true,
+                scrollBeyondLastLine: false,
             });
+            divEl.current.style.setProperty("height", `${editor.getContentHeight()}px`);
         }
         return () => {
             editor.dispose();
@@ -49,8 +52,8 @@ function PreciseErrorDocumentation() {
                 <h1>Turing Machine Program Error- {errorData.title}</h1>
                 <Divider/>
                 <h4>Code</h4>
-                <div className="Editor" ref={divEl}></div>
-                <p>{"Caption: " + errorData.caption}</p>
+                <div ref={divEl}></div>
+                <small>{"Caption: " + errorData.caption}</small>
                 <h4>Issue</h4>
                 <p dangerouslySetInnerHTML={{__html: errorData.description}}></p>
                 <h4>How To Fix</h4>

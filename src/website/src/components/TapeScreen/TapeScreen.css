@@ -1,0 +1,19 @@
+.tape {
+    padding: 0 25px;
+    margin: auto;
+}
+
+.buttons {
+    display: flex;
+    margin-top: 25px;
+}
+
+.buttons button {
+    margin: auto;
+}
+
+.termination-message {
+    min-width: 100px;
+    text-align: center;
+    line-height: 50px;
+}

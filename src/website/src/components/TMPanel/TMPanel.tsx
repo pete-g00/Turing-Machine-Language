@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import './TMPanel.css';
 import TMCircle from '../TMCircle/TMCircle';
 import TMArrow from '../TMArrow/TMArrow';
 import { TransitionData, TuringMachine } from 'parser-tml';
 import { Button } from '@mui/material';
 import { Box } from '@mui/system';
+import './TMPanel.css';
 
 interface TMPanelProps {
     turingMachine: TuringMachine|undefined;
@@ -19,7 +19,7 @@ function generateStateAndCoords(turingMachine:TuringMachine|undefined) {
         for (let i = 0; i < turingMachine.states.length+2; i++) {
             coords[i] = {
                 x: 50+150*i, 
-                y: 150
+                y: 100
             };
         }
     }
@@ -76,43 +76,45 @@ function TMPanel({ turingMachine }:TMPanelProps) {
     return (
         <div className='tm-panel'>
             <Box textAlign="center"><h2>Turing Machine</h2></Box>
-            <svg viewBox='0 0 800 250'>
-                <defs><marker id="arrow" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
-                    <polygon points="0 0, 10 3.5, 0 7" />
-                </marker></defs>
+            <div className='tm-fsm'>
+                <svg viewBox='0 0 1000 300'>
+                    <defs><marker id="arrow" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" />
+                    </marker></defs>
 
-                {states.map((state, i) => {
-                    let circleLabel:string;
-                    switch (state) {
-                        case "accept":
-                            circleLabel = "A";
-                            break;
-                        case "reject":
-                            circleLabel = "R";
-                            break;
-                        default:
-                            circleLabel = "q"+i;
-                            break;
-                    }
-                    return <TMCircle label={state} updateDragCoord={updateDragCoord} r={25} coords={coords} i={i} key={i} text={circleLabel}/>;
-                })}
-                {transitions.map((transition, i) => {
-                    const fromStateIndex = statesIndex[transition.currentState];
-                    const toStateIndex = statesIndex[transition.nextState];
-                    return <TMArrow key={i} text={transition.label} 
-                        x1={coords[fromStateIndex].x} 
-                        x2={coords[toStateIndex].x} 
-                        y1={coords[fromStateIndex].y} 
-                        y2={coords[toStateIndex].y} 
-                    />;
-                })}
-            </svg>
+                    {states.map((state, i) => {
+                        let circleLabel:string;
+                        switch (state) {
+                            case "accept":
+                                circleLabel = "A";
+                                break;
+                            case "reject":
+                                circleLabel = "R";
+                                break;
+                            default:
+                                circleLabel = "q"+i;
+                                break;
+                        }
+                        return <TMCircle label={state} updateDragCoord={updateDragCoord} r={25} coords={coords} i={i} key={i} text={circleLabel}/>;
+                    })}
+                    {transitions.map((transition, i) => {
+                        const fromStateIndex = statesIndex[transition.currentState];
+                        const toStateIndex = statesIndex[transition.nextState];
+                        return <TMArrow key={i} text={transition.label} 
+                            x1={coords[fromStateIndex].x} 
+                            x2={coords[toStateIndex].x} 
+                            y1={coords[fromStateIndex].y} 
+                            y2={coords[toStateIndex].y} 
+                        />;
+                    })}
+                </svg>
+            </div>
             <div>
                 <Box textAlign="center"><p>Convert the Code into the Turing Machine</p></Box>
                 <Box textAlign="center"><Button variant="contained" onClick={updateTuringMachine} disabled={!isConvertEnabled}>Convert</Button></Box>
             </div>
         </div>
-        );
+    );
 }
 
 export default TMPanel;

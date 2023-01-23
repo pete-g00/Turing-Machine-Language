@@ -11,14 +11,13 @@ function AppToolbar({isDocumentation}: AppToolbarProps):ReactElement {
         <Box sx={{display: 'flex'}}>
             <AppBar color="primary" variant="elevation" position="fixed">
                 <Toolbar>
-                    <Typography align='left' color='inherit' variant="h6" sx={{flexGrow: 1}}>TML</Typography>
+                    <Typography align='left' color='inherit' variant="h6" sx={{flexGrow: 1}}>TM Program Executor</Typography>
                     <div>
                         <Button color='inherit'>
                             {isDocumentation === true ? 
-                                <Link component={RouterLink} color='inherit' to="/" underline='none'>Home</Link> : 
+                                <Link component={RouterLink} color='inherit' to="/" underline='none'>Editor</Link> : 
                                 <Link component={RouterLink} color='inherit' to="/documentation" underline='none'>Documentation</Link>}
                         </Button>
-                        <Button color='inherit'>Examples</Button>
                     </div>
                 </Toolbar>
             </AppBar>

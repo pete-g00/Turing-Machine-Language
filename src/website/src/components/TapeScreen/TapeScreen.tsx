@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import TapeEntry from '../TapeEntry/TapeEntry';
 import * as d3 from 'd3';
-import { Box, Button } from '@mui/material';
-import { TuringMachine, TMExecutor, Direction } from 'parser-tml';
+import { Button } from '@mui/material';
+import { TuringMachine, TMExecutor, Direction, TerminationState } from 'parser-tml';
+import './TapeScreen.css';
 
 function getPreviousOffsetIndex(i:number) {
     return i === 0 ? 16 : i-1;
@@ -19,15 +20,18 @@ interface TapeScreenProps {
 }
 
 function TapeScreen({ tapeValue, turingMachine, goToTapeInput }:TapeScreenProps) {
-    const gRefs:React.RefObject<SVGGElement>[] = [];
     const length = 17;
     const executor = new TMExecutor(tapeValue, turingMachine);
 
     const [tape, setTape] = useState(Array(17).fill("").map((_, i) => tapeValue[i-2]?.trim() ?? ""));
     const [tapeHeadIndex, setTapeHeadIndex] = useState(2);
-    const [running, setRunning] = useState(true);
-    const executorRef = useRef(executor);
+    const [canGoBack, setCanGoBack] = useState(true);
+    const [canStep, setCanStep] = useState(true);
+    const [stepId, setStepId] = useState<NodeJS.Timeout|undefined>(undefined);
 
+    const executorRef = useRef(executor);
+    const gRefs:React.RefObject<SVGGElement>[] = [];
+    
     for (let i=0; i<length; i++) {
         // eslint-disable-next-line react-hooks/rules-of-hooks
         gRefs[i] = useRef<SVGGElement>(null);
@@ -66,12 +70,6 @@ function TapeScreen({ tapeValue, turingMachine, goToTapeInput }:TapeScreenProps)
             .attr('transform', `translate(${newTranslate}, 0)`);
     }
 
-    useEffect(() => {
-        console.log(tape);
-    }, [tape]);
-
-    // TODO: setTimeouts must be destroyed!
-    
     // moves the element at index `i` to the start
     function moveToStart(i:number) {
         const newTranslate = i*50;
@@ -111,8 +109,19 @@ function TapeScreen({ tapeValue, turingMachine, goToTapeInput }:TapeScreenProps)
         setTapeHeadIndex(nextOffset);
     }
 
+    function terminationMessage() {
+        if (executorRef.current.terminationStatus === TerminationState.ACCEPT) {
+            return "Accepted";
+        } else if (executorRef.current.terminationStatus === TerminationState.REJECT) {
+            return "Rejected";
+        } else {
+            return "";
+        }
+    }
+
     function handleStep() {
-        setRunning(false);
+        setCanStep(false);
+        setCanGoBack(false);
         const currentState = executorRef.current.currentState;
         const tmState = turingMachine.getState(currentState)!;
         const transition = tmState.transition(tape[tapeHeadIndex])!;
@@ -123,15 +132,25 @@ function TapeScreen({ tapeValue, turingMachine, goToTapeInput }:TapeScreenProps)
 
         executorRef.current.execute();
         
-        setTimeout(() => {
-            setRunning(executorRef.current.terminationStatus === undefined);
+        const stepId = setTimeout(() => {
+            setCanStep(executorRef.current.terminationStatus === undefined);
+            setCanGoBack(true);
         }, 1000);
+        setStepId(stepId);
     }
 
+    useEffect(() => {
+      return () => {
+        if (stepId) {
+            clearTimeout(stepId);
+        }
+      };
+    }, []);
+
     return (
-        <div className="tm-tape">
-            <div style={{padding: "0 25px"}}>
-                <svg style={{margin: "auto"}} viewBox='0 0 750 70'>
+        <div>
+            <div className='tape'>
+                <svg viewBox='0 0 750 70'>
                     <defs><marker id="arrow" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
                         <polygon points="0 0, 10 3.5, 0 7" />
                     </marker></defs>
@@ -141,9 +160,11 @@ function TapeScreen({ tapeValue, turingMachine, goToTapeInput }:TapeScreenProps)
                     <line stroke='black' strokeWidth={1} markerEnd="url(#arrow)" x1={75} y1={70} x2={75} y2={55}></line>
                 </svg>
             </div>
-            <Box textAlign='center'>
-                <Button onClick={handleStep} disabled={!running} variant='contained'>Step</Button>
-            </Box>
+            <div className='buttons'>
+                <Button color='secondary' onClick={goToTapeInput} disabled={!canGoBack} variant='contained'>Back</Button>
+                <span className='termination-message'>{terminationMessage()}</span>
+                <Button onClick={handleStep} disabled={!canStep} variant='contained'>Step</Button>
+            </div>
         </div>
     );
 }

@@ -278,3 +278,11 @@
 
 * *1 hour* Meeting with Ornela
 
+## Week 3
+
+### 23 Jan 2023
+
+* *0.5 hours* Improved layout of documentation pages.
+* *1 hour* Updated documentation pages content with real content (except for `PreciseErrorDocumentation`).
+* *1 hour* Added `PreciseErrorDocumentation`.
+
