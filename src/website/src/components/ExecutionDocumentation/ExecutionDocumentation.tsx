@@ -2,8 +2,9 @@ import React from 'react';
 import { Container, Divider } from '@mui/material';
 import AppToolbar from '../Apptoolbar/Apptoolbar';
 import Navigation from '../DocumentationNavigation/DocumentationNavigation';
+import { DocumentationProps } from '../Documentation/Documentation';
 
-function ExecutionDocumentation() {
+function ExecutionDocumentation({ userConfiguration }:DocumentationProps) {
     document.title = "TMP Execution Specification";
 
     const navArray = [
@@ -12,7 +13,7 @@ function ExecutionDocumentation() {
     ];
     return (
         <Container>
-            <AppToolbar isDocumentation></AppToolbar>
+            <AppToolbar isDocumentation userConfiguration={userConfiguration}/>
             <Navigation navArray={navArray}></Navigation>
             <div className="content">
                 <h1>Executing Turing Machine on a tape</h1>

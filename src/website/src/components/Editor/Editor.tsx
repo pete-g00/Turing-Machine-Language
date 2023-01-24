@@ -3,9 +3,11 @@ import './Editor.css';
 import * as monaco from 'monaco-editor';
 import { getProgram } from '../MonacoConfig';
 import { TuringMachine, CodeConverter } from 'parser-tml';
+import { UserConfiguration } from '../../App';
 
 interface EditorProps {
     setTuringMachine: (tm:TuringMachine | undefined) => void;
+    userConfiguration:UserConfiguration;
 }
 
 export const code = `// checks whether a binary number is divisible by 2
@@ -23,7 +25,7 @@ module isDiv2 {
     }
 }`;
 
-function Editor({setTuringMachine}:EditorProps) {
+function Editor({ userConfiguration, setTuringMachine }:EditorProps) {
     const divEl = useRef<HTMLDivElement>(null);
     let editor: monaco.editor.IStandaloneCodeEditor;
     const markers:monaco.editor.IMarkerData[] = [];
@@ -33,8 +35,10 @@ function Editor({setTuringMachine}:EditorProps) {
             editor = monaco.editor.create(divEl.current, {
                 value: code,
                 language: 'TMProgram',
-                theme: "TMProgramTheme-dark",
+                theme: userConfiguration.editorTheme,
                 automaticLayout: true,
+                fontSize: userConfiguration.editorFontSize.value,
+                lineNumbers: userConfiguration.showEditorLineNumber ? "on" : "off",
                 wordWrap: "on",
             });
             editor.onDidChangeModelContent(() => {
@@ -53,7 +57,7 @@ function Editor({setTuringMachine}:EditorProps) {
         return () => {
             editor.dispose();
         };
-    }, []);
+    }, [userConfiguration]);
     return (
         <div className="Editor" ref={divEl}></div>
     );

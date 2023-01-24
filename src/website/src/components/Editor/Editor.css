@@ -1,5 +1,9 @@
 .Editor {
 	width: 100%;
-	height: 676px;
+	height: 675px;
 	resize: vertical;
+}
+
+.monaco-hover {
+	z-index: 1200 !important;
 }

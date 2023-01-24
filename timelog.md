@@ -286,3 +286,8 @@
 * *1 hour* Updated documentation pages content with real content (except for `PreciseErrorDocumentation`).
 * *1 hour* Added `PreciseErrorDocumentation`.
 
+### 24 Jan 2023
+
+* *0.5 hours* Added more editor themes.
+* *1.5 hours* Added drawer to change editor themes, font size and show/hide line numbers.
+* *0.5 hours* Created a plan for the evaluation stage.

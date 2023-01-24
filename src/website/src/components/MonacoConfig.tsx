@@ -1,5 +1,6 @@
 import * as monaco from 'monaco-editor';
 import { CodeError, CodeParser, CodeValidator } from 'parser-tml';
+import themes from './editorThemes.json';
 
 monaco.languages.register({id: "TMProgram"});
 
@@ -30,27 +31,19 @@ monaco.languages.setMonarchTokensProvider("TMProgram", {
     typeKeywords
 });
 
-// based on the Dracula theme: https://github.com/brijeshb42/monaco-themes/blob/master/themes/Dracula.json
-monaco.editor.defineTheme("TMProgramTheme-dark", {
-    base: "vs-dark",
-    rules: [
-        {background: "282a36", token: ""},
-        {foreground: "6272a4", token: "comment"},
-        {foreground: "50fa7b", token: "identifier"},
-        {foreground: "ff79c6", token: "keyword"},
-        {foreground: "bd93f9", token: "predefined"},
-        {foreground: "f44747", background: "c82829", token: "invalid"},
+monaco.languages.setLanguageConfiguration('TMProgram', {
+    surroundingPairs: [
+        {open: '{', close: '}'}
     ],
-    inherit: true,
-    colors: {
-        "editor.foreground": "#f8f8f2",
-        "editor.background": "#282a36",
-        "editor.selectionBackground": "#44475a",
-        "editor.lineHighlightBackground": "#44475a",
-        "editorCursor.foreground": "#f8f8f0",
-        "editorWhitespace.foreground": "#3B3A32",
-        "editorIndentGuide.activeBackground": "#9D550FB0",
-        "editor.selectionHighlightBorder": "#222218"
+    autoClosingPairs: [
+        {open: '{', close: '}'},
+    ],
+    indentationRules: {
+        increaseIndentPattern: /{/,
+        decreaseIndentPattern: /}/,
+    },
+    comments: {
+        lineComment: "//"
     }
 });
 
@@ -70,13 +63,21 @@ function getCompletionItem(model:monaco.editor.ITextModel, position:monaco.Posit
 
 monaco.languages.registerCompletionItemProvider("TMProgram", {
     provideCompletionItems: (model, position) => {
-        const suggestions:monaco.languages.CompletionItem[] = [
+        const suggestions = [
             ...keywords.map(keyword => getCompletionItem(model, position, keyword)),
             ...typeKeywords.map(keyword => getCompletionItem(model, position, keyword))
         ];
         return {suggestions};
     }
 });
+
+// based on themes defined at: https://github.com/brijeshb42/monaco-themes/blob/master/themes
+monaco.editor.defineTheme("cobalt", {base: 'vs-dark', ...themes.cobalt});
+monaco.editor.defineTheme("dawn", {base: 'vs', ...themes.dawn});
+monaco.editor.defineTheme("dracula", {base: 'vs-dark', ...themes.dracula});
+monaco.editor.defineTheme("github", {base: 'vs', ...themes.github});
+monaco.editor.defineTheme("monokai", {base: "vs-dark", ...themes.monokai});
+monaco.editor.defineTheme("textmate", {base: "vs", ...themes.textmate});
 
 // @ts-ignore
 // eslint-disable-next-line no-restricted-globals
@@ -98,22 +99,6 @@ self.MonacoEnvironment = {
 	}
 };
 
-monaco.languages.setLanguageConfiguration('TMProgram', {
-    surroundingPairs: [
-        {open: '{', close: '}'}
-    ],
-    autoClosingPairs: [
-        {open: '{', close: '}'},
-    ],
-    indentationRules: {
-        increaseIndentPattern: /{/,
-        decreaseIndentPattern: /}/,
-    },
-    comments: {
-        lineComment: "//"
-    }
-});
-
 function catchError(source:string, error:unknown, markers:monaco.editor.IMarkerData[]) {
     try {
         markers.push({
@@ -126,7 +111,7 @@ function catchError(source:string, error:unknown, markers:monaco.editor.IMarkerD
             source,
         });
     } catch {
-        console.error("Not a CodeError!");
+        throw error;
     }
 }
 
@@ -145,4 +130,5 @@ export function getProgram(code:string, markers:monaco.editor.IMarkerData[]) {
     } catch (error) {
         catchError("TMParser", error, markers);
     }
+    return undefined;
 }

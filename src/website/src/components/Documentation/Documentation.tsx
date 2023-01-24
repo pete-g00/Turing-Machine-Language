@@ -3,8 +3,13 @@ import { Container, Divider, List, ListItem, ListItemButton, Link } from '@mui/m
 import AppToolbar from '../Apptoolbar/Apptoolbar';
 import Navigation from '../DocumentationNavigation/DocumentationNavigation';
 import { Link as RouterLink } from 'react-router-dom';
+import { UserConfiguration } from '../../App';
 
-function Documentation() {
+export interface DocumentationProps {
+    userConfiguration:UserConfiguration;
+}
+
+function Documentation({ userConfiguration }:DocumentationProps) {
     document.title = "TMP Documentation";
 
     const navArray = [
@@ -12,7 +17,7 @@ function Documentation() {
     ];
     return (
         <Container>
-            <AppToolbar isDocumentation></AppToolbar>
+            <AppToolbar userConfiguration={userConfiguration} isDocumentation></AppToolbar>
             <Navigation navArray={navArray}></Navigation>
             <div className="content">
                 <h1>Documentation</h1>

@@ -1,9 +1,10 @@
 import React from 'react';
 import { Container, Divider, Grid, Link, List, ListItem, ListItemButton } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
 import AppToolbar from '../Apptoolbar/Apptoolbar';
 import Navigation from '../DocumentationNavigation/DocumentationNavigation';
+import { DocumentationProps } from '../Documentation/Documentation';
 import * as _errors from '../errors.json';
-import { Link as RouterLink } from 'react-router-dom';
 
 export interface ErrorData {
     title:string;
@@ -20,7 +21,7 @@ export interface ErrorInterface {
 
 const errors:ErrorInterface = _errors;
 
-function ErrorDocumentation() {
+function ErrorDocumentation({ userConfiguration }:DocumentationProps) {
     document.title = "TMP Errors";
 
     const navArray = [
@@ -31,7 +32,7 @@ function ErrorDocumentation() {
     const validatorKeys = Object.keys(errors.validator);
     return (
         <Container>
-            <AppToolbar isDocumentation></AppToolbar>
+            <AppToolbar userConfiguration={userConfiguration} isDocumentation />
             <Navigation navArray={navArray}></Navigation>
             <div className="content">
                 <h1>Turing Machine Program Errors</h1>

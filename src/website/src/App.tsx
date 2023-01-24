@@ -1,14 +1,15 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useState } from 'react';
 import { purple, green } from '@mui/material/colors';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { Link as RouterLink, LinkProps as RouterLinkProps, Route, HashRouter as Router, Routes, Navigate } from 'react-router-dom';
+import { LinkProps } from '@mui/material';
+import { Link as RouterLink, LinkProps as RouterLinkProps, Route, Routes, Navigate, HashRouter as Router } from 'react-router-dom';
 import HomePage from './components/Homepage/Homepage';
 import Documentation from './components/Documentation/Documentation';
-import { LinkProps } from '@mui/material';
-import PreciseErrorDocumentation from './components/PreciseErrorDocumentation/PreciseErrorDocumentation';
 import ErrorDocumentation from './components/ErrorDocumentation/ErrorDocumentation';
 import ExecutionDocumentation from './components/ExecutionDocumentation/ExecutionDocumentation';
 import SpecificationDocumentation from './components/SpecificationDocumentation/SpecificationDocumentation';
+import PreciseErrorDocumentation from './components/PreciseErrorDocumentation/PreciseErrorDocumentation';
+import AppDrawer from './components/AppDrawer/AppDrawer';
 
 const LinkBehavior = React.forwardRef<HTMLAnchorElement, Omit<RouterLinkProps, 'to'> & { href: RouterLinkProps['to'] }>((props, ref) => {
     const { href, ...other } = props;
@@ -39,18 +40,79 @@ const theme = createTheme({
   },
 });
 
+export type EditorTheme = "cobalt" | "dawn" | "dracula" | "github" | "monokai" | "textmate";
+export const editorThemes:EditorTheme[] = ["cobalt", "dawn", "dracula", "github", "monokai", "textmate"];
+
+export class EditorFontSize {
+  public readonly label;
+  public readonly value;
+
+  private constructor(label:string, value:number) {
+    this.label = label;
+    this.value = value;
+  }
+
+  public static SMALL:EditorFontSize = new EditorFontSize("Small", 12);
+  public static NORMAL:EditorFontSize = new EditorFontSize("Normal", 14);
+  public static LARGE:EditorFontSize = new EditorFontSize("Large", 16);
+
+  public static parse(label:string):EditorFontSize|undefined {
+    const fontSize = editorFontSizes.find((el) => {
+      return el.label === label;
+    });
+    return fontSize;
+  }
+}
+
+export const editorFontSizes:EditorFontSize[] = [EditorFontSize.LARGE, EditorFontSize.NORMAL, EditorFontSize.SMALL];
+
+export interface UserConfiguration {
+  editorTheme:EditorTheme;
+  editorFontSize:EditorFontSize;
+  isDrawerOpen:boolean;
+  showEditorLineNumber:boolean;
+  setEditorTheme:(userConfiguration:UserConfiguration, theme:EditorTheme) => void;
+  setEditorFontSize:(userConfiguration:UserConfiguration, fontSize:EditorFontSize) => void;
+  setShowEditorLineNumber:(userConfiguration:UserConfiguration, showLineNumber:boolean) => void;
+  openDrawer:(userConfiguration:UserConfiguration) => void;
+  closeDrawer:(userConfiguration:UserConfiguration) => void;
+}
+
 function App():ReactElement {
+  const [userConfiguration, setUserConfiguration] = useState<UserConfiguration>({
+    editorTheme: "dracula",
+    editorFontSize: EditorFontSize.NORMAL,
+    showEditorLineNumber: true,
+    isDrawerOpen: false,
+    setEditorTheme: (userConfiguration:UserConfiguration, theme:EditorTheme) => {
+      setUserConfiguration({...userConfiguration, editorTheme: theme});
+    },
+    setEditorFontSize: (userConfiguration:UserConfiguration, fontSize:EditorFontSize) => {
+      setUserConfiguration({...userConfiguration, editorFontSize: fontSize});
+    },
+    setShowEditorLineNumber:(userConfiguration:UserConfiguration, showLineNumber:boolean) => {
+      setUserConfiguration({...userConfiguration, showEditorLineNumber: showLineNumber});
+    },
+    openDrawer:(userConfiguration:UserConfiguration) => { 
+      setUserConfiguration({...userConfiguration, isDrawerOpen: true});
+    },
+    closeDrawer:(userConfiguration:UserConfiguration) => {
+      setUserConfiguration({...userConfiguration, isDrawerOpen: false});
+    }
+  });
+
   return (
     <ThemeProvider theme={theme}>
       <div className="app">
         <Router>
+        <AppDrawer userConfiguration={userConfiguration}/>
           <Routes>
-            <Route path='/' element={<HomePage/>}></Route>
-            <Route path='/documentation' element={<Documentation/>}></Route>
-            <Route path='/documentation/errors/:label' element={<PreciseErrorDocumentation/>}></Route>
-            <Route path='/documentation/errors' element={<ErrorDocumentation/>}></Route>
-            <Route path='/documentation/execution' element={<ExecutionDocumentation/>}></Route>
-            <Route path='/documentation/specification' element={<SpecificationDocumentation/>}></Route>
+            <Route path='/' element={<HomePage userConfiguration={userConfiguration}/>} />
+            <Route path='/documentation' element={<Documentation userConfiguration={userConfiguration}/>} />
+            <Route path='/documentation/errors/:label' element={<PreciseErrorDocumentation userConfiguration={userConfiguration}/>} />
+            <Route path='/documentation/errors' element={<ErrorDocumentation userConfiguration={userConfiguration}/>} />
+            <Route path='/documentation/execution' element={<ExecutionDocumentation userConfiguration={userConfiguration}/>} />
+            <Route path='/documentation/specification' element={<SpecificationDocumentation userConfiguration={userConfiguration}/>} />
             <Route path='*' element={<Navigate replace to='/'></Navigate>}></Route>
           </Routes>
         </Router>
