@@ -2,11 +2,11 @@ import React, { useEffect, useRef } from 'react';
 import './Editor.css';
 import * as monaco from 'monaco-editor';
 import { getProgram } from '../MonacoConfig';
-import { TuringMachine, CodeConverter } from 'parser-tml';
+import { ProgramContext } from 'parser-tml';
 import { UserConfiguration } from '../../App';
 
 interface EditorProps {
-    setTuringMachine: (tm:TuringMachine | undefined) => void;
+    setProgram: (program:ProgramContext | undefined) => void;
     userConfiguration:UserConfiguration;
 }
 
@@ -25,7 +25,7 @@ module isDiv2 {
     }
 }`;
 
-function Editor({ userConfiguration, setTuringMachine }:EditorProps) {
+function Editor({ userConfiguration, setProgram }:EditorProps) {
     const divEl = useRef<HTMLDivElement>(null);
     let editor: monaco.editor.IStandaloneCodeEditor;
     const markers:monaco.editor.IMarkerData[] = [];
@@ -46,11 +46,9 @@ function Editor({ userConfiguration, setTuringMachine }:EditorProps) {
                 monaco.editor.setModelMarkers(editor.getModel()!, "validate-TMP", markers);
                 
                 if (markers.length === 0) {
-                    const converter = new CodeConverter(program!);
-                    const turingMachine = converter.convert();
-                    setTuringMachine(turingMachine);
+                    setProgram(program);
                 } else {
-                    setTuringMachine(undefined);
+                    setProgram(undefined);
                 }
             });
         }

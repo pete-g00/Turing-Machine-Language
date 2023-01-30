@@ -6,10 +6,10 @@ import { Link as RouterLink, LinkProps as RouterLinkProps, Route, Routes, Naviga
 import HomePage from './components/Homepage/Homepage';
 import Documentation from './components/Documentation/Documentation';
 import ErrorDocumentation from './components/ErrorDocumentation/ErrorDocumentation';
-import ExecutionDocumentation from './components/ExecutionDocumentation/ExecutionDocumentation';
-import SpecificationDocumentation from './components/SpecificationDocumentation/SpecificationDocumentation';
 import PreciseErrorDocumentation from './components/PreciseErrorDocumentation/PreciseErrorDocumentation';
 import AppDrawer from './components/AppDrawer/AppDrawer';
+import TMDocumentation from './components/TMDocumentation/TMDocumentation';
+import TMLDocumentation from './components/TMLDocumentation/TMLDocumentation';
 
 const LinkBehavior = React.forwardRef<HTMLAnchorElement, Omit<RouterLinkProps, 'to'> & { href: RouterLinkProps['to'] }>((props, ref) => {
     const { href, ...other } = props;
@@ -111,8 +111,8 @@ function App():ReactElement {
             <Route path='/documentation' element={<Documentation userConfiguration={userConfiguration}/>} />
             <Route path='/documentation/errors/:label' element={<PreciseErrorDocumentation userConfiguration={userConfiguration}/>} />
             <Route path='/documentation/errors' element={<ErrorDocumentation userConfiguration={userConfiguration}/>} />
-            <Route path='/documentation/execution' element={<ExecutionDocumentation userConfiguration={userConfiguration}/>} />
-            <Route path='/documentation/specification' element={<SpecificationDocumentation userConfiguration={userConfiguration}/>} />
+            <Route path='/documentation/turing-machine' element={<TMDocumentation userConfiguration={userConfiguration}/>} />
+            <Route path='/documentation/turing-machine-language' element={<TMLDocumentation userConfiguration={userConfiguration}/>} />
             <Route path='*' element={<Navigate replace to='/'></Navigate>}></Route>
           </Routes>
         </Router>

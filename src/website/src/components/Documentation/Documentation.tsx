@@ -17,28 +17,28 @@ function Documentation({ userConfiguration }:DocumentationProps) {
     ];
     return (
         <Container>
-            <AppToolbar userConfiguration={userConfiguration} isDocumentation></AppToolbar>
+            <AppToolbar isDocumentation userConfiguration={userConfiguration}></AppToolbar>
             <Navigation navArray={navArray}></Navigation>
             <div className="content">
                 <h1>Documentation</h1>
                 <Divider/>
-                <p>Welcome to the documentation section in the Turing Machine Editor! Here, you can find specifications of the Turing Machine and the Turing Machine program, along with error documentations and example programs.</p>
-                {/* Add an introduction to website passage? */}
+                <p>Welcome to the documentation section in the Turing Machine Editor! Here, you can find specifications of the Turing Machine and the Turing Machine Language, along with error documentations and example programs.</p>
                 <h2>Explore Documentation</h2>
                 <List>
                     <ListItem disablePadding>
-                        <span><ListItemButton>Turing Machine Specification</ListItemButton></span>
+                        <Link color="inherit" underline='none' component={RouterLink} to='/documentation/turing-machine/'>
+                           <ListItemButton>Turing Machine Specification</ListItemButton>
+                        </Link>
                     </ListItem>
                     <ListItem disablePadding>
-                        <span><ListItemButton>Turing Machine Program Specification</ListItemButton></span>
+                        <Link color="inherit" underline='none' component={RouterLink} to='/documentation/turing-machine-language/'>
+                           <ListItemButton>Turing Machine Program Specification</ListItemButton>
+                        </Link>
                     </ListItem>
                     <ListItem disablePadding>
                         <Link color="inherit" underline='none' component={RouterLink} to='/documentation/errors/'>
                            <ListItemButton>Errors</ListItemButton>
                         </Link>
-                    </ListItem>
-                    <ListItem disablePadding>
-                        <span><ListItemButton>Examples</ListItemButton></span>
                     </ListItem>
                 </List>
             </div>

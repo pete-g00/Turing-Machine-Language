@@ -291,3 +291,14 @@
 * *0.5 hours* Added more editor themes.
 * *1.5 hours* Added drawer to change editor themes, font size and show/hide line numbers.
 * *0.5 hours* Created a plan for the evaluation stage.
+
+### 26 Jan 2023
+
+* *1 hour* Meeting with Ornela
+
+## Week 4
+
+### 30 Jan 2023
+
+* *1.5 hours* Added specification for TM
+* *1 hour* Added specification for TML
