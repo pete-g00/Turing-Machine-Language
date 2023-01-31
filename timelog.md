@@ -302,3 +302,7 @@
 
 * *1.5 hours* Added specification for TM
 * *1 hour* Added specification for TML
+
+### 31 Jan 2023
+
+* *1.5 hours* Created the evaluation worksheet- still need to complete Part 3 but is mostly done
