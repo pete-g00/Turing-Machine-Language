@@ -306,3 +306,8 @@
 ### 31 Jan 2023
 
 * *1.5 hours* Created the evaluation worksheet- still need to complete Part 3 but is mostly done
+
+### 1 Feb 2023
+
+* *0.5 hours* Completed the evaluation worksheet
+* *0.5 hours* Added the agenda for tomorrow's meeting
