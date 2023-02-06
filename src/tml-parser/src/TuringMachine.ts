@@ -81,10 +81,10 @@ export interface TMChange extends IncompleteTMChange {
 }
 
 function generateLabel(change:IncompleteTMChange, letters:string[]) {
-    const source = letters.map((letter) => letter === "" ? "#" : letter).join("|");
+    const source = letters.map((letter) => letter || "#").join("|");
     const dir = change.direction ?? Direction.LEFT;
-    if (change.letter) {
-        return source + "→" + change.letter + ", "+ dir;
+    if (change.letter !== undefined) {
+        return source + "→" + (change.letter || "#") + ", "+ dir;
     } else {
         return source + ", " + dir;
     }

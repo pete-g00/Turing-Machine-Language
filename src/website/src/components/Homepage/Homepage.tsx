@@ -37,12 +37,12 @@ function HomePage({ userConfiguration }:HomePageProps) {
         <div>
             <AppToolbar userConfiguration={userConfiguration} />
             <Grid container>
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} sm={6}>
                     <Editor 
                         userConfiguration={userConfiguration} 
                         setProgram={setProgram}/>
                 </Grid>
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} sm={6}>
                     <TMPanel turingMachine={turingMachine}/>
                     <TapePanel turingMachine={turingMachine}/>
                 </Grid>

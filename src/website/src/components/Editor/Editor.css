@@ -1,6 +1,6 @@
 .Editor {
 	width: 100%;
-	height: 675px;
+	height: max(95vh, 100%);
 	resize: vertical;
 }
 

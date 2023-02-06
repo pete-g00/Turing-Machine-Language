@@ -7,7 +7,8 @@ export const editor = {
     create: () => {
         return {
             dispose: emptyFun,
-            onDidChangeModelContent: emptyFun
+            onDidChangeModelContent: emptyFun,
+            updateOptions: emptyFun,
         };
     },
     dispose: emptyFun,

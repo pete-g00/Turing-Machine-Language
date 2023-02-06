@@ -311,3 +311,13 @@
 
 * *0.5 hours* Completed the evaluation worksheet
 * *0.5 hours* Added the agenda for tomorrow's meeting
+
+### 2 Feb 2023
+
+* *1 hour* Meeting with Ornela
+
+## Week 5
+
+### 6 Feb 2023
+
+* *2.5 hours* Changed FSM using Graphviz for better presentation

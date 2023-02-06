@@ -27,23 +27,23 @@ module isDiv2 {
 
 function Editor({ userConfiguration, setProgram }:EditorProps) {
     const divEl = useRef<HTMLDivElement>(null);
-    let editor: monaco.editor.IStandaloneCodeEditor;
+    const editor = useRef<monaco.editor.IStandaloneCodeEditor|null>(null);
     const markers:monaco.editor.IMarkerData[] = [];
     
     useEffect(() => {
         if (divEl.current) {
-            editor = monaco.editor.create(divEl.current, {
+            const _editor = monaco.editor.create(divEl.current, {
                 value: code,
                 language: 'TMProgram',
-                theme: userConfiguration.editorTheme,
+                theme: "dracula",
                 automaticLayout: true,
-                fontSize: userConfiguration.editorFontSize.value,
-                lineNumbers: userConfiguration.showEditorLineNumber ? "on" : "off",
+                fontSize: 14,
+                lineNumbers: "on",
                 wordWrap: "on",
             });
-            editor.onDidChangeModelContent(() => {
-                const program = getProgram(editor.getValue(), markers);
-                monaco.editor.setModelMarkers(editor.getModel()!, "validate-TMP", markers);
+            _editor.onDidChangeModelContent(() => {
+                const program = getProgram(_editor.getValue(), markers);
+                monaco.editor.setModelMarkers(_editor.getModel()!, "validate-TMP", markers);
                 
                 if (markers.length === 0) {
                     setProgram(program);
@@ -51,11 +51,25 @@ function Editor({ userConfiguration, setProgram }:EditorProps) {
                     setProgram(undefined);
                 }
             });
+            editor.current = _editor;
         }
         return () => {
-            editor.dispose();
+            if (editor.current) {
+                editor.current.dispose();
+            }
         };
+    }, []);
+
+    useEffect(() => {
+        if (editor.current) {
+            editor.current.updateOptions({
+                theme: userConfiguration.editorTheme,
+                fontSize: userConfiguration.editorFontSize.value,
+                lineNumbers: userConfiguration.showEditorLineNumber ? "on" : "off"
+            });
+        }
     }, [userConfiguration]);
+
     return (
         <div className="Editor" ref={divEl}></div>
     );

@@ -51,149 +51,126 @@
     morestring=[b]"
 }
 
-
-\title{TML Worksheet}
-\author{Student No: \texttt{\_\_\_\_\_\_\_\_\_\_\_\_}}
-
 \begin{document}
-    \maketitle
-
-    \section{Writing TML Programs}
-    In this section, you will be tested on writing TML programs. Three programs are given below as examples:
+    % \addtitle{TML Worksheet}
+    \section{Introduction to Turing Machine Language}
+    In this section, you are given some programs in Turing Machine Language (TML). They will be used to explain the syntax of the programming language and how they can be run on tapes.
     \begin{itemize}
         \item \texttt{isDiv2}:
-\begin{lstlisting}[language=TML]
-// checks whether a binary number is divisible by 2
-alphabet = {0, 1}
-module isDiv2 {
-    while 0, 1 {
-        move right
-    } if blank {
-        move left
-        if 0 {
-            accept
-        } if 1, blank {
-            reject
-        }
-    }
-}
-\end{lstlisting}
+        \lstinputlisting[language=TML]{code/isDiv2.tm}
         
         \item \texttt{isDiv2Rec}:
-\begin{lstlisting}[language=TML]
-// checks whether a binary number is divisible by 2 recursively
-alphabet = {0, 1}
-module isDiv2 {
-    if 0, 1 {
-        move right
-        goto isDiv2
-    } if blank {
-        move left
-        if 0 {
-            accept
-        } if 1, blank {
-            reject
-        }
-    }
-}
-\end{lstlisting}
+        \lstinputlisting[language=TML]{code/isDiv2Rec.tm}
+
+        \noindent Both \texttt{isDiv2} and \texttt{isDiv2Rec} correspond to the following Turing Machine (TM):
+        \begin{figure}[H]
+            \centering
+            \begin{tikzpicture}
+                \node[state, accepting] (q0) at (0, 0) {$q_0$};
+                \node[state] (q1) at (3, 0) {$q_1$};
+                \node[state, fill=green, opacity=0.6] (A) at (6, -1.5) {$A$};
+                \node[state, fill=red, opacity=0.6] (R) at (6, 1.5) {$R$};
+
+                \draw[->] (q0) edge[loop above] node {$0|1, R$} (q0);
+                \draw[->] (q0) -- node[above] {$\#, L$} (q1);
+                \draw[->] (q1) -- node[below left] {$0, L$} (A);
+                \draw[->] (q1) -- node[above left] {$1|\#, L$} (R);
+            \end{tikzpicture}
+        \end{figure}
         \newpage
         
-        \item \texttt{aNbN}:
-\begin{lstlisting}[language=TML]
-// checks whether the input is blank or of the form ab, aabb, aaabbb, etc.
-alphabet = {a, b}
-module aNbN {
-    if blank {
-        accept
-    } 
-    // cannot start with a b
-    if b {
-        reject
-    } if a {
-        changeto blank
-        move right
-        // go to the end
-        while a, b {
-            move right
-        } 
-        if blank {
-            move left
-            // must end with a b
-            if a, blank {
-                reject
-            } if b {
-                changeto blank
-                move left
-                // go to the start and restart
-                while a, b {
-                    move left
-                } if blank {
-                    move right
-                    goto aNbN
-                }
-            }
-        }
-    }
-}
-\end{lstlisting}
+        \item \texttt{palindrome}:
+        \lstinputlisting[language=TML]{code/palindrome.tm}
+
+        \noindent The program \texttt{palindrome} corresponds to the following TM:
+        \begin{figure}[H]
+            \centering
+            \begin{tikzpicture}
+                \node[state, accepting] (q0) at (1, 0) {$q_0$};
+                \node[state] (q1) at (2, -2) {$q_1$};
+                \node[state] (q2) at (5, -2) {$q_2$};
+                \node[state] (q4) at (2, 2) {$q_3$};
+                \node[state] (q5) at (5, 2) {$q_4$};
+                \node[state] (q7) at (4, 0) {$q_5$};
+                \node[state, fill=green, opacity=0.6] (A) at (-2, 0) {$A$};
+                \node[state, fill=red, opacity=0.6] (R) at (8, 0) {$R$};
+    
+                \draw[->] (q0) -- node[left] {$a \to \#, R$} (q1);
+                \draw[->] (q0) -- node[left] {$b \to \#, R$} (q4);
+                \draw[->] (q0) -- node[above] {$\#, L$} (A);
+                \draw[->] (q1) edge[loop below] node {$a|b, R$} (q1);
+                \draw[->] (q1) -- node[above] {$\#, L$} (q2);
+                \draw[->] (q2) -- node[right] {$b \to \#, L$} (q7);
+                \draw[->] (q2) -- node[below right] {$a|\#, L$} (R);
+                \draw[->] (q4) edge[loop above] node {$a|b, R$} (q4);
+                \draw[->] (q4) -- node[below] {$\#, L$} (q5);
+                \draw[->] (q5) -- node[right] {$a \to \#, L$} (q7);
+                \draw[->] (q5) -- node[above right] {$b|\#, L$} (R);
+                \draw[->] (q7) edge[loop right] node {$a|b, L$} (q7);
+                \draw[->] (q7) -- node[above] {$\#, L$} (q0);
+                % \draw[->] (q0) -- node[left] {$a \to \#, R$} (q1);
+                % \draw[->] (q0) -- node[left] {$b \to \#, R$} (q4);
+                % \draw[->] (q0) -- node[above] {$\#, L$} (A);
+                % \draw[->] (q1) edge[loop above] node {$a|b, R$} (q1);
+                % \draw[->] (q1) -- node[above] {$\#, L$} (q2);
+                % \draw[->] (q2) -- node[right] {$b \to \#, L$} (q7);
+                % \draw[->] (q2) -- node[right] {$a|\#, L$} (R);
+                % \draw[->] (q4) edge[loop below] node {$a|b, R$} (q4);
+                % \draw[->] (q4) -- node[below] {$\#, L$} (q5);
+                % \draw[->] (q5) -- node[right] {$a \to \#, L$} (q7);
+                % \draw[->] (q5) -- node[right] {$b|\#, L$} (R);
+                % \draw[->] (q7) edge[loop right] node {$a|b, L$} (q7);
+                % \draw[->] (q7) -- node[above] {$\#, L$} (q0);
+            \end{tikzpicture}
+        \end{figure}
+
+% \begin{lstlisting}[language=TML]
+% // checks whether the input is blank or of the form ab, aabb, aaabbb, etc.
+% alphabet = {a, b}
+% module aNbN {
+%     if blank {
+%         accept
+%     } 
+%     // cannot start with a b
+%     if b {
+%         reject
+%     } if a {
+%         changeto blank
+%         move right
+%         // go to the end
+%         while a, b {
+%             move right
+%         } 
+%         if blank {
+%             move left
+%             // must end with a b
+%             if a, blank {
+%                 reject
+%             } if b {
+%                 changeto blank
+%                 move left
+%                 // go to the start and restart
+%                 while a, b {
+%                     move left
+%                 } if blank {
+%                     move right
+%                     goto aNbN
+%                 }
+%             }
+%         }
+%     }
+% }
+% \end{lstlisting}
     \end{itemize}
     \newpage
     
-    Following a similar syntax to the code given above, write the following programs. You are free to use the website to check the accuracy of the program while writing the programs.
-    \begin{enumerate}
-        \item divisibility by 4 in binary iteratively [HINT: Go to the end and check for 2 zeros. Allow 0 as well.]
-        \begin{solution}
-            \vspace*{540pt}
-        \end{solution}
-                
-        \item palindrome over $a, b$ [HINT: if blank, accept; if single entry, accept; otherwise, remove the first value, go to the end and check that this value is the same. Go to the start and recurse afterwards.]
-        \begin{solution}
-            \vspace*{560pt}
-        \end{solution}
-        
-        \item divisibility by 4 in binary, recursively.
-        \begin{solution}
-            \vspace*{570pt}
-        \end{solution}
-
-        \item check all $a$'s come before the $b$'s.
-        \begin{solution}
-            \vspace*{570pt}
-        \end{solution}
-
-        % \item check there are same number of $a$'s and $b$'s [HINT: remove the first letter and the last opposite letter- move all the remaining a's so that there is no blank space in the middle.]
-        % \begin{solution}
-        %     \vspace*{560pt}
-        % \end{solution}
-    \end{enumerate}
-    \newpage
-
     \section{Identifying TML Programs}
-    In this section, you are presented with TML programs. You will be given some tape values to run the program in and decode what values the program accepts. You can use the website to try and solve this, but you should attempt executing the program without the website for at least one of the values.
+    In this section, you are presented with TML programs. You will be given some tape values to run the program in and decode what values the program accepts. You are encouraged to use the website to try and solve this.
 
     \begin{enumerate}
         \item Consider the following TML Program:
-\begin{lstlisting}[language=TML]
-alphabet = {0, 1}
-module mystery {
-    while 0, 1 {
-        move right
-    } if blank {
-        move left
-        if blank, 0 {
-            reject
-        } if 1 {
-            move left
-            if blank, 1 {
-                reject
-            } if 0 {
-                accept
-            }
-        }
-    }
-}
-\end{lstlisting}
+        \lstinputlisting[language=TML]{code/mystery1.tm}
+
         \begin{enumerate}
             \item Does the program accept the values:
             \begin{enumerate}
@@ -225,60 +202,13 @@ module mystery {
             
             \item Describe the values this program accepts.
             \begin{solution}
-                
+                \vspace*{30pt}
             \end{solution}
         \end{enumerate}
         \newpage
 
         \item Consider the following TML program:
-\begin{lstlisting}[language=TML]
-alphabet = {a, b}
-module mystery {
-    if blank {
-        accept
-    } if a {
-        changeto blank
-        move right
-        while a, b {
-            move right
-        } if blank {
-            move left
-            if a {
-                reject
-            } if b, blank {
-                changeto blank
-                move left
-                while a, b {
-                    move left
-                } if blank {
-                    move right
-                    goto mystery
-                }
-            }
-        }
-    } if b {
-        changeto blank
-        move right
-        while a, b {
-            move right
-        } if blank {
-            move left
-            if b {
-                reject
-            } if a, blank {
-                changeto blank
-                move left
-                while a, b {
-                    move left
-                } if blank {
-                    move right
-                    goto mystery
-                }
-            }
-        }
-    }
-}
-\end{lstlisting}
+        \lstinputlisting[language=TML]{code/mystery2.tm}
         \begin{enumerate}
             \item Does the program accept the values:
             \begin{enumerate}
@@ -311,7 +241,7 @@ module mystery {
             
             \item Describe the values this program accepts.
             \begin{solution}
-                
+                \vspace*{30pt}
             \end{solution}
         \end{enumerate}
     \end{enumerate}
@@ -319,6 +249,7 @@ module mystery {
     \newpage
 
     \section{Identifying TMs}
+    In this section, you are presented with TMs. You will be given some tape values to run the program in and decode what values the program accepts. Since the website can only execute TML programs, you are also given the TML program for the code, but it is not comprehensible like the previous programs; you will likely find it easier to understand the TM than the program (which you should do!). 
     \begin{enumerate}
         \item Consider the following TM FSM:
         \begin{figure}[H]
@@ -327,8 +258,8 @@ module mystery {
                 \node[state, accepting] (q0) at (0, 0) {$q_0$};
                 \node[state] (q1) at (3, 0) {$q_1$};
                 \node[state] (q2) at (6, 0) {$q_2$};
-                \node[state, fill=green, opacity=0.8] (A) at (0, -2.5) {$A$};
-                \node[state, fill=red, opacity=0.8] (R) at (4.5, -2.5) {$R$};
+                \node[state, fill=green, opacity=0.6] (A) at (0, -2.5) {$A$};
+                \node[state, fill=red, opacity=0.6] (R) at (4.5, -2.5) {$R$};
     
                 \draw[->] (q0) edge[loop above] node {$0, R$} (q0);
                 \draw[->] (q0) edge[bend right] node[below] {$1, R$} (q1);
@@ -342,27 +273,6 @@ module mystery {
             \end{tikzpicture}
         \end{figure}
         You are given a basic representation of this FSM as code in Teams.
-%         The following is a program representation for the FSM:
-% \begin{lstlisting}[language=TML]
-% alphabet = {0, 1}
-% module q0 {
-%     if 0 {
-%         move right
-%     } if 1 {
-%         move right
-%         goto q1
-%     } if blank {
-%         move right
-%         accept
-%     }
-% }
-% module q1 {
-%     if 1 {
-%         move right
-%         goto q0
-%     } if 
-% }
-% \end{lstlisting}
         \begin{enumerate}
             \item Does the TM accept the values:
             \begin{enumerate}
@@ -394,7 +304,7 @@ module mystery {
             
             \item Describe the values this program accepts.
             \begin{solution}
-                % IsDiv3
+                \vspace*{30pt}
             \end{solution}
         \end{enumerate} 
         \newpage   
@@ -404,31 +314,30 @@ module mystery {
             \centering
             \begin{tikzpicture}
                 \node[state, accepting] (q0) at (3, 0) {$q_0$};
-                \node[state] (q1) at (2, 2) {$q_1$};
-                \node[state] (q2) at (5, 2) {$q_2$};
-                \node[state] (q3) at (8, 1.5) {$q_3$};
-                \node[state] (q4) at (2, -2) {$q_4$};
-                \node[state] (q5) at (5, -2) {$q_5$};
-                \node[state] (q6) at (8, -1.5) {$q_6$};
+                \node[state] (q1) at (2, -2) {$q_1$};
+                \node[state] (q2) at (5, -2) {$q_2$};
+                \node[state] (q3) at (8, -1.5) {$q_3$};
+                \node[state] (q4) at (2, 2) {$q_4$};
+                \node[state] (q5) at (5, 2) {$q_5$};
+                \node[state] (q6) at (8, 1.5) {$q_6$};
                 \node[state] (q7) at (6, 0) {$q_7$};
-                \node[state, fill=green, opacity=0.8] (A) at (1, 0) {$A$};
+                \node[state, fill=green, opacity=0.6] (A) at (0, 0) {$A$};
     
-                \draw[->] (q0) -- node[above right] {$a \to \#, R$} (q1);
-                \draw[->] (q0) -- node[below right] {$b \to \#, R$} (q4);
+                \draw[->] (q0) -- node[left] {$a \to \#, R$} (q1);
+                \draw[->] (q0) -- node[left] {$b \to \#, R$} (q4);
                 \draw[->] (q0) -- node[above] {$\#, R$} (A);
-                \draw[->] (q1) edge[loop above] node {$a|b, R$} (q1);
-                \draw[->] (q1) -- node[above] {$\#, L$} (q2);
-                \draw[->] (q2) -- node[above] {$b \to \#, L$} (q3);
-                \draw[->] (q3) -- node[below right] {$b \to \#, L$} (q7);
-                \draw[->] (q4) edge[loop below] node {$a|b, R$} (q4);
-                \draw[->] (q4) -- node[below] {$\#, L$} (q5);
-                \draw[->] (q5) -- node[below] {$a \to \#, L$} (q6);
-                \draw[->] (q6) -- node[above right] {$a \to \#, L$} (q7);
-                \draw[->] (q7) edge[loop above] node {$a|b, L$} (q7);
-                \draw[->] (q7) -- node[above] {$\#, L$} (q0);
+                \draw[->] (q1) edge[loop below] node {$a|b, R$} (q1);
+                \draw[->] (q1) -- node[below] {$\#, L$} (q2);
+                \draw[->] (q2) -- node[below] {$b \to \#, L$} (q3);
+                \draw[->] (q3) -- node[right] {$b \to \#, L$} (q7);
+                \draw[->] (q4) edge[loop above] node {$a|b, R$} (q4);
+                \draw[->] (q4) -- node[above] {$\#, L$} (q5);
+                \draw[->] (q5) -- node[above] {$a \to \#, L$} (q6);
+                \draw[->] (q6) -- node[right] {$a \to \#, L$} (q7);
+                \draw[->] (q7) edge[loop right] node {$a|b, L$} (q7);
+                \draw[->] (q7) -- node[above] {$\#, R$} (q0);
             \end{tikzpicture}
         \end{figure}
-        % Checks 
         NOTE: The missing transitions go to the reject state, i.e. $q_2$, $q_3$ to $a|\#$ and $q_5$, $q_6$ to $b|\#$ are rejected. You are given a basic representation of this FSM as code in Teams.
         \begin{enumerate}
             \item Does this TM accept the values:
@@ -466,11 +375,45 @@ module mystery {
 
             \item Describe the values this program accepts.
             \begin{solution}
-                
+                \vspace*{25pt}
             \end{solution}
         \end{enumerate}
     \end{enumerate}
     % Checks isDiv4
+    \newpage
+
+    
+    \section{Writing TML Programs}
+    % In this section, you will be tested on writing TML programs. Three programs are given below as examples:
+    
+    Following a similar syntax to the code given above, write the following programs. You are free to use the website to check the accuracy of the program while writing the programs.
+    \begin{enumerate}
+        \item divisibility by 4 in binary iteratively [HINT: Go to the end and check for 2 zeros. Allow 0 as well.]
+        \begin{solution}
+            \vspace*{520pt}
+        \end{solution}
+        
+        \item divisibility by 4 in binary, recursively.
+        \begin{solution}
+            \vspace*{570pt}
+        \end{solution}
+        
+        \item check all $a$'s come before the $b$'s
+        \begin{solution}
+            \vspace*{570pt}
+        \end{solution}
+        
+        \item strings of the form $a^n b^n$ [HINT: this is a special version of palindrome.]
+        \begin{solution}
+            \vspace*{570pt}
+        \end{solution}
+
+        \item HARD: check there are same number of $a$'s and $b$'s
+        %  [HINT: remove the first letter and the last opposite letter- move all the remaining a's so that there is no blank space in the middle.]
+        \begin{solution}
+            \vspace*{560pt}
+        \end{solution}
+    \end{enumerate}
     
     % NOTE: The missing links go to the reject state, 
     
