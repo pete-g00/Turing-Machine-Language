@@ -11,6 +11,39 @@ export class CodeExecutor extends TapeExecutor {
         this._currentBlocks = blocks;
         this._currentBlockIndex = 0;
     }
+    
+    public get currentBasicBlock(): BasicBlockContext|CoreBasicBlockContext|undefined {
+        const currentBlock = this.currentBlock;
+        if (currentBlock === undefined) {
+            return undefined;
+        } else if (currentBlock instanceof BasicBlockContext) {
+            return currentBlock;
+        } else if (currentBlock instanceof SwitchBlockContext) {
+            const caseBlock = currentBlock.cases.find((_case) => _case.values.has(this.tape.get(0)))!;
+            return caseBlock.getFirstBlock(this);
+        }
+        return undefined;
+    }
+
+    /**
+     * Gets the first block from a while case.
+     * 
+     * @param whileCase the while case
+     * @returns the first block
+     */
+    public getFirstBlockFromWhile(whileCase:WhileCaseContext): CoreBasicBlockContext {
+        return whileCase.block;
+    }
+    
+    /**
+     * Gets the first block from an if case.
+     * 
+     * @param ifCase the if case
+     * @returns the first block
+     */
+    public getFirstBlockFromIf(ifCase:IfCaseContext):BasicBlockContext {
+        return ifCase.blocks[0] as BasicBlockContext;
+    }
 
     public get terminationStatus(): TerminationState | undefined {
         return this._terminationStatus;

@@ -31,9 +31,9 @@ function TapeInput({goToTapeScreen, tape, setTape, alphabet}:TapeInputProps) {
         <form>
             <Box textAlign='center'>
                 <div>
-                    <TextField 
-                        variant='outlined' label='Tape Value' error={hasError} helperText={hasError ? 'Invalid Tape Value' : ' '}
-                        onChange={(e) => setTape(e.target.value)} disabled={alphabet === undefined} value={tape}/>
+                    <TextField autoComplete='off'variant='outlined' label='Tape Value' error={hasError} 
+                        helperText={hasError ? 'Invalid Tape Value' : ' '} onChange={(e) => setTape(e.target.value)} 
+                        disabled={alphabet === undefined} value={tape}/>
                 </div>
                 <div>
                     <Button variant='contained' onClick={handleSubmit} disabled={alphabet === undefined}>Execute</Button>

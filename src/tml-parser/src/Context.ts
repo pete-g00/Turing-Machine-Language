@@ -1,4 +1,5 @@
 import { CodeConverter } from "./CodeConverter";
+import { CodeExecutor } from "./CodeExecutor";
 import { CodePosition } from "./CodePosition";
 import { CodeValidator } from "./CodeValidator";
 
@@ -274,7 +275,7 @@ export abstract class CaseContext extends NormalBlockContext {
         this.values = values;
     }
 
-    public abstract getFirstBlock(converter:CodeConverter):BasicBlockContext | CoreBasicBlockContext;
+    public abstract getFirstBlock(converter:CodeConverter|CodeExecutor):BasicBlockContext | CoreBasicBlockContext;
 }
 
 /**
@@ -301,7 +302,7 @@ export class IfCaseContext extends CaseContext {
         converter.convertIf(this);
     }
 
-    public getFirstBlock(converter: CodeConverter): BasicBlockContext {
+    public getFirstBlock(converter: CodeConverter|CodeExecutor): BasicBlockContext {
         return converter.getFirstBlockFromIf(this);
     }
 }
@@ -329,7 +330,7 @@ export class WhileCaseContext extends CaseContext {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     public convert(): void {}
 
-    public getFirstBlock(converter: CodeConverter): CoreBasicBlockContext {
+    public getFirstBlock(converter: CodeConverter|CodeExecutor): CoreBasicBlockContext {
         return converter.getFirstBlockFromWhile(this);
     }
 }

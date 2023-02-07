@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Grid } from '@mui/material';
 import Editor, { code } from '../Editor/Editor';
 import TMPanel from '../TMPanel/TMPanel';
@@ -13,20 +13,44 @@ interface HomePageProps {
 }
 
 function HomePage({ userConfiguration }:HomePageProps) {
-    const [program, setProgram] = useState<ProgramContext|undefined>(undefined);
+    const program = useRef<ProgramContext|undefined>(undefined);
     const [turingMachine, setTuringMachine] = useState<TuringMachine|undefined>(undefined);
+    
+    const [currentState, setCurrentState] = useState<string|undefined>(undefined);
+    const [currentEdge, setCurrentEdge] = useState<string|undefined>(undefined);
+    
+    const [isTapeExecuting, setIsTapeExecuting] = useState(false);
+
+    // the timeout fn to revert current edge and marker position back to undefined 
+    // (animation occurs even if the previous value equals the current value)
+    const [changeCurrentEdgeFn, setChangeCurrentEdgeFn] = useState<NodeJS.Timeout|undefined>(undefined);
+
+    useEffect(() => {
+        if (currentEdge) {
+            const changeCurrentEdgeFn = setTimeout(() => {
+                setCurrentEdge(undefined);
+            }, 500);
+            setChangeCurrentEdgeFn(changeCurrentEdgeFn);
+        }
+        
+        return (() => {
+            if (changeCurrentEdgeFn) {
+                clearTimeout(changeCurrentEdgeFn);
+            }
+        });
+    }, [currentEdge]);
 
     useEffect(() => {
         const parser = new CodeParser(code);
-        const program = parser.parse();
-        setProgram(program);
-        const converter = new CodeConverter(program);
+        const _program = parser.parse();
+        program.current = _program;
+        const converter = new CodeConverter(_program);
         setTuringMachine(converter.convert());
     }, []);
 
     useEffect(() => {
-        if (program) {
-            const converter = new CodeConverter(program);
+        if (program.current) {
+            const converter = new CodeConverter(program.current);
             setTuringMachine(converter.convert());
         } else {
             setTuringMachine(undefined);
@@ -38,17 +62,16 @@ function HomePage({ userConfiguration }:HomePageProps) {
             <AppToolbar userConfiguration={userConfiguration} />
             <Grid container>
                 <Grid item xs={12} sm={6}>
-                    <Editor 
-                        userConfiguration={userConfiguration} 
-                        setProgram={setProgram}/>
+                    <Editor userConfiguration={userConfiguration} 
+                        program={program} isTapeExecuting={isTapeExecuting}/>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <TMPanel turingMachine={turingMachine}/>
-                    <TapePanel turingMachine={turingMachine}/>
+                    <TMPanel turingMachine={turingMachine} currentEdge={currentEdge} currentState={currentState} />
+                    <TapePanel program={program} turingMachine={turingMachine} 
+                        setIsTapeExecuting={setIsTapeExecuting} setCurrentState={setCurrentState} setCurrentEdge={setCurrentEdge}/>
                 </Grid>
             </Grid>
-            <AppDrawer 
-                userConfiguration={userConfiguration}/>
+            <AppDrawer userConfiguration={userConfiguration}/>
         </div>
     );
 }

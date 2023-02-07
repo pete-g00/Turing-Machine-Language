@@ -7,15 +7,17 @@ import FSMPanel from '../FSMPanel/FSMPanel';
 
 interface TMPanelProps {
     turingMachine: TuringMachine|undefined;
+    currentState: string|undefined;
+    currentEdge: string|undefined;
 }
 
-function TMPanel({ turingMachine }:TMPanelProps) {
+function TMPanel({ turingMachine, currentEdge, currentState }:TMPanelProps) {
     // whether the convert button is enabled
     const [isConvertEnabled, setIsConvertEnabled] = useState(true);
     
     // the TM actually being shown
     const [currentTM, setCurrentTM] = useState<TuringMachine|undefined>(undefined);
-    
+        
     useEffect(() => {
         setIsConvertEnabled(turingMachine !== undefined);
     }, [turingMachine]);
@@ -24,7 +26,7 @@ function TMPanel({ turingMachine }:TMPanelProps) {
         <div className='tm-panel'>
             <Box textAlign="center"><h2>Turing Machine</h2></Box>
             <div className='tm-fsm'>
-                {currentTM && <FSMPanel turingMachine={currentTM}/>}
+                {currentTM && <FSMPanel turingMachine={currentTM} currentEdge={currentEdge} currentState={currentState}/>}
             </div>
             <div>
                 <Box textAlign="center"><p>Convert the Code into the Turing Machine</p></Box>

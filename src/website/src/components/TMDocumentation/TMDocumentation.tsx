@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { Divider } from '@mui/material';
 import { Container } from '@mui/system';
 import AppToolbar from '../Apptoolbar/Apptoolbar';
@@ -11,8 +11,8 @@ import TapePanel from '../TapePanel/TapePanel';
 import { DocumentationProps } from '../Documentation/Documentation';
 import FSMPanel from '../FSMPanel/FSMPanel';
 
-const program = getProgram(code, [])!;
-const converter = new CodeConverter(program);
+const _program = getProgram(code, [])!;
+const converter = new CodeConverter(_program);
 const turingMachine = converter.convert();
 
 function TMDocumentation({userConfiguration}:DocumentationProps) {
@@ -20,6 +20,10 @@ function TMDocumentation({userConfiguration}:DocumentationProps) {
         {name: "Documentation", link: "/documentation"},
         {name: "TM Documentation"}
     ];
+    
+    const program = useRef(_program);
+    const [currentState, setCurrentState] = useState<string|undefined>('q0');
+    const [currentEdge, setCurrentEdge] = useState<string|undefined>(undefined);
 
     return (
         <Container>
@@ -32,7 +36,7 @@ function TMDocumentation({userConfiguration}:DocumentationProps) {
                 <p>Before defining Turing Machines formally, we will first see an illustration of a Turing Machine.</p>
                 <figure>
                 <div className='tm-fsm'>
-                    <FSMPanel turingMachine={turingMachine}/>
+                    <FSMPanel turingMachine={turingMachine} currentState={currentState} currentEdge={currentEdge}/>
                 </div>
                     <figcaption>A Turing Machine that accepts binary numbers that divide 2. It is a directed graph where the vertices are called <i>states</i> and the edges <i>transitions</i>. This is a <i>finite state machine</i> representation of a Turing Machine.</figcaption>
                 </figure>
@@ -51,7 +55,8 @@ function TMDocumentation({userConfiguration}:DocumentationProps) {
 
                 The panel below illustrates how a Turing Machine is executed on a valid tape. Enter a valid tape value (i.e. a binary number) to show the animation!
                 <figure>
-                    <TapePanel turingMachine={turingMachine} />
+                    <TapePanel turingMachine={turingMachine} setCurrentEdge={setCurrentEdge} setCurrentState={setCurrentState} 
+                        setIsTapeExecuting={() => undefined} program={program} />
                     <figcaption>A Turing Machine tape animation that shows how a Turing Machine executes on a tape. The current Turing Machine state is highlighted during execution, along with the arrow we chose.</figcaption>
                 </figure>
             </div>

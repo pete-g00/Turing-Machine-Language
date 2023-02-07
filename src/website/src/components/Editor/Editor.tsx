@@ -6,8 +6,9 @@ import { ProgramContext } from 'parser-tml';
 import { UserConfiguration } from '../../App';
 
 interface EditorProps {
-    setProgram: (program:ProgramContext | undefined) => void;
+    program: React.MutableRefObject<ProgramContext | undefined>;
     userConfiguration:UserConfiguration;
+    isTapeExecuting:boolean;
 }
 
 export const code = `// checks whether a binary number is divisible by 2
@@ -25,7 +26,7 @@ module isDiv2 {
     }
 }`;
 
-function Editor({ userConfiguration, setProgram }:EditorProps) {
+function Editor({ userConfiguration, program, isTapeExecuting }:EditorProps) {
     const divEl = useRef<HTMLDivElement>(null);
     const editor = useRef<monaco.editor.IStandaloneCodeEditor|null>(null);
     const markers:monaco.editor.IMarkerData[] = [];
@@ -40,15 +41,17 @@ function Editor({ userConfiguration, setProgram }:EditorProps) {
                 fontSize: 14,
                 lineNumbers: "on",
                 wordWrap: "on",
+                detectIndentation: true,
             });
             _editor.onDidChangeModelContent(() => {
-                const program = getProgram(_editor.getValue(), markers);
+                console.log("program changed");
+                const _program = getProgram(_editor.getValue(), markers);
                 monaco.editor.setModelMarkers(_editor.getModel()!, "validate-TMP", markers);
                 
                 if (markers.length === 0) {
-                    setProgram(program);
+                    program.current = _program;
                 } else {
-                    setProgram(undefined);
+                    program.current = undefined;
                 }
             });
             editor.current = _editor;
@@ -59,6 +62,18 @@ function Editor({ userConfiguration, setProgram }:EditorProps) {
             }
         };
     }, []);
+
+    useEffect(() => {
+        if (isTapeExecuting) {
+            editor.current?.updateOptions({
+                readOnly: true
+            });
+        } else {
+            editor.current?.updateOptions({
+                readOnly: false
+            });
+        }
+    }, [isTapeExecuting]);
 
     useEffect(() => {
         if (editor.current) {

@@ -10,8 +10,8 @@ import { CodeConverter } from 'parser-tml';
 import { code } from '../Editor/Editor';
 import { DocumentationProps } from '../Documentation/Documentation';
 
-const program = getProgram(code, [])!;
-const converter = new CodeConverter(program);
+const _program = getProgram(code, [])!;
+const converter = new CodeConverter(_program);
 const turingMachine = converter.convert();
 
 function TMLDocumentation({ userConfiguration }:DocumentationProps) {
@@ -20,6 +20,7 @@ function TMLDocumentation({ userConfiguration }:DocumentationProps) {
         {name: "TML Documentation"}
     ];
     
+    const program = useRef(_program);
     const divEl = useRef<HTMLDivElement>(null);
     const editor = useRef<monaco.editor.IStandaloneCodeEditor|null>(null);
 
@@ -41,7 +42,9 @@ function TMLDocumentation({ userConfiguration }:DocumentationProps) {
             divEl.current.style.setProperty("height", `${editor.current.getContentHeight()}px`);
         }
         return () => {
-            editor.current?.dispose();
+            if (editor.current) {
+                editor.current.dispose();
+            }
         };
     }, []);
 
@@ -73,7 +76,8 @@ function TMLDocumentation({ userConfiguration }:DocumentationProps) {
 
                 The panel below illustrates how a Turing Machine is executed on a valid tape. Enter a valid tape value (i.e. a binary number) to show the animation!
                 <figure>
-                    <TapePanel turingMachine={turingMachine} />
+                    <TapePanel program={program} setCurrentEdge={() => undefined} setCurrentState={() => undefined} 
+                        setIsTapeExecuting={() => undefined} turingMachine={turingMachine} />
                     <figcaption>A Turing Machine tape animation that shows how a Turing Machine executes on a tape. The current Turing Machine block is highlighted during execution.</figcaption>
                 </figure>
             </div>

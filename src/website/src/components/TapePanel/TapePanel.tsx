@@ -1,24 +1,31 @@
+import React, { useRef, useState } from 'react';
 import { Box } from '@mui/material';
-import React, { useState } from 'react';
-import { TuringMachine } from 'parser-tml';
+import { ProgramContext, TuringMachine } from 'parser-tml';
 import TapeInput from '../TapeInput/TapeInput';
 import TapeScreen from '../TapeScreen/TapeScreen';
-import './TapePanel.css';
 
 interface TapePanelProps {
     turingMachine:TuringMachine|undefined;
+    program: React.MutableRefObject<ProgramContext | undefined>;
+    setCurrentState: (state:string|undefined) => void;
+    setCurrentEdge: (edge:string|undefined) => void;
+    setIsTapeExecuting: (isTapeExecuting:boolean) => void;
 }
 
-function TapePanel({ turingMachine }:TapePanelProps) {
+function TapePanel({ turingMachine, program, setCurrentEdge, setCurrentState, setIsTapeExecuting }:TapePanelProps) {
     const [tape, setTape] = useState("");
     const [currentTM, setCurrentTM] = useState<TuringMachine|undefined>(undefined);
+    const currentProgram = useRef<ProgramContext|undefined>(undefined);
 
     function goToTapeScreen() {
         setCurrentTM(turingMachine);
+        currentProgram.current = program.current;
+        setIsTapeExecuting(true);
     }
 
     function goToTapeInput() {
         setCurrentTM(undefined);
+        setIsTapeExecuting(false);
     }
 
     return (
@@ -29,7 +36,8 @@ function TapePanel({ turingMachine }:TapePanelProps) {
             </Box>
             {currentTM === undefined
                 ? <TapeInput alphabet={turingMachine?.alphabet} setTape={setTape} goToTapeScreen={goToTapeScreen} tape={tape}/> 
-                : <TapeScreen goToTapeInput={goToTapeInput} tapeValue={tape} turingMachine={currentTM}/>
+                : <TapeScreen program={currentProgram} goToTapeInput={goToTapeInput} setCurrentState={setCurrentState} 
+                        setCurrentEdge={setCurrentEdge} tapeValue={tape} turingMachine={currentTM}/>
             }
         </div>
     );

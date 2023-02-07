@@ -4,6 +4,9 @@ import * as d3 from 'd3';
 import { Button } from '@mui/material';
 import { TuringMachine, TMExecutor, Direction, TerminationState } from 'parser-tml';
 import './TapeScreen.css';
+import { ProgramContext } from 'parser-tml/index';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
 function getPreviousOffsetIndex(i:number) {
     return i === 0 ? 16 : i-1;
@@ -17,19 +20,25 @@ interface TapeScreenProps {
     turingMachine:TuringMachine;
     tapeValue:string;
     goToTapeInput:() => void;
+    program: React.MutableRefObject<ProgramContext | undefined>;
+    setCurrentState: (state:string|undefined) => void;
+    setCurrentEdge: (edge:string|undefined) => void;
 }
 
-function TapeScreen({ tapeValue, turingMachine, goToTapeInput }:TapeScreenProps) {
+function TapeScreen({ tapeValue, turingMachine, program, goToTapeInput, setCurrentEdge, setCurrentState }:TapeScreenProps) {
     const length = 17;
-    const executor = new TMExecutor(tapeValue, turingMachine);
+    const tmExecutor = new TMExecutor(tapeValue, turingMachine);
 
     const [tape, setTape] = useState(Array(17).fill("").map((_, i) => tapeValue[i-2]?.trim() ?? ""));
     const [tapeHeadIndex, setTapeHeadIndex] = useState(2);
     const [canGoBack, setCanGoBack] = useState(true);
     const [canStep, setCanStep] = useState(true);
     const [stepId, setStepId] = useState<NodeJS.Timeout|undefined>(undefined);
+    const [msg, setMsg] = useState<string>("");
+    const [showSnackbar, setShowSnackbar] = useState(false);
 
-    const executorRef = useRef(executor);
+    const tmExecutorRef = useRef(tmExecutor);
+
     const gRefs:React.RefObject<SVGGElement>[] = [];
     
     for (let i=0; i<length; i++) {
@@ -38,9 +47,11 @@ function TapeScreen({ tapeValue, turingMachine, goToTapeInput }:TapeScreenProps)
     }
 
     // changes the two values during each step
-    function changeValues(i1:number, val1:string, i2:number, val2:string) {
+    function changeValues(i1:number, val1:string, i2:number, val2:string):boolean {
+        let changed = true;
         const newTape = tape.map((original, j) => {
             if (j === i1) {
+                changed = val1 !== original;
                 return val1;
             } else if (j === i2) {
                 return val2;
@@ -49,6 +60,7 @@ function TapeScreen({ tapeValue, turingMachine, goToTapeInput }:TapeScreenProps)
             }
         });
         setTape(newTape);
+        return changed;
     }
 
     // moves the `g` element corresponding to the `gRef` by (50*`sign`, 0) 
@@ -84,14 +96,21 @@ function TapeScreen({ tapeValue, turingMachine, goToTapeInput }:TapeScreenProps)
         const nextOffset = getNextOffsetIndex(tapeHeadIndex);
         
         const leftmostIndex = getPreviousOffsetIndex(getPreviousOffsetIndex(tapeHeadIndex));
-        const leftmostValue = executorRef.current.tape.get(15);
-        changeValues(i, val, leftmostIndex, leftmostValue);
+        const leftmostValue = tmExecutorRef.current.tape.get(15);
+        const changed = changeValues(i, val, leftmostIndex, leftmostValue);
+        let msg = "";
+
+        if (changed) {
+            msg += "Changing the tapehead value to " + (val || "blank") + ". ";
+        }
         
         // move most entries to the left but the leftmost entry becomes the rightmost entry
         for (let i = 0; i < length; i++) {
             i === leftmostIndex ? moveToEnd(leftmostIndex): moveEntry(gRefs[i], -1);
         }
         setTapeHeadIndex(nextOffset);
+        msg += "Moving to the right";
+        setMsg(msg);
     }
     
     // transitions the tape entries to the left
@@ -99,53 +118,75 @@ function TapeScreen({ tapeValue, turingMachine, goToTapeInput }:TapeScreenProps)
         const nextOffset = getPreviousOffsetIndex(tapeHeadIndex);
 
         const rightmostIndex = getPreviousOffsetIndex(getPreviousOffsetIndex(nextOffset));
-        const rightMostValue = executorRef.current.tape.get(-3);
-        changeValues(i, val, rightmostIndex, rightMostValue);
+        const rightMostValue = tmExecutorRef.current.tape.get(-3);
+        const changed = changeValues(i, val, rightmostIndex, rightMostValue);
+        let msg = "";
+
+        if (changed) {
+            msg += "Changing the tapehead value to " + (val || "blank") + ". ";
+        }
 
         // move most entries to the right but the rightmost entry becomes the leftmost entry
         for (let i = 0; i < length; i++) {
             i === rightmostIndex ? moveToStart(rightmostIndex) : moveEntry(gRefs[i], 1);
         }
         setTapeHeadIndex(nextOffset);
+        msg += "Moving to the left";
+        setMsg(msg);
     }
 
-    function terminationMessage() {
-        if (executorRef.current.terminationStatus === TerminationState.ACCEPT) {
-            return "Accepted";
-        } else if (executorRef.current.terminationStatus === TerminationState.REJECT) {
-            return "Rejected";
-        } else {
-            return "";
+    function setTerminationMessage() {
+        if (tmExecutorRef.current.terminationStatus === TerminationState.ACCEPT) {
+            setMsg("Tape Accepted");
+        } else if (tmExecutorRef.current.terminationStatus === TerminationState.REJECT) {
+            setMsg("Tape Rejected");
         }
     }
 
     function handleStep() {
         setCanStep(false);
         setCanGoBack(false);
-        const currentState = executorRef.current.currentState;
+        const currentState = tmExecutorRef.current.currentState;
         const tmState = turingMachine.getState(currentState)!;
         const transition = tmState.transition(tape[tapeHeadIndex])!;
+        
+        const currentEdgeIdx = tmState.transitions.findIndex((value) => value.letters.includes(tape[tapeHeadIndex]));
+        const currentEdge = tmState.transitions[currentEdgeIdx];
+        const letters = currentEdge.letters.map((val) => val.length === 0 ? "_" : val).join("-");
+        const transitionLabel = `${currentEdge.currentState}-${currentEdge.nextState}-${letters}`;
     
         transition.direction === Direction.LEFT 
             ? transitionLeft(tapeHeadIndex, transition.letter) 
             : transitionRight(tapeHeadIndex, transition.letter);
-
-        executorRef.current.execute();
+        
+        tmExecutorRef.current.execute();
+        setCurrentEdge(transitionLabel);
+        setTerminationMessage();
+        setShowSnackbar(true);
         
         const stepId = setTimeout(() => {
-            setCanStep(executorRef.current.terminationStatus === undefined);
+            setCurrentState(tmExecutorRef.current.currentState);
+            setCanStep(tmExecutorRef.current.terminationStatus === undefined);
             setCanGoBack(true);
-        }, 1000);
+        }, 500);
         setStepId(stepId);
     }
 
     useEffect(() => {
-      return () => {
-        if (stepId) {
-            clearTimeout(stepId);
-        }
-      };
+        return () => {
+            setCurrentState(tmExecutorRef.current.currentState);
+            if (stepId) {
+                clearTimeout(stepId);
+            }
+        };
     }, []);
+
+    function handleSnackbarClose(event?: React.SyntheticEvent | Event, reason?: string) {
+        if (reason === 'clickaway') {
+          return;
+        }
+        setShowSnackbar(false);
+    }
 
     return (
         <div>
@@ -162,9 +203,12 @@ function TapeScreen({ tapeValue, turingMachine, goToTapeInput }:TapeScreenProps)
             </div>
             <div className='buttons'>
                 <Button color='secondary' onClick={goToTapeInput} disabled={!canGoBack} variant='contained'>Back</Button>
-                <span className='termination-message'>{terminationMessage()}</span>
                 <Button onClick={handleStep} disabled={!canStep} variant='contained'>Step</Button>
             </div>
+            <Snackbar open={showSnackbar} onClick={() => setShowSnackbar(true)} onClose={handleSnackbarClose} 
+                autoHideDuration={400} anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}>
+                <MuiAlert elevation={6} variant="filled" severity='info' onClose={handleSnackbarClose} sx={{ width: '100%' }}>{msg}</MuiAlert>
+            </Snackbar>
         </div>
     );
 }

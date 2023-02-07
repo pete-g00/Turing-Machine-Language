@@ -321,3 +321,9 @@
 ### 6 Feb 2023
 
 * *2.5 hours* Changed FSM using Graphviz for better presentation
+
+### 7 Feb 2023
+
+* *0.5 hours* Showed code execution in Tape- a verbose description of execution given
+* *1 hour* Showed code execution in TM code- highlight the current state and current edge 
+* *1 hour* Created the evaluation survey

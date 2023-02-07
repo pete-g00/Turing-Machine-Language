@@ -2,9 +2,12 @@ import React, { useEffect, useRef } from 'react';
 import { Graphviz } from "@hpcc-js/wasm";
 import { TuringMachine } from 'parser-tml';
 import { Box } from '@mui/material';
+import * as d3 from 'd3';
 
 interface FSMPanelProps {
     turingMachine: TuringMachine;
+    currentState: string|undefined;
+    currentEdge: string|undefined;
 }
 
 function convertToDot(tm:TuringMachine): string {
@@ -29,19 +32,61 @@ function convertToDot(tm:TuringMachine): string {
     tm.states.forEach((_state, i) => {
         const label = "q" + i;
         stateToLabel[_state] = label;
+        values.push(`\tnode [id = "${_state}"]; ${label}\n`);
     });
     tm.states.forEach((_state) => {
         const state = tm.getState(_state)!;
         state.transitions.forEach((transition) => {
-            values.push(`\t${stateToLabel[transition.currentState]} -> ${stateToLabel[transition.nextState]} [label = "${transition.label}"];\n`);
+            const letters = transition.letters.map((val) => val.length === 0 ? "_" : val).join("-");
+            const transitionLabel = `${transition.currentState}-${transition.nextState}-${letters}`;
+            values.push(`\t${stateToLabel[transition.currentState]} -> ${stateToLabel[transition.nextState]} [label = "${transition.label}", id = "${transitionLabel}"];\n`);
         });
     });
     values.push("}");
     return values.join("");
 }
 
-function FSMPanel({ turingMachine }: FSMPanelProps) {
+function FSMPanel({ turingMachine, currentEdge, currentState }: FSMPanelProps) {
     const divElement = useRef<HTMLDivElement>(null);
+
+    function changeCurrentState(currentState:string|undefined) {
+        if (currentState) {
+            const node = d3.select(`g#${currentState}`).selectAll("ellipse");
+            node.attr("stroke", "blue");
+            node.attr("stroke-width", "2");
+        }
+    }
+
+    function changeCurrentEdge(currentEdge:string|undefined) {
+        if (currentEdge) {
+            const arrow = d3.select(`g#${currentEdge}`).select("path");
+            console.log(arrow);
+            arrow.transition()
+                .duration(750)
+                .attr("stroke", "blue")
+                .attr("stroke-width", "3")
+                .transition()
+                .duration(250)
+                .attr("stroke", "black")
+                .attr("stroke-width", "1");
+        }
+    }
+
+    useEffect(() => {
+        changeCurrentState(currentState);
+
+        return (() => {
+            if (currentState) {
+                const node = d3.select(`g#${currentState}`).selectAll("ellipse");
+                node.attr("stroke", "black");
+                node.attr("stroke-width", "1");
+            }
+        });
+    }, [currentState]);
+
+    useEffect(() => {
+        changeCurrentEdge(currentEdge);
+    }, [currentEdge]);
 
     useEffect(() => {
         Graphviz.load().then((graphviz) => {
@@ -49,9 +94,12 @@ function FSMPanel({ turingMachine }: FSMPanelProps) {
             const svg = graphviz.dot(dot);
             if (divElement.current) {
                 divElement.current.innerHTML = svg;
+                changeCurrentState(currentState);
+                changeCurrentEdge(currentEdge);
             }
         });
     }, [turingMachine]);
+
     return (
         <Box textAlign="center">
             <p>FSM representation of the TM program:</p>
