@@ -25,6 +25,7 @@ function TapePanel({ turingMachine, setCurrentEdge, setCurrentState, setIsTapeEx
 
     function goToTapeInput() {
         setCurrentTM(undefined);
+        setCurrentState(undefined);
         setIsTapeExecuting(false);
     }
 

@@ -172,8 +172,8 @@ function TapeScreen({ tapeValue, turingMachine, goToTapeInput, setCurrentEdge, s
     }
 
     useEffect(() => {
+        setCurrentState(tmExecutorRef.current.currentState);
         return () => {
-            setCurrentState(tmExecutorRef.current.currentState);
             if (stepId) {
                 clearTimeout(stepId);
             }
