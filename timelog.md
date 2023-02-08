@@ -327,3 +327,8 @@
 * *0.5 hours* Showed code execution in Tape- a verbose description of execution given
 * *1 hour* Showed code execution in TM code- highlight the current state and current edge 
 * *1 hour* Created the evaluation survey
+
+### 8 Feb 2023
+
+* *1 hour* Fixed a bug in editor
+* *0.5 hours* Added agenda for the meeting

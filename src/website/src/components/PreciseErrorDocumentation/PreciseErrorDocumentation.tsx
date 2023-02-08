@@ -13,13 +13,13 @@ const errors:ErrorInterface = _errors;
 function PreciseErrorDocumentation({ userConfiguration }:DocumentationProps) {
     const {label} = useParams();
     const errorData = errors.parser[label!] ?? errors.validator[label!];
+    
+    const navigate = useNavigate();
     if (errorData === undefined) {
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        const navigate = useNavigate();
         navigate('/');
     }
     
-    document.title = `TMP Errors- ${errorData.title}`;
+    document.title = `TML Errors- ${errorData.title}`;
     const navArray = [
         {name: "Documentation", link: "/documentation"},
         {name: "Errors", link: "/documentation/errors"},

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Divider } from '@mui/material';
 import { Container } from '@mui/system';
 import AppToolbar from '../Apptoolbar/Apptoolbar';
@@ -11,8 +11,8 @@ import TapePanel from '../TapePanel/TapePanel';
 import { DocumentationProps } from '../Documentation/Documentation';
 import FSMPanel from '../FSMPanel/FSMPanel';
 
-const _program = getProgram(code, [])!;
-const converter = new CodeConverter(_program);
+const program = getProgram(code, [])!;
+const converter = new CodeConverter(program);
 const turingMachine = converter.convert();
 
 function TMDocumentation({userConfiguration}:DocumentationProps) {
@@ -21,7 +21,6 @@ function TMDocumentation({userConfiguration}:DocumentationProps) {
         {name: "TM Documentation"}
     ];
     
-    const program = useRef(_program);
     const [currentState, setCurrentState] = useState<string|undefined>('q0');
     const [currentEdge, setCurrentEdge] = useState<string|undefined>(undefined);
 

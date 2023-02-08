@@ -10,7 +10,7 @@ export interface DocumentationProps {
 }
 
 function Documentation({ userConfiguration }:DocumentationProps) {
-    document.title = "TMP Documentation";
+    document.title = "TML Documentation";
 
     const navArray = [
         {name: "Documentation"}

@@ -4,7 +4,7 @@ import { Box, Button, TextField } from '@mui/material';
 interface TapeInputProps {
     setTape:(value:string) => void;
     goToTapeScreen:() => void;
-    alphabet?:Set<string>;
+    alphabet:Set<string>|undefined;
     tape:string;
 }
 
@@ -13,17 +13,19 @@ function TapeInput({goToTapeScreen, tape, setTape, alphabet}:TapeInputProps) {
     const [hasError, setHasError] = useState(false);
 
     function handleSubmit() {
-        let errorState = false;
-        for (let i = 0; i < tape.length; i++) {
-            if (tape[i] !== " " && !alphabet!.has(tape[i])) {
-                errorState = true;
-            }            
-        }
-
-        setHasError(errorState);
-
-        if (!errorState) {
-            goToTapeScreen();
+        if (alphabet) {
+            let errorState = false;
+            for (let i = 0; i < tape.length; i++) {
+                if (tape[i] !== " " && !alphabet.has(tape[i])) {
+                    errorState = true;
+                }
+            }
+    
+            setHasError(errorState);
+    
+            if (!errorState) {
+                goToTapeScreen();
+            }
         }
     }
 

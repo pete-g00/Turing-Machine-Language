@@ -4,7 +4,6 @@ import * as d3 from 'd3';
 import { Button } from '@mui/material';
 import { TuringMachine, TMExecutor, Direction, TerminationState } from 'parser-tml';
 import './TapeScreen.css';
-import { ProgramContext } from 'parser-tml/index';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 
@@ -20,12 +19,11 @@ interface TapeScreenProps {
     turingMachine:TuringMachine;
     tapeValue:string;
     goToTapeInput:() => void;
-    program: React.MutableRefObject<ProgramContext | undefined>;
     setCurrentState: (state:string|undefined) => void;
     setCurrentEdge: (edge:string|undefined) => void;
 }
 
-function TapeScreen({ tapeValue, turingMachine, program, goToTapeInput, setCurrentEdge, setCurrentState }:TapeScreenProps) {
+function TapeScreen({ tapeValue, turingMachine, goToTapeInput, setCurrentEdge, setCurrentState }:TapeScreenProps) {
     const length = 17;
     const tmExecutor = new TMExecutor(tapeValue, turingMachine);
 
@@ -160,6 +158,7 @@ function TapeScreen({ tapeValue, turingMachine, program, goToTapeInput, setCurre
             : transitionRight(tapeHeadIndex, transition.letter);
         
         tmExecutorRef.current.execute();
+
         setCurrentEdge(transitionLabel);
         setTerminationMessage();
         setShowSnackbar(true);

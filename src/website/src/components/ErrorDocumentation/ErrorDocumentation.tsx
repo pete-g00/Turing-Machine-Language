@@ -22,7 +22,7 @@ export interface ErrorInterface {
 const errors:ErrorInterface = _errors;
 
 function ErrorDocumentation({ userConfiguration }:DocumentationProps) {
-    document.title = "TMP Errors";
+    document.title = "TML Errors";
 
     const navArray = [
         {name: "Documentation", link: "/documentation"},

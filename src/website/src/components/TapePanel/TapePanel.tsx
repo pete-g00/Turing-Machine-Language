@@ -1,25 +1,25 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Box } from '@mui/material';
 import { ProgramContext, TuringMachine } from 'parser-tml';
 import TapeInput from '../TapeInput/TapeInput';
 import TapeScreen from '../TapeScreen/TapeScreen';
 
 interface TapePanelProps {
-    turingMachine:TuringMachine|undefined;
-    program: React.MutableRefObject<ProgramContext | undefined>;
+    turingMachine: TuringMachine|undefined;
+    program: ProgramContext | undefined;
     setCurrentState: (state:string|undefined) => void;
     setCurrentEdge: (edge:string|undefined) => void;
     setIsTapeExecuting: (isTapeExecuting:boolean) => void;
 }
 
-function TapePanel({ turingMachine, program, setCurrentEdge, setCurrentState, setIsTapeExecuting }:TapePanelProps) {
+function TapePanel({ turingMachine, setCurrentEdge, setCurrentState, setIsTapeExecuting }:TapePanelProps) {
     const [tape, setTape] = useState("");
     const [currentTM, setCurrentTM] = useState<TuringMachine|undefined>(undefined);
-    const currentProgram = useRef<ProgramContext|undefined>(undefined);
+    // const [currentProgram, setCurrentProgram] = useState<ProgramContext|undefined>(undefined);
 
     function goToTapeScreen() {
         setCurrentTM(turingMachine);
-        currentProgram.current = program.current;
+        // setCurrentProgram(program);
         setIsTapeExecuting(true);
     }
 
@@ -36,7 +36,7 @@ function TapePanel({ turingMachine, program, setCurrentEdge, setCurrentState, se
             </Box>
             {currentTM === undefined
                 ? <TapeInput alphabet={turingMachine?.alphabet} setTape={setTape} goToTapeScreen={goToTapeScreen} tape={tape}/> 
-                : <TapeScreen program={currentProgram} goToTapeInput={goToTapeInput} setCurrentState={setCurrentState} 
+                : <TapeScreen goToTapeInput={goToTapeInput} setCurrentState={setCurrentState} 
                         setCurrentEdge={setCurrentEdge} tapeValue={tape} turingMachine={currentTM}/>
             }
         </div>

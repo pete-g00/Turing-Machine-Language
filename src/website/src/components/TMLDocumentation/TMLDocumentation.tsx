@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import * as monaco from 'monaco-editor';
 import { Container } from '@mui/system';
 import { Divider } from '@mui/material';
@@ -10,8 +10,8 @@ import { CodeConverter } from 'parser-tml';
 import { code } from '../Editor/Editor';
 import { DocumentationProps } from '../Documentation/Documentation';
 
-const _program = getProgram(code, [])!;
-const converter = new CodeConverter(_program);
+const program = getProgram(code, [])!;
+const converter = new CodeConverter(program);
 const turingMachine = converter.convert();
 
 function TMLDocumentation({ userConfiguration }:DocumentationProps) {
@@ -20,7 +20,6 @@ function TMLDocumentation({ userConfiguration }:DocumentationProps) {
         {name: "TML Documentation"}
     ];
     
-    const program = useRef(_program);
     const divEl = useRef<HTMLDivElement>(null);
     const editor = useRef<monaco.editor.IStandaloneCodeEditor|null>(null);
 

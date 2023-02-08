@@ -6,7 +6,7 @@ import { ProgramContext } from 'parser-tml';
 import { UserConfiguration } from '../../App';
 
 interface EditorProps {
-    program: React.MutableRefObject<ProgramContext | undefined>;
+    setProgram: (program:ProgramContext|undefined) => void;
     userConfiguration:UserConfiguration;
     isTapeExecuting:boolean;
 }
@@ -26,10 +26,11 @@ module isDiv2 {
     }
 }`;
 
-function Editor({ userConfiguration, program, isTapeExecuting }:EditorProps) {
+function Editor({ userConfiguration, setProgram, isTapeExecuting }:EditorProps) {
     const divEl = useRef<HTMLDivElement>(null);
     const editor = useRef<monaco.editor.IStandaloneCodeEditor|null>(null);
     const markers:monaco.editor.IMarkerData[] = [];
+    const event = useRef<monaco.IDisposable|undefined>(undefined);
     
     useEffect(() => {
         if (divEl.current) {
@@ -44,14 +45,15 @@ function Editor({ userConfiguration, program, isTapeExecuting }:EditorProps) {
                 detectIndentation: true,
             });
             _editor.onDidChangeModelContent(() => {
-                console.log("program changed");
-                const _program = getProgram(_editor.getValue(), markers);
-                monaco.editor.setModelMarkers(_editor.getModel()!, "validate-TMP", markers);
-                
-                if (markers.length === 0) {
-                    program.current = _program;
-                } else {
-                    program.current = undefined;
+                if (!isTapeExecuting) {
+                    const program = getProgram(_editor.getValue(), markers);
+                    monaco.editor.setModelMarkers(_editor.getModel()!, "validate-TMP", markers);
+                    
+                    if (markers.length === 0) {
+                        setProgram(program);
+                    } else {
+                        setProgram(undefined);
+                    }
                 }
             });
             editor.current = _editor;
@@ -65,13 +67,14 @@ function Editor({ userConfiguration, program, isTapeExecuting }:EditorProps) {
 
     useEffect(() => {
         if (isTapeExecuting) {
-            editor.current?.updateOptions({
-                readOnly: true
+            const value = editor.current?.getValue();
+            event.current = editor.current?.onDidChangeModelContent(() => {
+                if (editor.current?.getValue() !== value) {
+                    editor.current?.setValue(value!);
+                }
             });
         } else {
-            editor.current?.updateOptions({
-                readOnly: false
-            });
+            event.current?.dispose();
         }
     }, [isTapeExecuting]);
 

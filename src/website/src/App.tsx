@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react';
+import React, { useState } from 'react';
 import { purple, green } from '@mui/material/colors';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { LinkProps } from '@mui/material';
@@ -78,7 +78,7 @@ export interface UserConfiguration {
   closeDrawer:(userConfiguration:UserConfiguration) => void;
 }
 
-function App():ReactElement {
+function App() {
   const [userConfiguration, setUserConfiguration] = useState<UserConfiguration>({
     editorTheme: "dracula",
     editorFontSize: EditorFontSize.NORMAL,
