@@ -9,6 +9,7 @@ export const editor = {
             dispose: emptyFun,
             onDidChangeModelContent: emptyFun,
             updateOptions: emptyFun,
+            getModel: emptyFun,
         };
     },
     dispose: emptyFun,
