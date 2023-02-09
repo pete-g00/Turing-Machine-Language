@@ -55,7 +55,7 @@ function TMDocumentation({userConfiguration}:DocumentationProps) {
                 The panel below illustrates how a Turing Machine is executed on a valid tape. Enter a valid tape value (i.e. a binary number) to show the animation!
                 <figure>
                     <TapePanel turingMachine={turingMachine} setCurrentEdge={setCurrentEdge} setCurrentState={setCurrentState} 
-                        setIsTapeExecuting={() => undefined} program={program} />
+                        setExecutingPositions={() => undefined} setIsTapeExecuting={() => undefined} program={program} />
                     <figcaption>A Turing Machine tape animation that shows how a Turing Machine executes on a tape. The current Turing Machine state is highlighted during execution, along with the arrow we chose.</figcaption>
                 </figure>
             </div>

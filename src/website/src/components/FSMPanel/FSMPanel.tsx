@@ -13,7 +13,7 @@ interface FSMPanelProps {
 function convertToDot(tm:TuringMachine): string {
     const values:string[] = [];
     values.push(`digraph {
-    size="7,1.8"
+    size="7,2"
     ratio=compress
     bgcolor="#E6E6E6"
     fontname="Helvetica"

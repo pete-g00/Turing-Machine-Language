@@ -201,6 +201,20 @@ export abstract class BlockContext extends Context {
     public getNextLabel(label:string, converter:CodeConverter): string {
         return converter.getNextLabelFromCoreBasicBlock(label);
     }
+    
+    public get positions(): CodePosition[] {
+        const positions:CodePosition[] = [];
+
+        if (this.changeToCommand) {
+            positions.push(this.changeToCommand.position);
+        }
+        
+        if (this.moveCommand) {
+            positions.push(this.moveCommand.position);
+        }
+
+        return positions;
+    }
 }
 /**
  * The class `NormalBlockContext` is the base abstract class for all block types valid in modules/if statements.
@@ -256,6 +270,24 @@ export class BasicBlockContext extends NormalBlockContext {
 
     public getNextLabel(label:string, converter:CodeConverter): string {
         return converter.getNextLabelFromBasicBlock(label, this);
+    }
+
+    public get positions(): CodePosition[] {
+        const positions:CodePosition[] = [];
+
+        if (this.changeToCommand) {
+            positions.push(this.changeToCommand.position);
+        }
+        
+        if (this.moveCommand) {
+            positions.push(this.moveCommand.position);
+        }
+        
+        if (this.flowCommand) {
+            positions.push(this.flowCommand.position);
+        }
+
+        return positions;
     }
 }
 

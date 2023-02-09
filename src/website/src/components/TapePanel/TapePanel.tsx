@@ -1,25 +1,26 @@
 import React, { useState } from 'react';
 import { Box } from '@mui/material';
-import { ProgramContext, TuringMachine } from 'parser-tml';
+import { CodePosition, ProgramContext, TuringMachine } from 'parser-tml';
 import TapeInput from '../TapeInput/TapeInput';
 import TapeScreen from '../TapeScreen/TapeScreen';
 
 interface TapePanelProps {
     turingMachine: TuringMachine|undefined;
     program: ProgramContext | undefined;
+    setExecutingPositions:(executingPositions:CodePosition[]) => void;
     setCurrentState: (state:string|undefined) => void;
     setCurrentEdge: (edge:string|undefined) => void;
     setIsTapeExecuting: (isTapeExecuting:boolean) => void;
 }
 
-function TapePanel({ turingMachine, setCurrentEdge, setCurrentState, setIsTapeExecuting }:TapePanelProps) {
+function TapePanel({ turingMachine, program, setExecutingPositions, setCurrentEdge, setCurrentState, setIsTapeExecuting }:TapePanelProps) {
     const [tape, setTape] = useState("");
     const [currentTM, setCurrentTM] = useState<TuringMachine|undefined>(undefined);
-    // const [currentProgram, setCurrentProgram] = useState<ProgramContext|undefined>(undefined);
+    const [currentProgram, setCurrentProgram] = useState<ProgramContext|undefined>(undefined);
 
     function goToTapeScreen() {
         setCurrentTM(turingMachine);
-        // setCurrentProgram(program);
+        setCurrentProgram(program);
         setIsTapeExecuting(true);
     }
 
@@ -37,8 +38,9 @@ function TapePanel({ turingMachine, setCurrentEdge, setCurrentState, setIsTapeEx
             </Box>
             {currentTM === undefined
                 ? <TapeInput alphabet={turingMachine?.alphabet} setTape={setTape} goToTapeScreen={goToTapeScreen} tape={tape}/> 
-                : <TapeScreen goToTapeInput={goToTapeInput} setCurrentState={setCurrentState} 
-                        setCurrentEdge={setCurrentEdge} tapeValue={tape} turingMachine={currentTM}/>
+                : <TapeScreen goToTapeInput={goToTapeInput} setCurrentState={setCurrentState} program={currentProgram!}
+                        setExecutingPositions={setExecutingPositions} setCurrentEdge={setCurrentEdge} tapeValue={tape} 
+                        turingMachine={currentTM}/>
             }
         </div>
     );

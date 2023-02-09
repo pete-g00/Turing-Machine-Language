@@ -332,3 +332,9 @@
 
 * *1 hour* Fixed a bug in editor
 * *0.5 hours* Added agenda for the meeting
+
+### 9 Feb 2023
+
+* *1 hour* Weekly meeting with Ornela
+* *1 hour* Showed code execution in Editor- highlight the basic block being executed
+ 

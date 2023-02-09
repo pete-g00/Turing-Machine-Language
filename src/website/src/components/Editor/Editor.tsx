@@ -2,13 +2,14 @@ import React, { useEffect, useRef } from 'react';
 import './Editor.css';
 import * as monaco from 'monaco-editor';
 import { getProgram } from '../MonacoConfig';
-import { ProgramContext } from 'parser-tml';
+import { CodePosition, ProgramContext } from 'parser-tml';
 import { UserConfiguration } from '../../App';
 
 interface EditorProps {
     setProgram: (program:ProgramContext|undefined) => void;
     userConfiguration:UserConfiguration;
     isTapeExecuting:boolean;
+    executingPositions:CodePosition[];
 }
 
 export const code = `// checks whether a binary number is divisible by 2
@@ -26,7 +27,7 @@ module isDiv2 {
     }
 }`;
 
-function Editor({ userConfiguration, setProgram, isTapeExecuting }:EditorProps) {
+function Editor({ userConfiguration, setProgram, isTapeExecuting, executingPositions }:EditorProps) {
     const divEl = useRef<HTMLDivElement>(null);
     const editor = useRef<monaco.editor.IStandaloneCodeEditor|null>(null);
     const markers:monaco.editor.IMarkerData[] = [];
@@ -87,6 +88,23 @@ function Editor({ userConfiguration, setProgram, isTapeExecuting }:EditorProps) 
             });
         }
     }, [userConfiguration]);
+
+    useEffect(() => {
+        if (editor.current) {
+            markers.length = 0;
+            for (const position of executingPositions) {
+                markers.push({
+                    endColumn: position.endColNumber+1,
+                    endLineNumber: position.endLineNumber,
+                    startColumn: position.startColNumber+1,
+                    startLineNumber: position.startLineNumber+1,
+                    message: "The code being executed",
+                    severity: monaco.MarkerSeverity.Info
+                });
+            }
+            monaco.editor.setModelMarkers(editor.current.getModel()!, "executing-code", markers);
+        }
+    }, [executingPositions]);
 
     return (
         <div className="Editor" ref={divEl}></div>

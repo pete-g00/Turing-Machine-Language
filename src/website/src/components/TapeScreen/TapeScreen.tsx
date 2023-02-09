@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import TapeEntry from '../TapeEntry/TapeEntry';
 import * as d3 from 'd3';
 import { Button } from '@mui/material';
-import { TuringMachine, TMExecutor, Direction, TerminationState } from 'parser-tml';
+import { TuringMachine, TMExecutor, Direction, TerminationState, ProgramContext, CodePosition, CodeExecutor } from 'parser-tml';
 import './TapeScreen.css';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
@@ -17,15 +17,18 @@ function getNextOffsetIndex(i:number) {
 
 interface TapeScreenProps {
     turingMachine:TuringMachine;
+    program:ProgramContext;
+    setExecutingPositions:(executingPositions:CodePosition[]) => void;
     tapeValue:string;
     goToTapeInput:() => void;
     setCurrentState: (state:string|undefined) => void;
     setCurrentEdge: (edge:string|undefined) => void;
 }
 
-function TapeScreen({ tapeValue, turingMachine, goToTapeInput, setCurrentEdge, setCurrentState }:TapeScreenProps) {
+function TapeScreen({ tapeValue, turingMachine, setExecutingPositions, program,  goToTapeInput, setCurrentEdge, setCurrentState }:TapeScreenProps) {
     const length = 17;
     const tmExecutor = new TMExecutor(tapeValue, turingMachine);
+    const tmpExecutor = new CodeExecutor(tapeValue, program);
 
     const [tape, setTape] = useState(Array(17).fill("").map((_, i) => tapeValue[i-2]?.trim() ?? ""));
     const [tapeHeadIndex, setTapeHeadIndex] = useState(2);
@@ -36,6 +39,7 @@ function TapeScreen({ tapeValue, turingMachine, goToTapeInput, setCurrentEdge, s
     const [showSnackbar, setShowSnackbar] = useState(false);
 
     const tmExecutorRef = useRef(tmExecutor);
+    const tmpExecutorRef = useRef(tmpExecutor);
 
     const gRefs:React.RefObject<SVGGElement>[] = [];
     
@@ -156,17 +160,22 @@ function TapeScreen({ tapeValue, turingMachine, goToTapeInput, setCurrentEdge, s
         transition.direction === Direction.LEFT 
             ? transitionLeft(tapeHeadIndex, transition.letter) 
             : transitionRight(tapeHeadIndex, transition.letter);
+
+        const executingPositions = tmpExecutorRef.current.currentBasicBlock?.positions;
         
         tmExecutorRef.current.execute();
+        tmpExecutorRef.current.execute();
 
         setCurrentEdge(transitionLabel);
         setTerminationMessage();
         setShowSnackbar(true);
+        setExecutingPositions(executingPositions ?? []);
         
         const stepId = setTimeout(() => {
             setCurrentState(tmExecutorRef.current.currentState);
             setCanStep(tmExecutorRef.current.terminationStatus === undefined);
             setCanGoBack(true);
+            setExecutingPositions([]);
         }, 500);
         setStepId(stepId);
     }

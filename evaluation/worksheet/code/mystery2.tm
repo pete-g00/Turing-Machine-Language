@@ -1,5 +1,5 @@
 alphabet = {a, b}
-module mystery {
+module mystery2 {
     if blank {
         accept
     } if a {
@@ -18,7 +18,7 @@ module mystery {
                     move left
                 } if blank {
                     move right
-                    goto mystery
+                    goto mystery2
                 }
             }
         }
@@ -38,7 +38,7 @@ module mystery {
                     move left
                 } if blank {
                     move right
-                    goto mystery
+                    goto mystery2
                 }
             }
         }

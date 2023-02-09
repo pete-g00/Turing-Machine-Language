@@ -29,7 +29,9 @@ function TMPanel({ turingMachine, currentEdge, currentState }:TMPanelProps) {
                 {currentTM && <FSMPanel turingMachine={currentTM} currentEdge={currentEdge} currentState={currentState}/>}
             </div>
             <div>
-                <Box textAlign="center"><p>Convert the Code into the Turing Machine</p></Box>
+                <Box textAlign="center">
+                    {currentTM ? <p>&nbsp;</p> : <p>Convert the Code into the Turing Machine</p>}
+                </Box>
                 <Box textAlign="center"><Button variant="contained" onClick={() => setCurrentTM(turingMachine)} 
                     disabled={!isConvertEnabled}>Convert</Button></Box>
             </div>

@@ -1,5 +1,5 @@
 alphabet = {0, 1}
-module mystery {
+module mystery1 {
     while 0, 1 {
         move right
     } if blank {

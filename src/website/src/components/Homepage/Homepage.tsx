@@ -4,7 +4,7 @@ import Editor, { code } from '../Editor/Editor';
 import TMPanel from '../TMPanel/TMPanel';
 import TapePanel from '../TapePanel/TapePanel';
 import AppToolbar from '../Apptoolbar/Apptoolbar';
-import { CodeParser, CodeConverter, ProgramContext, TuringMachine } from 'parser-tml';
+import { CodeParser, CodeConverter, ProgramContext, TuringMachine, CodePosition } from 'parser-tml';
 import AppDrawer from '../AppDrawer/AppDrawer';
 import { UserConfiguration } from '../../App';
 
@@ -18,6 +18,8 @@ function HomePage({ userConfiguration }:HomePageProps) {
 
     const [currentState, setCurrentState] = useState<string|undefined>(undefined);
     const [currentEdge, setCurrentEdge] = useState<string|undefined>(undefined);
+
+    const [executingPositions, setExecutingPositions] = useState<CodePosition[]>([]);
     
     const [isTapeExecuting, setIsTapeExecuting] = useState(false);
 
@@ -62,12 +64,12 @@ function HomePage({ userConfiguration }:HomePageProps) {
             <AppToolbar userConfiguration={userConfiguration} />
             <Grid container>
                 <Grid item xs={12} sm={6}>
-                    <Editor userConfiguration={userConfiguration} 
+                    <Editor userConfiguration={userConfiguration} executingPositions={executingPositions}
                         setProgram={setProgram} isTapeExecuting={isTapeExecuting}/>
                 </Grid>
                 <Grid item xs={12} sm={6}>
                     <TMPanel turingMachine={turingMachine} currentEdge={currentEdge} currentState={currentState} />
-                    <TapePanel program={program} turingMachine={turingMachine} 
+                    <TapePanel program={program} turingMachine={turingMachine} setExecutingPositions={setExecutingPositions}
                         setIsTapeExecuting={setIsTapeExecuting} setCurrentState={setCurrentState} setCurrentEdge={setCurrentEdge}/>
                 </Grid>
             </Grid>
