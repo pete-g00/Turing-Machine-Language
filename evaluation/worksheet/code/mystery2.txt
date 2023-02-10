@@ -9,9 +9,9 @@ module mystery2 {
             move right
         } if blank {
             move left
-            if a {
+            if a, blank {
                 reject
-            } if b, blank {
+            } if b {
                 changeto blank
                 move left
                 while a, b {
@@ -29,9 +29,9 @@ module mystery2 {
             move right
         } if blank {
             move left
-            if b {
+            if b, blank {
                 reject
-            } if a, blank {
+            } if a {
                 changeto blank
                 move left
                 while a, b {

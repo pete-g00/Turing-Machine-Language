@@ -175,7 +175,6 @@ function TapeScreen({ tapeValue, turingMachine, setExecutingPositions, program, 
             setCurrentState(tmExecutorRef.current.currentState);
             setCanStep(tmExecutorRef.current.terminationStatus === undefined);
             setCanGoBack(true);
-            setExecutingPositions([]);
         }, 500);
         setStepId(stepId);
     }
@@ -214,7 +213,7 @@ function TapeScreen({ tapeValue, turingMachine, setExecutingPositions, program, 
                 <Button onClick={handleStep} disabled={!canStep} variant='contained'>Step</Button>
             </div>
             <Snackbar open={showSnackbar} onClick={() => setShowSnackbar(true)} onClose={handleSnackbarClose} 
-                autoHideDuration={400} anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}>
+                autoHideDuration={500} anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}>
                 <MuiAlert elevation={6} variant="filled" severity='info' onClose={handleSnackbarClose} sx={{ width: '100%' }}>{msg}</MuiAlert>
             </Snackbar>
         </div>

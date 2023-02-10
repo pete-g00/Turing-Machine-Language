@@ -29,8 +29,15 @@ function TapeInput({goToTapeScreen, tape, setTape, alphabet}:TapeInputProps) {
         }
     }
 
+    function handleKeyDown(e:React.KeyboardEvent<HTMLFormElement>) {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            handleSubmit();
+        }
+    }
+
     return (
-        <form>
+        <form onKeyDown={handleKeyDown}>
             <Box textAlign='center'>
                 <div>
                     <TextField autoComplete='off'variant='outlined' label='Tape Value' error={hasError} 

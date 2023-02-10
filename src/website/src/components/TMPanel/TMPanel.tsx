@@ -9,9 +9,10 @@ interface TMPanelProps {
     turingMachine: TuringMachine|undefined;
     currentState: string|undefined;
     currentEdge: string|undefined;
+    isTapeExecuting: boolean;
 }
 
-function TMPanel({ turingMachine, currentEdge, currentState }:TMPanelProps) {
+function TMPanel({ turingMachine, currentEdge, currentState, isTapeExecuting }:TMPanelProps) {
     // whether the convert button is enabled
     const [isConvertEnabled, setIsConvertEnabled] = useState(true);
     
@@ -21,6 +22,12 @@ function TMPanel({ turingMachine, currentEdge, currentState }:TMPanelProps) {
     useEffect(() => {
         setIsConvertEnabled(turingMachine !== undefined);
     }, [turingMachine]);
+
+    useEffect(() => {
+        if (isTapeExecuting && currentTM !== undefined) {
+            setCurrentTM(turingMachine);
+        }
+    }, [isTapeExecuting]);
 
     return (
         <div className='tm-panel'>

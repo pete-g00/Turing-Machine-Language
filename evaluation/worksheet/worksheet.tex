@@ -59,10 +59,10 @@
     In this section, you are given some programs in Turing Machine Language (TML). They will be used to explain the syntax of the programming language and how they can be run on tapes.
     \begin{itemize}
         \item \texttt{isDiv2}:
-        \lstinputlisting[language=TML]{code/isDiv2.tm}
+        \lstinputlisting[language=TML]{code/isDiv2.txt}
         
         \item \texttt{isDiv2Rec}:
-        \lstinputlisting[language=TML]{code/isDiv2Rec.tm}
+        \lstinputlisting[language=TML]{code/isDiv2Rec.txt}
 
         \noindent Both \texttt{isDiv2} and \texttt{isDiv2Rec} correspond to the following Turing Machine (TM):
         \begin{figure}[H]
@@ -70,8 +70,8 @@
             \begin{tikzpicture}
                 \node[state, accepting] (q0) at (0, 0) {$q_0$};
                 \node[state] (q1) at (3, 0) {$q_1$};
-                \node[state, fill=green, opacity=0.6] (A) at (6, -1.5) {$A$};
-                \node[state, fill=red, opacity=0.6] (R) at (6, 1.5) {$R$};
+                \node[state, fill=green, opacity=0.6] (A) at (6, -1) {$A$};
+                \node[state, fill=red, opacity=0.6] (R) at (6, 1) {$R$};
 
                 \draw[->] (q0) edge[loop above] node {$0|1, R$} (q0);
                 \draw[->] (q0) -- node[above] {$\#, L$} (q1);
@@ -82,7 +82,7 @@
         \newpage
         
         \item \texttt{palindrome}:
-        \lstinputlisting[language=TML]{code/palindrome.tm}
+        \lstinputlisting[language=TML]{code/palindrome.txt}
 
         \noindent The program \texttt{palindrome} corresponds to the following TM:
         \begin{figure}[H]
@@ -158,7 +158,7 @@
 
     \begin{enumerate}
         \item Consider the following TML Program:
-        \lstinputlisting[language=TML]{code/mystery1.tm}
+        \lstinputlisting[language=TML]{code/mystery1.txt}
 
         \begin{enumerate}
             \item Does the program accept the values:
@@ -197,7 +197,7 @@
         \newpage
 
         \item Consider the following TML program:
-        \lstinputlisting[language=TML]{code/mystery2.tm}
+        \lstinputlisting[language=TML]{code/mystery2.txt}
         \begin{enumerate}
             \item Does the program accept the values:
             \begin{enumerate}
@@ -208,11 +208,6 @@
                 \newpage
                 
                 \item $aab$
-                \begin{solution}
-                    
-                \end{solution}
-                
-                \item $abb$
                 \begin{solution}
                     
                 \end{solution}
@@ -265,6 +260,11 @@
         \begin{enumerate}
             \item Does the TM accept the values:
             \begin{enumerate}
+                \item $3 = 11$
+                \begin{solution}
+                    
+                \end{solution}
+
                 \item $2 = 10$
                 \begin{solution}
                     
@@ -275,17 +275,12 @@
                     
                 \end{solution}
                 
-                \item $6 = 100$
+                \item $6 = 110$
                 \begin{solution}
                     
                 \end{solution}
                 
-                \item $5 = 101$
-                \begin{solution}
-                    
-                \end{solution}
-                
-                \item $8 = 110$
+                \item $9 = 1001$
                 \begin{solution}
                     
                 \end{solution}
@@ -346,7 +341,7 @@
                     
                 \end{solution}
                 
-                \item $bbaaaa$
+                \item $babbaa$
                 \begin{solution}
                     
                 \end{solution}
@@ -392,7 +387,7 @@
             \vspace*{570pt}
         \end{solution}
         
-        \item strings of the form $a^n b^n$ [HINT: this is a special version of palindrome.]
+        \item strings of the form $a^n b^n$ [HINT: this is closely related to palindrome.]
         \begin{solution}
             \vspace*{570pt}
         \end{solution}
@@ -480,7 +475,7 @@
     Below are the links to the website and the survey:
     \begin{itemize}
         \item Website: \href{https://pete-g00.github.io/Turing-Machine-Language/}{Link to Website}
-        \item Survey: \href{https://forms.office.com/Pages/ResponsePage.aspx? id=KVxybjp2UE-B8i4lTwEzyPz6GSAWAwRKgZ9JRXvHgYxUMEw3TjM0OFhCTjlLMlRDOU1QTDRRQkpVTC4u}{Link to Survey}
+        \item Survey: \href{https://forms.office.com/Pages/ResponsePage.aspx?id=KVxybjp2UE-B8i4lTwEzyPz6GSAWAwRKgZ9JRXvHgYxUMEw3TjM0OFhCTjlLMlRDOU1QTDRRQkpVTC4u}{Link to Survey}
     \end{itemize}
     
     

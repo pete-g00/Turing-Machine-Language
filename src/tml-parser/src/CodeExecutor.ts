@@ -51,7 +51,7 @@ export class CodeExecutor extends TapeExecutor {
 
     private _validateTapeValue(value:string) {
         for (let i = 0; i < value.length; i++) {
-            if (!this._program.alphabet.values.has(value[i])) {
+            if (value[i].trim().length !== 0 && !this._program.alphabet.values.has(value[i])) {
                 throw new Error("The tape is not valid for the given TM Program.");
             }
         }

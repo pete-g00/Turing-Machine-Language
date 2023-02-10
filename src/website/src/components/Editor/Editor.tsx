@@ -1,9 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './Editor.css';
 import * as monaco from 'monaco-editor';
 import { getProgram } from '../MonacoConfig';
 import { CodePosition, ProgramContext } from 'parser-tml';
 import { UserConfiguration } from '../../App';
+import { Snackbar } from '@mui/material';
+import MuiAlert from '@mui/material/Alert';
 
 interface EditorProps {
     setProgram: (program:ProgramContext|undefined) => void;
@@ -72,9 +74,12 @@ function Editor({ userConfiguration, setProgram, isTapeExecuting, executingPosit
             event.current = editor.current?.onDidChangeModelContent(() => {
                 if (editor.current?.getValue() !== value) {
                     editor.current?.setValue(value!);
+                    setShowSnackbar(true);
                 }
             });
         } else {
+            markers.length = 0;
+            monaco.editor.setModelMarkers(editor.current!.getModel()!, "executing-code", markers);
             event.current?.dispose();
         }
     }, [isTapeExecuting]);
@@ -92,6 +97,7 @@ function Editor({ userConfiguration, setProgram, isTapeExecuting, executingPosit
     useEffect(() => {
         if (editor.current) {
             markers.length = 0;
+            monaco.editor.setModelMarkers(editor.current!.getModel()!, "executing-code", markers);
             for (const position of executingPositions) {
                 markers.push({
                     endColumn: position.endColNumber+1,
@@ -102,13 +108,30 @@ function Editor({ userConfiguration, setProgram, isTapeExecuting, executingPosit
                     severity: monaco.MarkerSeverity.Info
                 });
             }
-            monaco.editor.setModelMarkers(editor.current.getModel()!, "executing-code", markers);
+            setTimeout(() => {
+                monaco.editor.setModelMarkers(editor.current!.getModel()!, "executing-code", markers);
+            }, 100);
         }
     }, [executingPositions]);
 
-    return (
+    const [showSnackbar, setShowSnackbar] = useState(false);
+    function handleSnackbarClose(event?: React.SyntheticEvent | Event, reason?: string) {
+        if (reason === 'clickaway') {
+          return;
+        }
+        setShowSnackbar(false);
+    }
+
+    return (<>
         <div className="Editor" ref={divEl}></div>
-    );
+        
+        <Snackbar open={showSnackbar} onClick={() => setShowSnackbar(true)} onClose={handleSnackbarClose} 
+            autoHideDuration={2000} anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}>
+            <MuiAlert elevation={6} variant="filled" severity='error' onClose={handleSnackbarClose} sx={{ width: '100%' }}>
+                Cannot Edit When Executing on Tape.
+            </MuiAlert>
+        </Snackbar>
+    </>);
 }
 
 export default Editor;

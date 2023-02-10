@@ -3,6 +3,7 @@ import { Box } from '@mui/material';
 import { CodePosition, ProgramContext, TuringMachine } from 'parser-tml';
 import TapeInput from '../TapeInput/TapeInput';
 import TapeScreen from '../TapeScreen/TapeScreen';
+import './TapePanel.css';
 
 interface TapePanelProps {
     turingMachine: TuringMachine|undefined;

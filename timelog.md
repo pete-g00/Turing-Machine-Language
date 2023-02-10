@@ -338,3 +338,7 @@
 * *1 hour* Weekly meeting with Ornela
 * *1 hour* Showed code execution in Editor- highlight the basic block being executed
  
+### 10 Feb 2023
+
+* *2 hours* Evaluation Sessions
+* *1 hour* Fixed many minor bugs noticed during the evaluation
