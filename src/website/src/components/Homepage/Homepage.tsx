@@ -68,10 +68,11 @@ function HomePage({ userConfiguration }:HomePageProps) {
                         setProgram={setProgram} isTapeExecuting={isTapeExecuting}/>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                    <TMPanel turingMachine={turingMachine} currentEdge={currentEdge} 
+                    <TMPanel turingMachine={turingMachine} currentEdge={currentEdge} transitionTime={userConfiguration.transitionTime}
                         isTapeExecuting={isTapeExecuting} currentState={currentState} />
                     <TapePanel program={program} turingMachine={turingMachine} setExecutingPositions={setExecutingPositions}
-                        setIsTapeExecuting={setIsTapeExecuting} setCurrentState={setCurrentState} setCurrentEdge={setCurrentEdge}/>
+                        transitionTime={userConfiguration.transitionTime} setIsTapeExecuting={setIsTapeExecuting} 
+                        setCurrentState={setCurrentState} setCurrentEdge={setCurrentEdge}/>
                 </Grid>
             </Grid>
             <AppDrawer userConfiguration={userConfiguration}/>

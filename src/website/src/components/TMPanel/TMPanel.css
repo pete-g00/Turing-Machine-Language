@@ -7,7 +7,15 @@
     margin: auto;
 }
 
-div.tm-fsm {
-    height: 200px;
+div.tm-screen {
+    height: 300px;
     margin: 0 25px;
+}
+
+div.tm-screen:has(.def-panel) {
+    overflow-y: scroll;
+}
+
+div.tm-screen div.def-panel {
+    margin: 10px
 }

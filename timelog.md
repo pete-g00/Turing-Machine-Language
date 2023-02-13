@@ -342,3 +342,10 @@
 
 * *2 hours* Evaluation Sessions
 * *1 hour* Fixed many minor bugs noticed during the evaluation
+
+## Week 6
+
+### 13 Feb 2023
+
+* *0.5 hours* Added transition time user configuration
+* *1 hour* Added Definition TM Panel 

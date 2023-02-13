@@ -46,6 +46,16 @@ function AppDrawer({ userConfiguration }:AppDrawerProps) {
                         })}
                     </ButtonGroup>
                 </div>
+                <Divider/>
+                <div className='editor-settings-tile'>
+                    <h3>Tape Transition Time (seconds)</h3>
+                    <ButtonGroup color='secondary' variant='contained' orientation='vertical' fullWidth>
+                        {[0.2, 0.5, 1].map((sec, i) => {
+                            return <Button key={i} className={sec*1000 === userConfiguration.transitionTime ? 'active-option' : undefined}
+                                onClick={() => userConfiguration.setTransitionTime(userConfiguration, sec*1000)}>{ sec }</Button>;
+                        })}
+                    </ButtonGroup>
+                </div>
             </Box>
         </Drawer>
     );

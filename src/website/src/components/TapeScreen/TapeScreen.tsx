@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import TapeEntry from '../TapeEntry/TapeEntry';
 import * as d3 from 'd3';
 import { Button } from '@mui/material';
-import { TuringMachine, TMExecutor, Direction, TerminationState, ProgramContext, CodePosition, CodeExecutor } from 'parser-tml';
+import { ProgramContext, TuringMachine, TMExecutor, Direction, TerminationState, CodePosition, CodeExecutor } from 'parser-tml';
 import './TapeScreen.css';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
@@ -23,9 +23,10 @@ interface TapeScreenProps {
     goToTapeInput:() => void;
     setCurrentState: (state:string|undefined) => void;
     setCurrentEdge: (edge:string|undefined) => void;
+    transitionTime:number;
 }
 
-function TapeScreen({ tapeValue, turingMachine, setExecutingPositions, program,  goToTapeInput, setCurrentEdge, setCurrentState }:TapeScreenProps) {
+function TapeScreen({ tapeValue, turingMachine, setExecutingPositions, program, goToTapeInput, setCurrentEdge, setCurrentState, transitionTime }:TapeScreenProps) {
     const length = 17;
     const tmExecutor = new TMExecutor(tapeValue, turingMachine);
     const tmpExecutor = new CodeExecutor(tapeValue, program);
@@ -34,7 +35,10 @@ function TapeScreen({ tapeValue, turingMachine, setExecutingPositions, program, 
     const [tapeHeadIndex, setTapeHeadIndex] = useState(2);
     const [canGoBack, setCanGoBack] = useState(true);
     const [canStep, setCanStep] = useState(true);
+    
     const [stepId, setStepId] = useState<NodeJS.Timeout|undefined>(undefined);
+    const [snackbarId, setSnackbarId] = useState<NodeJS.Timeout|undefined>(undefined);
+    
     const [msg, setMsg] = useState<string>("");
     const [showSnackbar, setShowSnackbar] = useState(false);
 
@@ -71,7 +75,7 @@ function TapeScreen({ tapeValue, turingMachine, setExecutingPositions, program, 
     
         d3.select(gRef.current)
             .transition()
-            .duration(1000)
+            .duration(transitionTime)
             .attr('transform', `translate(${nextTranslate}, 0)`);
     }
 
@@ -168,15 +172,20 @@ function TapeScreen({ tapeValue, turingMachine, setExecutingPositions, program, 
 
         setCurrentEdge(transitionLabel);
         setTerminationMessage();
-        setShowSnackbar(true);
+        handleSnackbarClose();
         setExecutingPositions(executingPositions ?? []);
         
         const stepId = setTimeout(() => {
             setCurrentState(tmExecutorRef.current.currentState);
             setCanStep(tmExecutorRef.current.terminationStatus === undefined);
             setCanGoBack(true);
-        }, 500);
+        }, transitionTime);
         setStepId(stepId);
+        
+        const snackbarId = setTimeout(() => {
+            setShowSnackbar(true);
+        }, 100);
+        setSnackbarId(snackbarId);
     }
 
     useEffect(() => {
@@ -184,11 +193,13 @@ function TapeScreen({ tapeValue, turingMachine, setExecutingPositions, program, 
         return () => {
             if (stepId) {
                 clearTimeout(stepId);
+            } if (snackbarId) {
+                clearTimeout(snackbarId);
             }
         };
     }, []);
 
-    function handleSnackbarClose(event?: React.SyntheticEvent | Event, reason?: string) {
+    function handleSnackbarClose(_event?:any, reason?: string) {
         if (reason === 'clickaway') {
           return;
         }
@@ -213,7 +224,7 @@ function TapeScreen({ tapeValue, turingMachine, setExecutingPositions, program, 
                 <Button onClick={handleStep} disabled={!canStep} variant='contained'>Step</Button>
             </div>
             <Snackbar open={showSnackbar} onClick={() => setShowSnackbar(true)} onClose={handleSnackbarClose} 
-                autoHideDuration={500} anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}>
+                autoHideDuration={transitionTime*3} anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}>
                 <MuiAlert elevation={6} variant="filled" severity='info' onClose={handleSnackbarClose} sx={{ width: '100%' }}>{msg}</MuiAlert>
             </Snackbar>
         </div>

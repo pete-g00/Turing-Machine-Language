@@ -71,9 +71,11 @@ export interface UserConfiguration {
   editorFontSize:EditorFontSize;
   isDrawerOpen:boolean;
   showEditorLineNumber:boolean;
+  transitionTime:number;
   setEditorTheme:(userConfiguration:UserConfiguration, theme:EditorTheme) => void;
   setEditorFontSize:(userConfiguration:UserConfiguration, fontSize:EditorFontSize) => void;
   setShowEditorLineNumber:(userConfiguration:UserConfiguration, showLineNumber:boolean) => void;
+  setTransitionTime:(userConfiguration:UserConfiguration, transitionTime:number) => void;
   openDrawer:(userConfiguration:UserConfiguration) => void;
   closeDrawer:(userConfiguration:UserConfiguration) => void;
 }
@@ -84,6 +86,7 @@ function App() {
     editorFontSize: EditorFontSize.NORMAL,
     showEditorLineNumber: true,
     isDrawerOpen: false,
+    transitionTime: 500,
     setEditorTheme: (userConfiguration:UserConfiguration, theme:EditorTheme) => {
       setUserConfiguration({...userConfiguration, editorTheme: theme});
     },
@@ -98,6 +101,9 @@ function App() {
     },
     closeDrawer:(userConfiguration:UserConfiguration) => {
       setUserConfiguration({...userConfiguration, isDrawerOpen: false});
+    },
+    setTransitionTime:(userConfiguration:UserConfiguration, transitionTime:number) => {
+      setUserConfiguration({...userConfiguration, transitionTime});
     }
   });
 

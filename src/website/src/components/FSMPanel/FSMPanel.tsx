@@ -8,12 +8,13 @@ interface FSMPanelProps {
     turingMachine: TuringMachine;
     currentState: string|undefined;
     currentEdge: string|undefined;
+    transitionTime: number;
 }
 
 function convertToDot(tm:TuringMachine): string {
     const values:string[] = [];
     values.push(`digraph {
-    size="7,2"
+    size="7,3"
     ratio=compress
     bgcolor="#E6E6E6"
     fontname="Helvetica"
@@ -46,7 +47,7 @@ function convertToDot(tm:TuringMachine): string {
     return values.join("");
 }
 
-function FSMPanel({ turingMachine, currentEdge, currentState }: FSMPanelProps) {
+function FSMPanel({ turingMachine, currentEdge, currentState, transitionTime }: FSMPanelProps) {
     const divElement = useRef<HTMLDivElement>(null);
 
     function changeCurrentState(currentState:string|undefined) {
@@ -62,11 +63,11 @@ function FSMPanel({ turingMachine, currentEdge, currentState }: FSMPanelProps) {
             const arrow = d3.select(`g#${currentEdge}`).select("path");
             console.log(arrow);
             arrow.transition()
-                .duration(750)
+                .duration(transitionTime*3/4)
                 .attr("stroke", "blue")
                 .attr("stroke-width", "3")
                 .transition()
-                .duration(250)
+                .duration(transitionTime/4)
                 .attr("stroke", "black")
                 .attr("stroke-width", "1");
         }
@@ -102,7 +103,7 @@ function FSMPanel({ turingMachine, currentEdge, currentState }: FSMPanelProps) {
 
     return (
         <Box textAlign="center">
-            <p>FSM representation of the TM program:</p>
+            <h3>FSM representation of the TM program</h3>
             <div className='tm-FSMPanel' ref={divElement}></div>
         </Box>
     );
