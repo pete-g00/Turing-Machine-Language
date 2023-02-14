@@ -1,7 +1,10 @@
 import React from 'react';
 import { Box, Button, ButtonGroup, Divider, Drawer, } from '@mui/material';
-import { editorThemes, UserConfiguration, editorFontSizes } from '../../App';
+import { editorThemes, UserConfiguration, editorFontSizes, ExampleKey } from '../../App';
 import './AppDrawer.css';
+import examples from '../examples.json';
+
+const exampleKeys = Object.keys(examples);
 
 interface AppDrawerProps {
     userConfiguration:UserConfiguration;
@@ -56,6 +59,16 @@ function AppDrawer({ userConfiguration }:AppDrawerProps) {
                         })}
                     </ButtonGroup>
                 </div>
+                <Divider/>
+                <div className='editor-settings-tile'>
+                    <h3>Add Example to Editor</h3>
+                    <ButtonGroup color='secondary' variant='contained' orientation='vertical' fullWidth>
+                        {exampleKeys.map((key, i) => {
+                            return <Button key={i} onClick={() => userConfiguration.setExampleKey(userConfiguration, key as ExampleKey)}>{ key }</Button>;
+                        })}
+                    </ButtonGroup>
+                </div>
+                <Divider/>
             </Box>
         </Drawer>
     );

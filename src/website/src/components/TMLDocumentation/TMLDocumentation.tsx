@@ -7,10 +7,10 @@ import Navigation from '../DocumentationNavigation/DocumentationNavigation';
 import TapePanel from '../TapePanel/TapePanel';
 import { getProgram } from '../MonacoConfig';
 import { CodeConverter } from 'parser-tml';
-import { code } from '../Editor/Editor';
+import examples from '../examples.json';
 import { DocumentationProps } from '../Documentation/Documentation';
 
-const program = getProgram(code, [])!;
+const program = getProgram(examples.isDiv2, [])!;
 const converter = new CodeConverter(program);
 const turingMachine = converter.convert();
 
@@ -26,7 +26,7 @@ function TMLDocumentation({ userConfiguration }:DocumentationProps) {
     useEffect(() => {
         if (divEl.current) {
             editor.current = monaco.editor.create(divEl.current, {
-                value: code,
+                value: examples.isDiv2,
                 language: 'TMProgram',
                 theme: 'dracula',
                 automaticLayout: true,

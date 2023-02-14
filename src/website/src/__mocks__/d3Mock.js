@@ -1,20 +1,25 @@
 function emptyFn() {
     return undefined;
 }
-function getSelect() {
-    return select();
-}
 
 export function select() {
     return {
-        attr: (x, y) => {
-            if (y) {
-                return getSelect;
-            } else {
-                return '';
-            }
-        },
+        attr: select,
         on: () => emptyFn,
+        node: () => {
+            return {
+                transform: {
+                    baseVal: []
+                }
+            };
+        },
+        transition: () => {
+            return {
+                duration: select
+            };
+        },
+        selectAll: select,
+        select,
     };
 }
 

@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Grid } from '@mui/material';
-import Editor, { code } from '../Editor/Editor';
+import Editor from '../Editor/Editor';
 import TMPanel from '../TMPanel/TMPanel';
 import TapePanel from '../TapePanel/TapePanel';
 import AppToolbar from '../Apptoolbar/Apptoolbar';
 import { CodeParser, CodeConverter, ProgramContext, TuringMachine, CodePosition } from 'parser-tml';
 import AppDrawer from '../AppDrawer/AppDrawer';
 import { UserConfiguration } from '../../App';
+import * as _examples from '../examples.json';
+
+const examples :{[key:string]: string} = _examples;
 
 interface HomePageProps {
     userConfiguration: UserConfiguration;
@@ -43,12 +46,14 @@ function HomePage({ userConfiguration }:HomePageProps) {
     }, [currentEdge]);
 
     useEffect(() => {
-        const parser = new CodeParser(code);
-        const program = parser.parse();
-        setProgram(program);
-        const converter = new CodeConverter(program);
-        setTuringMachine(converter.convert());
-    }, []);
+        if (userConfiguration.exampleKey) {
+            const parser = new CodeParser(examples[userConfiguration.exampleKey]);
+            const program = parser.parse();
+            setProgram(program);
+            const converter = new CodeConverter(program);
+            setTuringMachine(converter.convert());
+        }
+    }, [userConfiguration]);
 
     useEffect(() => {
         if (program) {

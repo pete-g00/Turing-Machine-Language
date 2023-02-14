@@ -1,3 +1,5 @@
+import examples from "../components/examples.json";
+
 const emptyFun = () => {
     return undefined;
 };
@@ -10,6 +12,9 @@ export const editor = {
             onDidChangeModelContent: emptyFun,
             updateOptions: emptyFun,
             getModel: emptyFun,
+            setValue: emptyFun,
+            getValue: () => examples.isDiv2,
+            getContentHeight: () => 0,
         };
     },
     dispose: emptyFun,

@@ -66,18 +66,22 @@ export class EditorFontSize {
 
 export const editorFontSizes:EditorFontSize[] = [EditorFontSize.LARGE, EditorFontSize.NORMAL, EditorFontSize.SMALL];
 
+export type ExampleKey = "isDiv2" | "isDiv2Recursive" | "palindrome";
+
 export interface UserConfiguration {
   editorTheme:EditorTheme;
   editorFontSize:EditorFontSize;
   isDrawerOpen:boolean;
   showEditorLineNumber:boolean;
   transitionTime:number;
+  exampleKey:ExampleKey|undefined;
   setEditorTheme:(userConfiguration:UserConfiguration, theme:EditorTheme) => void;
   setEditorFontSize:(userConfiguration:UserConfiguration, fontSize:EditorFontSize) => void;
   setShowEditorLineNumber:(userConfiguration:UserConfiguration, showLineNumber:boolean) => void;
   setTransitionTime:(userConfiguration:UserConfiguration, transitionTime:number) => void;
   openDrawer:(userConfiguration:UserConfiguration) => void;
   closeDrawer:(userConfiguration:UserConfiguration) => void;
+  setExampleKey:(userConfiguration:UserConfiguration, exampleKey:ExampleKey|undefined) => void;
 }
 
 function App() {
@@ -87,6 +91,7 @@ function App() {
     showEditorLineNumber: true,
     isDrawerOpen: false,
     transitionTime: 500,
+    exampleKey: "isDiv2",
     setEditorTheme: (userConfiguration:UserConfiguration, theme:EditorTheme) => {
       setUserConfiguration({...userConfiguration, editorTheme: theme});
     },
@@ -104,6 +109,9 @@ function App() {
     },
     setTransitionTime:(userConfiguration:UserConfiguration, transitionTime:number) => {
       setUserConfiguration({...userConfiguration, transitionTime});
+    },
+    setExampleKey: (userConfiguration:UserConfiguration, exampleKey:ExampleKey|undefined) => {
+      setUserConfiguration({...userConfiguration, exampleKey});
     }
   });
 

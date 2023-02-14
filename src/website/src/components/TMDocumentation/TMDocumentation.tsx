@@ -6,12 +6,12 @@ import Navigation from '../DocumentationNavigation/DocumentationNavigation';
 import { MathComponent } from "mathjax-react";
 import { getProgram } from '../MonacoConfig';
 import { CodeConverter } from 'parser-tml';
-import { code } from '../Editor/Editor';
+import examples from '../examples.json';
 import TapePanel from '../TapePanel/TapePanel';
 import { DocumentationProps } from '../Documentation/Documentation';
 import FSMPanel from '../FSMPanel/FSMPanel';
 
-const program = getProgram(code, [])!;
+const program = getProgram(examples.isDiv2, [])!;
 const converter = new CodeConverter(program);
 const turingMachine = converter.convert();
 

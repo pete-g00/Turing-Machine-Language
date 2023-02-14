@@ -349,3 +349,8 @@
 
 * *0.5 hours* Added transition time user configuration
 * *1 hour* Added Definition TM Panel 
+
+### 14 Feb 2023
+
+* *0.5 hours* Add examples, but only the ones not given in the worksheet- isDiv2, isDiv2Recursive, aNbN
+* *2 hours* Added react tests 

@@ -8,9 +8,8 @@ module q0 {
         move right
         goto q1
     } if b {
-        changeto blank
         move right
-        goto q4
+        reject
     }
 }
 module q1 {
@@ -38,7 +37,7 @@ module q3 {
     } if b {
         changeto blank
         move left
-        goto q7
+        goto q4
     }
 }
 module q4 {
@@ -46,34 +45,6 @@ module q4 {
         move right
     } if blank {
         move left
-        goto q5
-    }
-}
-module q5 {
-    if a {
-        changeto blank
-        move left
-        goto q6
-    } if b, blank {
-        move right
-        reject
-    }
-}
-module q6 {
-    if a {
-        changeto blank
-        move left
-        goto q7
-    } if b, blank {
-        move right
-        reject
-    }
-}
-module q7 {
-    while a, b {
-        move left
-    } if blank {
-        move right
         goto q0
     }
 }

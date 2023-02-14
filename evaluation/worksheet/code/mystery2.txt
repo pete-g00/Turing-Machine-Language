@@ -2,43 +2,37 @@ alphabet = {a, b}
 module mystery2 {
     if blank {
         accept
+    } if b {
+        reject
     } if a {
         changeto blank
         move right
-        while a, b {
+        if b, blank {
+            reject
+        } if a {
+            changeto blank
             move right
-        } if blank {
-            move left
-            if a, blank {
-                reject
-            } if b {
-                changeto blank
+            while a, b {
+                move right
+            } if blank {
                 move left
-                while a, b {
+                if a, blank {
+                    reject
+                } if b {
+                    changeto blank
                     move left
-                } if blank {
-                    move right
-                    goto mystery2
-                }
-            }
-        }
-    } if b {
-        changeto blank
-        move right
-        while a, b {
-            move right
-        } if blank {
-            move left
-            if b, blank {
-                reject
-            } if a {
-                changeto blank
-                move left
-                while a, b {
-                    move left
-                } if blank {
-                    move right
-                    goto mystery2
+                    if a, blank {
+                        reject
+                    } if b {
+                        changeto blank
+                        move left
+                        while a, b {
+                            move left
+                        } if blank {
+                            move right
+                            goto mystery2
+                        }
+                    }
                 }
             }
         }

@@ -6,6 +6,9 @@ import { CodePosition, ProgramContext } from 'parser-tml';
 import { UserConfiguration } from '../../App';
 import { Snackbar } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
+import _examples from '../examples.json';
+
+const examples:{[key:string]:string} = _examples;
 
 interface EditorProps {
     setProgram: (program:ProgramContext|undefined) => void;
@@ -14,31 +17,29 @@ interface EditorProps {
     executingPositions:CodePosition[];
 }
 
-export const code = `// checks whether a binary number is divisible by 2
-alphabet = {0, 1}
-module isDiv2 {
-    while 0, 1 {
-        move right
-    } if blank {
-        move left
-        if 0 {
-            accept
-        } if 1, blank {
-            reject
-        }
-    }
-}`;
-
 function Editor({ userConfiguration, setProgram, isTapeExecuting, executingPositions }:EditorProps) {
     const divEl = useRef<HTMLDivElement>(null);
     const editor = useRef<monaco.editor.IStandaloneCodeEditor|null>(null);
     const markers:monaco.editor.IMarkerData[] = [];
     const event = useRef<monaco.IDisposable|undefined>(undefined);
+
+    function handleChange() {
+        if (!isTapeExecuting && editor.current) {
+            const program = getProgram(editor.current.getValue(), markers);
+            monaco.editor.setModelMarkers(editor.current.getModel()!, "validate-TMP", markers);
+            
+            if (markers.length === 0) {
+                setProgram(program);
+            } else {
+                setProgram(undefined);
+            }
+        }
+    }
     
     useEffect(() => {
         if (divEl.current) {
             const _editor = monaco.editor.create(divEl.current, {
-                value: code,
+                value: examples.isDiv2,
                 language: 'TMProgram',
                 theme: "dracula",
                 automaticLayout: true,
@@ -47,19 +48,8 @@ function Editor({ userConfiguration, setProgram, isTapeExecuting, executingPosit
                 wordWrap: "on",
                 detectIndentation: true,
             });
-            _editor.onDidChangeModelContent(() => {
-                if (!isTapeExecuting) {
-                    const program = getProgram(_editor.getValue(), markers);
-                    monaco.editor.setModelMarkers(_editor.getModel()!, "validate-TMP", markers);
-                    
-                    if (markers.length === 0) {
-                        setProgram(program);
-                    } else {
-                        setProgram(undefined);
-                    }
-                }
-            });
             editor.current = _editor;
+            _editor.onDidChangeModelContent(handleChange);
         }
         return () => {
             if (editor.current) {
@@ -91,6 +81,12 @@ function Editor({ userConfiguration, setProgram, isTapeExecuting, executingPosit
                 fontSize: userConfiguration.editorFontSize.value,
                 lineNumbers: userConfiguration.showEditorLineNumber ? "on" : "off"
             });
+            if (userConfiguration.exampleKey) {
+                const value = examples[userConfiguration.exampleKey];
+                editor.current.setValue(value);
+                handleChange();
+                userConfiguration.setExampleKey(userConfiguration, undefined);
+            }
         }
     }, [userConfiguration]);
 

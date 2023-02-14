@@ -81,75 +81,31 @@
         \end{figure}
         \newpage
         
-        \item \texttt{palindrome}:
-        \lstinputlisting[language=TML]{code/palindrome.txt}
+        \item \texttt{aNbN}:
+        \lstinputlisting[language=TML]{code/aNbN.txt}
 
-        \noindent The program \texttt{palindrome} corresponds to the following TM:
+        \noindent The program \texttt{aNbN} corresponds to the following TM:
         \begin{figure}[H]
             \centering
             \begin{tikzpicture}
-                \node[state, accepting] (q0) at (1, 0) {$q_0$};
-                \node[state] (q1) at (2, -2) {$q_1$};
-                \node[state] (q2) at (5, -2) {$q_2$};
-                \node[state] (q4) at (2, 2) {$q_3$};
-                \node[state] (q5) at (5, 2) {$q_4$};
-                \node[state] (q7) at (4, 0) {$q_5$};
-                \node[state, fill=green, opacity=0.6] (A) at (-2, 0) {$A$};
-                \node[state, fill=red, opacity=0.6] (R) at (8, 0) {$R$};
+                \node[state, accepting] (q0) at (0, 0) {$q_0$};
+                \node[state] (q1) at (0, -2) {$q_1$};
+                \node[state] (q2) at (6, -2) {$q_2$};
+                \node[state] (q3) at (6, 0) {$q_3$};
+                \node[state, fill=green, opacity=0.6] (A) at (-3, 0) {$A$};
+                \node[state, fill=red, opacity=0.6] (R) at (3, -1) {$R$};
     
                 \draw[->] (q0) -- node[left] {$a \to \#, R$} (q1);
-                \draw[->] (q0) -- node[left] {$b \to \#, R$} (q4);
                 \draw[->] (q0) -- node[above] {$\#, L$} (A);
+                \draw[->] (q0) -- node[below] {$b, L$} (R);
                 \draw[->] (q1) edge[loop below] node {$a|b, R$} (q1);
-                \draw[->] (q1) -- node[above] {$\#, L$} (q2);
-                \draw[->] (q2) -- node[right] {$b \to \#, L$} (q7);
-                \draw[->] (q2) -- node[below right] {$a|\#, L$} (R);
-                \draw[->] (q4) edge[loop above] node {$a|b, R$} (q4);
-                \draw[->] (q4) -- node[below] {$\#, L$} (q5);
-                \draw[->] (q5) -- node[right] {$a \to \#, L$} (q7);
-                \draw[->] (q5) -- node[above right] {$b|\#, L$} (R);
-                \draw[->] (q7) edge[loop right] node {$a|b, L$} (q7);
-                \draw[->] (q7) -- node[above] {$\#, L$} (q0);
+                \draw[->] (q1) -- node[below] {$\#, L$} (q2);
+                \draw[->] (q2) -- node[right] {$b \to \#, L$} (q3);
+                \draw[->] (q3) edge[loop above] node {$a|b, L$} (q3);
+                \draw[->] (q2) -- node[above] {$a|\#, L$} (R);
+                \draw[->] (q3) -- node[above] {$\#, L$} (q0);
             \end{tikzpicture}
         \end{figure}
-
-% \begin{lstlisting}[language=TML]
-% // checks whether the input is blank or of the form ab, aabb, aaabbb, etc.
-% alphabet = {a, b}
-% module aNbN {
-%     if blank {
-%         accept
-%     } 
-%     // cannot start with a b
-%     if b {
-%         reject
-%     } if a {
-%         changeto blank
-%         move right
-%         // go to the end
-%         while a, b {
-%             move right
-%         } 
-%         if blank {
-%             move left
-%             // must end with a b
-%             if a, blank {
-%                 reject
-%             } if b {
-%                 changeto blank
-%                 move left
-%                 // go to the start and restart
-%                 while a, b {
-%                     move left
-%                 } if blank {
-%                     move right
-%                     goto aNbN
-%                 }
-%             }
-%         }
-%     }
-% }
-% \end{lstlisting}
     \end{itemize}
     \newpage
     
@@ -205,19 +161,19 @@
                 \begin{solution}
                     
                 \end{solution}
-                \newpage
                 
-                \item $aab$
+                \item $aabb$
                 \begin{solution}
                     
                 \end{solution}
+                \newpage
                 
                 \item $abba$
                 \begin{solution}
                     
                 \end{solution}
                 
-                \item $abab$
+                \item $bab$
                 \begin{solution}
                     
                 \end{solution}
@@ -256,7 +212,7 @@
                 \draw[->] (q2) edge node[right] {$\#, R$} (R);
             \end{tikzpicture}
         \end{figure}
-        You are given a basic representation of this FSM as code in Teams.
+        You are given a basic representation of this FSM as code in Teams. The file is called mystery3.
         \begin{enumerate}
             \item Does the TM accept the values:
             \begin{enumerate}
@@ -299,30 +255,26 @@
             \begin{tikzpicture}
                 \node[state, accepting] (q0) at (3, 0) {$q_0$};
                 \node[state] (q1) at (2, -2) {$q_1$};
-                \node[state] (q2) at (5, -2) {$q_2$};
-                \node[state] (q3) at (8, -1.5) {$q_3$};
-                \node[state] (q4) at (2, 2) {$q_4$};
-                \node[state] (q5) at (5, 2) {$q_5$};
-                \node[state] (q6) at (8, 1.5) {$q_6$};
-                \node[state] (q7) at (6, 0) {$q_7$};
+                \node[state] (q2) at (5, -3) {$q_2$};
+                \node[state] (q3) at (8, -2) {$q_3$};
+                \node[state] (q7) at (6, 0) {$q_4$};
                 \node[state, fill=green, opacity=0.6] (A) at (0, 0) {$A$};
+                \node[state, fill=red, opacity=0.6] (R) at (5, -1) {$R$};
     
                 \draw[->] (q0) -- node[left] {$a \to \#, R$} (q1);
-                \draw[->] (q0) -- node[left] {$b \to \#, R$} (q4);
                 \draw[->] (q0) -- node[above] {$\#, R$} (A);
                 \draw[->] (q1) edge[loop below] node {$a|b, R$} (q1);
-                \draw[->] (q1) -- node[below] {$\#, L$} (q2);
-                \draw[->] (q2) -- node[below] {$b \to \#, L$} (q3);
+                \draw[->] (q1) -- node[below left] {$\#, L$} (q2);
+                \draw[->] (q2) -- node[below right] {$b \to \#, L$} (q3);
                 \draw[->] (q3) -- node[right] {$b \to \#, L$} (q7);
-                \draw[->] (q4) edge[loop above] node {$a|b, R$} (q4);
-                \draw[->] (q4) -- node[above] {$\#, L$} (q5);
-                \draw[->] (q5) -- node[above] {$a \to \#, L$} (q6);
-                \draw[->] (q6) -- node[right] {$a \to \#, L$} (q7);
                 \draw[->] (q7) edge[loop right] node {$a|b, L$} (q7);
                 \draw[->] (q7) -- node[above] {$\#, R$} (q0);
+                \draw[->] (q2) -- node[left] {$a|\#, R$} (R);
+                \draw[->] (q3) -- node[above] {$a|\#, R$} (R);
+                \draw[->] (q0) -- node[below] {$b, R$} (R);
             \end{tikzpicture}
         \end{figure}
-        NOTE: The missing transitions go to the reject state, i.e. $q_2$, $q_3$ to $a|\#$ and $q_5$, $q_6$ to $b|\#$ are rejected. You are given a basic representation of this FSM as code in Teams.
+        You are given a basic representation of this FSM as code in Teams. The file is called mystery4.
         \begin{enumerate}
             \item Does this TM accept the values:
             \begin{enumerate}
@@ -336,22 +288,17 @@
                     
                 \end{solution}
 
-                \item $aabb$
+                \item $aabbbb$
                 \begin{solution}
                     
                 \end{solution}
                 
-                \item $babbaa$
+                \item $bab$
                 \begin{solution}
                     
                 \end{solution}
 
                 \item $abba$
-                \begin{solution}
-                    
-                \end{solution}
-
-                \item $abab$
                 \begin{solution}
                     
                 \end{solution}
@@ -383,93 +330,11 @@
         \end{solution}
         
         \noindent The remaining questions are optional. If you attempt them, you can answer them in the survey.
-        \item check all $a$'s come before the $b$'s
-        % \begin{solution}
-        %     \vspace*{570pt}
-        % \end{solution}
-        
-        \item strings of the form $a^n b^n$ [HINT: this is closely related to palindrome.]
-        % \begin{solution}
-        %     \vspace*{570pt}
-        % \end{solution}
-
+        \item strings of the form $a^n b^m c^{n+m}$
+        \item strings of the form $a^n b^n c^n$
         \item HARD: check there are same number of $a$'s and $b$'s
-        %  [HINT: remove the first letter and the last opposite letter- move all the remaining a's so that there is no blank space in the middle.]
-        % \begin{solution}
-        %     \vspace*{560pt}
-        % \end{solution}
     \end{enumerate}
-    
-    % NOTE: The missing links go to the reject state, 
-    
-% // accepts strings of the form a^n b^n c^n
-% alphabet = {a, b, c}
-% module aNbNcN {
-%     if blank {
-%         accept
-%     } if c {
-%         reject
-%     } 
-%     // a => remove a, go to the end, replace c with a
-%     if a {
-%         move right
-%         // move to the end
-%         while a, b, c {
-%             move right
-%         } if blank {
-%             move left
-%             // go past the a's and then replace the last c with an a
-%             while a {
-%                 move left
-%             } if blank, b {
-%                 reject
-%             } if c {
-%                 changeto a
-%                 move left
-%                 // go to the start
-%                 while a, b, c {
-%                     move left
-%                 } if blank {
-%                     move right
-%                     goto aNbNcN
-%                 }
-%             }
-%         }
-%     } if b {
-%         goto bNaN
-%     }
-% }
-% module bNaN {
-%     if blank {
-%         accept
-%     } if a, c {
-%         reject
-%     } if b {
-%         changeto blank
-%         move right
-%         // go to the end (c is a direct reject)
-%         while a, b {
-%             move right
-%         } if c {
-%             reject
-%         } if blank {
-%             move left
-%             // remove the a and move to the start
-%             if b, c, blank {
-%                 reject
-%             } if a {
-%                 changeto blank
-%                 while a, b {
-%                     move left
-%                 } if c {
-%                     reject
-%                 } if blank {
-%                     goto bNaN
-%                 }
-%             }
-%         }
-%     }
-% }
+
     \section{Appendix- Links}
     Below are the links to the website and the survey:
     \begin{itemize}

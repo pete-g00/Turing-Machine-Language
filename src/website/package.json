@@ -53,7 +53,8 @@
   "jest": {
     "moduleNameMapper": {
       "monaco-editor": "<rootDir>/src/__mocks__/monacoMock.js",
-      "d3": "<rootDir>/src/__mocks__/d3Mock.js"
+      "d3": "<rootDir>/src/__mocks__/d3Mock.js",
+      "@hpcc-js/wasm": "<rootDir>/src/__mocks__/graphvizMock.js"
     }
   },
   "devDependencies": {
