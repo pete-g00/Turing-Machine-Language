@@ -122,9 +122,9 @@ function Editor({ userConfiguration, setProgram, isTapeExecuting, executingPosit
         <div className="Editor" ref={divEl}></div>
         
         <Snackbar open={showSnackbar} onClick={() => setShowSnackbar(true)} onClose={handleSnackbarClose} 
-            autoHideDuration={2000} anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}>
+            autoHideDuration={5000} anchorOrigin={{vertical: 'bottom', horizontal: 'left'}}>
             <MuiAlert elevation={6} variant="filled" severity='error' onClose={handleSnackbarClose} sx={{ width: '100%' }}>
-                Cannot Edit When Executing on Tape.
+                Cannot Edit When Executing on Tape. <br/>Stop tape execution before editing.
             </MuiAlert>
         </Snackbar>
     </>);

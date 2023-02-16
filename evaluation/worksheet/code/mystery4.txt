@@ -42,9 +42,9 @@ module q3 {
 }
 module q4 {
     while a, b {
-        move right
-    } if blank {
         move left
+    } if blank {
+        move right
         goto q0
     }
 }

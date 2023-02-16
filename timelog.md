@@ -354,3 +354,9 @@
 
 * *0.5 hours* Add examples, but only the ones not given in the worksheet- isDiv2, isDiv2Recursive, aNbN
 * *2 hours* Added react tests 
+
+### 16 Feb 2023
+
+* *1 hour* Evaluation Session
+* *1 hour* Meeting with Ornela
+
