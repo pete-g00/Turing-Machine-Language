@@ -1,0 +1,54 @@
+\chapter{Requirements}
+
+I used MoScoWs to specify the requirements for the project. In particular, the requirements were partitioned into one of the 4 sections: must have, should have, could have and will not have. Since the project has multiple parts, each part had its own MoScoW section.
+
+\section{Developing TML}
+
+\paragraph{Must Have} A specification document for the TML must be created. The specification should include the following:
+\begin{itemize}
+    \item a formal and an informal definition for the language;
+    \item how to execute a program on a valid tape; and
+    \item a proof of equivalence between TMs and TML programs (which involves constructing a TM for a TML program, and vice versa).
+\end{itemize}
+
+\paragraph{Should Have} The specification should include examples. In particular, there should be examples of valid and invalid programs, and those that illustrate the proofs (e.g. how to convert a TM into a TML program) so that it is easier to follow.
+
+\paragraph{Could Have} The specification could connect TML program with the Church-Turing Thesis. In particular, a proof of equivalence could be explored between TML program and $\lambda$-calculus.
+
+\section{Developing the parser for TML}
+
+\paragraph{Must Have} The parser must be able to:
+\begin{itemize}
+    \item parse a string representation of a TM program to a program context;
+    \item validate a program context; and 
+    \item execute a program context on a valid tape.
+\end{itemize}
+
+\paragraph{Should Have} The parser should be able to convert a program context to a TM. Compared to the 3 must-have requirements, this requirement was considered to be of the lowest priority, and so was considered a should-have.
+
+\paragraph{Could Have} The parser should be able to execute a TM on a tape. This might help in the website to illustrate execution on the converted TM.
+
+\paragraph{Will Not Have} The parser will not be able to convert a TM into a TML program.
+
+\section{The website}
+
+\paragraph{Must Have} The website must:
+\begin{itemize}
+    \item have a code editor for TML;
+    \item be able to convert a valid program to a TM and present it as a FSM;
+    \item be able to execute a program on a valid tape, one step at a time.
+\end{itemize}
+
+\paragraph{Should Have} The code editor should support syntax highlighting. Assuming that the initial FSM representation rendered by the website places the states in a random manner, without considering which states are linked and should be placed closer, the user should be able to drag them around.
+% TODO: Illustrate this?
+
+\paragraph{Could Have} The editor could support error detection. The user could be able to configure the website, e.g. change the editor theme, the editor font size and the speed of tape execution. The website could convert a program to its definition as a TM. The website could support automatic placement of states (within the FSM) in an aesthetic manner instead of having the user drag it.
+
+\paragraph{Will Not Have} The editor will not be able to automatically fix errors. The website will not be able to execute a TM on a tape (without a program). The website will not able to convert a TM into a TML program.
+
+% \section{Guidance}
+% Make it clear how you derived the constrained form of your problem via a clear and logical process. 
+
+% The analysis chapter explains the process by which you arrive at a concrete design. In software 
+% engineering projects, this will include a statement of the requirement capture process and the
+% derived requirements.

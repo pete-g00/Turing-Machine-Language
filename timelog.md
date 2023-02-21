@@ -360,3 +360,16 @@
 * *1 hour* Evaluation Session
 * *1 hour* Meeting with Ornela
 
+### 17 Feb 2023
+
+* *2 hours* Evaluation Sessions
+
+## Week 7
+
+### 20 Feb 2023
+* *0.5 hours* Updated examples so it matches with evaluation exercises
+* *0.5 hours* Some minor tweaks to the website (changing opacity of accept/reject state if it is current state so it is easier to see the difference)
+
+### 21 Feb 2023
+
+* *1 hour* Completed requirements section of the dissertation- moved stuff from the moscows and expanded the points

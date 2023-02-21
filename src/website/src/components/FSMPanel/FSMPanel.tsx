@@ -3,6 +3,7 @@ import { Graphviz } from "@hpcc-js/wasm";
 import { TuringMachine } from 'parser-tml';
 import { Box } from '@mui/material';
 import * as d3 from 'd3';
+import './FSMPanel.css';
 
 interface FSMPanelProps {
     turingMachine: TuringMachine;
@@ -61,7 +62,6 @@ function FSMPanel({ turingMachine, currentEdge, currentState, transitionTime }: 
     function changeCurrentEdge(currentEdge:string|undefined) {
         if (currentEdge) {
             const arrow = d3.select(`g#${currentEdge}`).select("path");
-            console.log(arrow);
             arrow.transition()
                 .duration(transitionTime*3/4)
                 .attr("stroke", "blue")
