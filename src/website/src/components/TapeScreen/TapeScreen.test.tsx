@@ -97,7 +97,7 @@ test("After stepping starts, the position gets updated", async () =>  {
         setExecutingPositions={setExecutingPositions} transitionTime={1000} program={program} tapeValue='' turingMachine={turingMachine}/>);
     const stepButton = screen.getByText("Step");
     fireEvent.click(stepButton);
-    expect(executingPositions[0]).toStrictEqual(new CodePosition(6, 7, 8, 17));
+    expect(executingPositions[0]).toStrictEqual(new CodePosition(7, 8, 8, 17));
 });
 
 test("After stepping ends, the back button is enabled", async () =>  {
