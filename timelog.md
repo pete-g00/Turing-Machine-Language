@@ -373,3 +373,9 @@
 ### 21 Feb 2023
 
 * *1 hour* Completed requirements section of the dissertation- moved stuff from the moscows and expanded the points
+
+### 23 Feb 2023
+
+* *2 hours* Evaluation sessions
+* *1 hour* Meeting with Ornela
+
