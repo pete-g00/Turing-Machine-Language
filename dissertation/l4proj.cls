@@ -60,6 +60,9 @@
 \usepackage[table,svgnames]{xcolor}
 \usepackage{parskip} % adjustable line spacing
 \usepackage{lstautogobble, listings} % nice code listings
+\usepackage{tikz}
+
+\usetikzlibrary{automata, positioning, arrows}
 
 % remove dots from ToC
 \usepackage[titles]{tocloft} 
@@ -135,7 +138,7 @@ textfont=it,tableposition=above]{caption}
 
 % allow subfloats
 \usepackage{subcaption}
-
+\usepackage{float}
 
 % fix the margins and linespacing
 \usepackage[top=3.5cm,bottom=4.0cm,left=3.5cm,right=3.5cm]{geometry}

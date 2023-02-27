@@ -1,0 +1,38 @@
+// accepts strings of the form a^nb^n for some n >= 0
+// e.g. blank, ab, aabb, aaabbb, etc.
+alphabet = {a, b}
+module aNbN {
+    // empty string => base case, accept
+    if blank {
+        accept
+    }
+    // cannot start with b
+    if b {
+        reject
+    }
+    // starts with a => remove the last b
+    if a {
+        changeto blank
+        move right
+        // move to the end
+        while a, b {
+            move right
+        } if blank {
+            move left
+            // the last letter must be a b
+            if a, blank {
+                reject
+            } if b {
+                changeto blank
+                move left
+                // move back and restart
+                while a, b {
+                    move left
+                } if blank {
+                    move right
+                    goto aNbN
+                }
+            }
+        }
+    }
+}

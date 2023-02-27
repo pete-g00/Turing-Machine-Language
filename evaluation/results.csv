@@ -1,0 +1,746 @@
+"ID","Start time","Completion time","Email","Name","How many years of programming experience do you have?","Were you familiar with Turing Machines before the workshop?","Iterative program that checks for divisibility by 4","Recursive program that checks for divisibility by 4","Strings of the form a^n b^m c^n+m","Strings of the form a^n b^n c^n","Check there are the same number of a's and b's","TML is easy to understand","TML is easy to write programs in","I was able to fix errors in my code using the error messages provided","I was able to easily reason executing a program on a tape","Do you have any general comments about the language?","Are there any features that should be added to the language in your opinion, e.g. moving to the end of the tape in one line of code?","I am more confident in writing a program in TML than drawing a TM","I find it easier to reason what a TML program accepts than a TM","If you had to draw a TM, would you write a TML program for it first?","The website is easy to follow","The presentation of the website is intuitive","There were no visible bugs in the website","The website was fast","The website feels complete","The code execution was easy to follow","The code editor was easy to use","The website presents tape execution using pop-ups. Do you think this is a good idea or should it be replaced by just a short paragraph within the tape section, or anything else?","Are there any features you would like to be added to the website?"
+"1","2/10/23 15:55:39","2/10/23 16:29:29","anonymous","","More than 3 Years","Not familiar","","","","","","Agree","Disagree","Disagree","Strongly Agree","","","Disagree","Disagree","No","Strongly agree","Strongly agree","Agree","Strongly agree","Strongly agree","Strongly agree","Strongly agree","Pop-ups are fine!",""
+"2","2/10/23 19:40:16","2/10/23 19:42:44","anonymous","","More than 3 Years","Not familiar","","","","","","Agree","Agree","Agree","Disagree","","An else statement would make it easier to see the logic of the code","Agree","Agree","Maybe","Strongly agree","Strongly agree","Strongly agree","Strongly agree","Strongly agree","Strongly agree","Strongly agree","A short paragraph is a better idea",""
+"3","2/10/23 20:38:34","2/10/23 20:45:27","anonymous","","1-2 Years","Not familiar","","","","","","Agree","Agree","Agree","Disagree","It's interesting to look back at how computers used to work back in the day","Only thing is the page ","Disagree","Agree","Maybe","Strongly agree","Agree","Strongly agree","Strongly agree","Agree","Agree","Agree","Pop-ups are fine!","Nope! It was all very well put together."
+"4","2/16/23 12:51:19","2/16/23 13:00:25","anonymous","","More than 3 Years","Somewhat familiar","","","","","","Strongly Agree","Agree","Disagree","Agree","Pretty self explanatory. Would be nicer if you could have an else when checking for the other cases. ","Maybe elifs","Strongly agree","Agree","Yes","Strongly agree","Strongly agree","Strongly agree","Strongly agree","Agree","Agree","Agree","Pop-ups are fine!","Maybe change the font size of the side box that shows how the program is going over the input if you are using bigger inputs (because sometimes you can not see the first characters)"
+"5","2/17/23 15:07:45","2/17/23 16:05:54","anonymous","","1-2 Years","Not familiar","","","","","alphabet = {a, b}
+
+module sameNum {
+    if blank {
+        accept
+    } if a {
+        changeto blank
+        move right
+        while a, b {
+…            } if blank {
+                reject
+            }
+        }
+    }
+}","Agree","Strongly Disagree","Strongly Disagree","Strongly Disagree","Cool idea","giving a traceback for directions to see where the logic went wrong easier instead of reading most of the program","Strongly agree","Strongly agree","Yes","Strongly agree","Strongly agree","Disagree","Strongly disagree","Disagree","Strongly disagree","Strongly agree","A short paragraph is a better idea","fix spaces causing errors in the interpreter"
+"6","2/17/23 16:01:31","2/17/23 16:08:24","anonymous","","More than 3 Years","Somewhat familiar","","","","","","Agree","Agree","Agree","Agree","It was syntactically easy to understand due to its similarity to other languages.","","Strongly agree","Agree","Yes","Strongly agree","Strongly agree","Strongly agree","Strongly agree","Strongly agree","Strongly agree","Strongly agree","Pop-ups are fine!",""
+"7","2/21/23 23:13:57","2/21/23 23:18:05","anonymous","","More than 3 Years","Somewhat familiar","","","","","","Strongly Agree","Strongly Agree","Strongly Agree","Strongly Agree","The language looks much like java which makes it interesting and easy to use.","moving to the end of the tape in one line of code, else feature if added would be great ","Strongly agree","Agree","Maybe","Strongly agree","Strongly agree","Strongly agree","Strongly agree","Disagree","Agree","Strongly agree","Pop-ups are fine!","The feature i would like the most to be added to the website is that where i could slide over the code and the Execution of the code."
+"8","2/22/23 14:54:40","2/22/23 15:55:57","anonymous","","More than 3 Years","Not familiar","","","","","","Strongly Agree","Agree","Disagree","Strongly Agree","- Language although do resemble procedural languages, it is hard to understand at first as it is more of a pattern matching type of thing.
+- The diagram generation capability is like magic.","- Changing the syntax of `while` to no braces may be helpful, like a `while <...alpha> move <direction>`, as there is not much to do except moving in `while` loop.
+- Support wildcard matching, like the `default` switch case in C like languages, or `_` in Rust match arm. Optimally this kind of matching can have hinting, like the way VSCode display type inference for reminder.
+- Aliasing `#` as `blank` for brevity.
+- Use `main` module marker to denote where the start of execution happens instead of implicitly choose the first one.","Strongly agree","Agree","Maybe","Agree","Strongly agree","Agree","Strongly agree","Agree","Strongly agree","Strongly agree","Pop-ups are fine!",""
+"9","2/23/23 12:21:54","2/23/23 12:58:24","anonymous","","More than 3 Years","Not familiar","alphabet = {0, 1}
+module isDiv4 {
+    // move to the end
+    while 0, 1 {
+        move right
+    } if blank {
+        move left
+        // check last letter is 0
+        if 0 {
+            move left
+            if 0, blank{
+                accept
+            }if 1 {
+                reject
+            }
+        }
+        if 1, blank{
+            reject
+        
+        }
+    }
+}","alphabet = {0, 1}
+module isDiv4Rec {
+    // recursive case: not at the end => move closer to the end
+    if 0, 1 {
+        move right
+        goto isDiv4Rec
+    } 
+    // base case: at the end => check final letter 0
+    if blank {
+        move left
+        // check last letter is 0
+        if 0 {
+            move left
+            if 0, blank{
+                accept
+            }if 1 {
+                reject
+            }
+        }
+        if 1, blank{
+            reject
+        
+        }
+    }
+}","","","","Agree","Disagree","Agree","Strongly Agree","Fairly easy to use but certain aspects would be easier acccomplished in other laguages ","","Disagree","Disagree","Maybe","Strongly agree","Strongly agree","Agree","Strongly agree","Agree","Strongly agree","Strongly agree","Pop-ups are fine!",""
+"10","2/23/23 12:32:58","2/23/23 13:05:24","anonymous","","More than 3 Years","Not familiar","// checks whether a binary number is divisible by 2
+alphabet = {0, 1}
+module isDiv2 {
+    // move to the end
+    while 0, 1 {
+        move right
+    } if blank {
+        move left
+        // check last letter is 0
+        if 0 {
+            move right
+            if 1 {
+                reject
+            }
+            if 0, blank {
+                accept
+            }
+        }if 1, blank{
+            reject
+        }
+        }
+    }","// checks whether a binary number is divisible by 2 recursively
+alphabet = {0, 1}
+module isDiv2Rec {
+    // recursive case: not at the end => move closer to the end
+    if 0, 1 {
+        move right
+        goto isDiv2Rec
+    } 
+    // base case: at the end => check final letter 0
+    if blank {
+        move left
+        if 0 {
+            move left
+            
+            if 1 {
+                reject
+            }
+            if 0,blank{
+                accept
+            }
+        } if 1, blank {
+            reject
+        }
+    }
+}","","","","Agree","Agree","Agree","Agree","good visual representation of TML ","","Disagree","Agree","Maybe","Strongly agree","Agree","Agree","Strongly agree","Disagree","Agree","Disagree","Pop-ups are fine!",""
+"11","2/23/23 12:32:50","2/23/23 13:07:09","anonymous","","More than 3 Years","Not familiar","alphabet = {0, 1}
+module isDiv2 {
+    // move to the end
+    while 0, 1 {
+        move right
+    } if blank {
+        move left
+        // check last letter is 0
+        if 0 {
+            move left
+            
+            if 1 {
+                reject
+            } if 0, blank {
+                accept
+            }
+
+        } if 1, blank {
+            reject
+        }
+    }
+}","alphabet = {0, 1}
+module isDiv2Rec {
+    // recursive case: not at the end => move closer to the end
+    if 0, 1 {
+        move right
+        goto isDiv2Rec
+    } 
+    // base case: at the end => check final letter 0
+    if blank {
+        move left
+        if 0 {
+            move left
+            if 1 {
+                reject
+            } if 0, blank {
+                accept
+            }
+        } if 1, blank {
+            reject
+        }
+    }
+}","","","","Agree","Agree","Disagree","Strongly Agree","Fairly simple to understand","Faster end of tape operation","Disagree","Disagree","Maybe","Strongly agree","Agree","Agree","Agree","Agree","Strongly agree","Strongly agree","Probably both makes some sense, popups for events and the paragraph to log them all",""
+"12","2/23/23 12:37:11","2/23/23 13:10:12","anonymous","","More than 3 Years","Not familiar","alphabet = {0, 1}
+module isDiv2 {
+    // move to the end
+    while 0, 1 {
+        move right
+    } if blank {
+        move left
+        // check last letter is 0
+        if 0 {
+            move left
+            if 0, blank{
+                accept
+            }
+            if 1{
+                reject
+            }
+        } if 1, blank {
+            reject
+        }
+    }
+}","// checks whether a binary number is divisible by 2
+alphabet = {0, 1}
+module isDiv2 {
+    // move to the end
+    if 0, 1 {
+        move right
+        goto isDiv2
+    } if blank {
+        move left
+        // check last letter is 0
+        if 0 {
+            move left
+            if 0, blank{
+                accept
+            }
+            if 1{
+                reject
+            }
+        } if 1, blank {
+            reject
+        }
+    }
+}","","","","Agree","Agree","Agree","Strongly Agree","I think it is well designed. I found it quite easy to understand and was able to step through each program looking at the code and understanding what each part meant","I think moving to the end of the tape in one line of code would be a good feature rather than having to take it step by step to get to the end","Agree","Strongly agree","Maybe","Strongly agree","Strongly agree","Strongly agree","Agree","Strongly agree","Strongly agree","Strongly agree","A short paragraph is a better idea","No, I think it is very intuitive and well designed"
+"13","2/23/23 16:29:26","2/23/23 16:51:16","anonymous","","More than 3 Years","Not familiar","// checks whether a binary number is divisible by 2
+alphabet = {0, 1}
+module isDiv2 {
+    // move to the end
+    while 0, 1 {
+        move right
+    } if blank {
+        move left
+        // check last letter is 0
+        if 0 {
+            move left
+
+            if 0{
+                accept
+            }
+            if 1, blank {
+                reject
+            } 
+        }if 1, blank {
+                reject
+            } 
+    }
+}","// checks whether a binary number is divisible by 2
+alphabet = {0, 1}
+module isDiv2 {
+    // move to the end
+    if 0, 1 {
+        move right
+        goto isDiv2
+    } if blank {
+        move left
+        // check last letter is 0
+        if 0 {
+            move left
+
+            if 0{
+                accept
+            }
+            if 1, blank {
+                reject
+            } 
+        }if 1, blank {
+                reject
+            } 
+    }
+}","","","","Agree","Disagree","Agree","Strongly Agree","Easy to follow ","","Agree","Strongly agree","Yes","Agree","Agree","Disagree","Strongly agree","Disagree","Agree","Strongly agree","Something more permanent (i.e. notes that can be tracked) because pop ups disappear after a few seconds and if the user misses them, they have to repeat the process (lines of messages somewhere on the page, that dont disappear would be better perhaps)","Website is not so intuitive in the way that there is no instruction for the user to click on the back button before clicking on settings, or that the code automatically changes when you click on an option in settings and user just has to click on the blank outside of the settings menu to get back to the home screen. Perhaps a line of instruction to point these things out might make things more convenient."
+"14","2/24/23 11:22:16","2/24/23 11:52:09","anonymous","","1-2 Years","Not familiar","// checks whether a binary number is divisible by 4
+alphabet = {0, 1}
+module isDiv2 {
+    // move to the end
+    while 0, 1 {
+        move right
+    } if blank {
+        move left
+        // check last letter is 0
+        if 0 {
+            move left
+            if 0{
+                accept
+            }
+            if 1{
+                reject
+            }
+            if blank{
+                accept
+            }
+        } if 1, blank {
+            reject
+        }
+    }
+}","// checks whether a binary number is divisible by 2
+alphabet = {0, 1}
+module isDiv2 {
+    // move to the end
+    if 0, 1 {
+        move right
+        goto isDiv2
+    } if blank {
+        move left
+        // check last letter is 0
+        if 0 {
+            move left
+            if 0{
+                accept
+            }
+            if 1{
+                reject
+            }
+            if blank{
+                accept
+            }
+        } if 1, blank {
+            reject
+        }
+    }
+}","// accepts strings of the form a^nb^n for some n >= 0
+// e.g. blank, ab, aabb, aaabbb, etc.
+alphabet = {a, b, c}
+module aNbN {
+    // empty string => base case, accept
+    if blank {
+        accept
+    }
+    // cannot start with b
+    if c {
+        reject
+    }
+    // starts with a => remove the last b
+    if a {
+        changeto blank
+        move right
+        // move to the end
+        while a, b, c {
+            move right
+        } if blank {
+            move left
+            // the last letter must be a b
+            if a, b, blank {
+                reject
+            } if c {
+                changeto blank
+                move left
+                // move back and restart
+                while a, b, c {
+                    move left
+                } if blank {
+                    move right
+                    goto aNbN
+                }
+            }
+        }
+    }
+        if b{
+                    changeto blank
+        move right
+        // move to the end
+        while a, b, c {
+            move right
+        } if blank {
+            move left
+            // the last letter must be a b
+            if a, b, blank {
+                reject
+            } if c {
+                changeto blank
+                move left
+                // move back and restart
+                while a, b, c {
+                    move left
+                } if blank {
+                    move right
+                    goto bNcN
+                }
+            }
+        }
+    }
+
+}
+module bNcN{
+        if blank {
+        accept
+    }
+    // cannot start with b
+    if a, c {
+        reject
+    }
+    // starts with a => remove the last b
+    if b {
+        changeto blank
+        move right
+        // move to the end
+        while a, b, c {
+            move right
+        } if blank {
+            move left
+            // the last letter must be a b
+            if a, b, blank {
+                reject
+            } if c {
+                changeto blank
+                move left
+                // move back and restart
+                while a, b, c {
+                    move left
+                } if blank {
+                    move right
+                    goto bNcN
+                }
+            }
+        }
+    }
+
+}","// accepts strings of the form a^nb^n for some n >= 0
+// e.g. blank, ab, aabb, aaabbb, etc.
+alphabet = {a, b, c}
+module aNbN {
+    // empty string => base case, accept
+    if blank {
+        accept
+    }
+    // cannot start with b
+    if c {
+        reject
+    }
+    // starts with a => remove the last b
+    if a {
+        changeto blank
+        move right
+        // move to the end
+        while a, b, c {
+            move right
+        } if blank {
+            move left
+            // the last letter must be a b
+            while a{
+                move left
+            }
+            if b, blank {
+                reject
+            } if c {
+                changeto a
+                move left
+                // move back and restart
+                while a, b, c {
+                    move left
+                } if blank {
+                    move right
+                    goto aNbN
+                }
+            }
+        }
+    }
+    if b{
+        changeto blank
+        move right
+        // move to the end
+        if c{
+            reject
+        }
+        while a, b  {
+            move right
+        } if blank {
+            move left
+            // the last letter must be a b
+            if c, b, blank {
+                reject
+            } if a{
+                changeto blank
+                move left
+                // move back and restart
+                while a, b, c {
+                    move left
+                } if blank {
+                    move right
+                    goto bNcN
+                }
+            }
+        }
+    }
+
+}
+module bNcN{
+        if blank {
+        accept
+    }
+    // cannot start with b
+    if a, c {
+        reject
+    }
+    // starts with a => remove the last b
+    if b {
+        changeto blank
+        move right
+        // move to the end
+        if c{
+            reject
+        }
+        while a, b  {
+            move right
+        } if blank {
+            move left
+            // the last letter must be a b
+            if c, b, blank {
+                reject
+            } if a{
+                changeto blank
+                move left
+                // move back and restart
+                while a, b, c {
+                    move left
+                } if blank {
+                    move right
+                    goto bNcN
+                }
+            }
+        }
+    }
+
+}","","Strongly Agree","Strongly Agree","Strongly Agree","Strongly Agree","The language is intuitive for someone with my level of programming experience. ","No. ","Strongly agree","Strongly agree","Maybe","Strongly agree","Strongly agree","Strongly agree","Strongly agree","Agree","Strongly agree","Strongly agree","Pop-ups are fine!","It would be handy to have the option to execute in full, some of the tasks take a lot of stepping. "
+"15","2/24/23 15:22:11","2/24/23 15:59:06","anonymous","","More than 3 Years","Not familiar","alphabet = {0, 1}
+module isDiv2 {
+    // move to the end
+    while 0, 1 {
+        move right
+    } if blank {
+        move left
+        // check last letter is 0
+        if 0 {
+            move left
+            if 0, blank{
+                accept
+            }
+            if 1{
+                reject
+            }
+            
+        } if 1, blank {
+            reject
+        }
+        
+    }
+}","alphabet = {0, 1}
+module isDiv2Rec {
+    // recursive case: not at the end => move closer to the end
+    if 0, 1 {
+        move right
+        goto isDiv2Rec
+    } 
+    // base case: at the end => check final letter 0
+    if blank {
+        move left
+        if 0 {
+            move left
+            if 0, blank{
+                accept
+            }
+            if 1{
+                reject
+            }
+        } if 1, blank {
+            reject
+        }
+    }
+}","alphabet = {a, b, c}
+module aNbN {
+    if blank {
+        accept
+    }
+    if c {
+        reject
+    }
+    if a,b {
+        changeto blank
+        move right
+        while a, b,c {
+            move right
+        } if blank {
+            move left
+            if a,b, blank {
+                reject
+            } if c {
+                changeto blank
+                move left
+                while a, b,c {
+                    move left
+                } if blank {
+                    move right
+                    goto aNbN
+                }
+            }
+        }
+    }
+}","","","Strongly Agree","Agree","Disagree","Strongly Agree","In the tasks I was completing, it was very easy to understand and write.","The ability to remove an item from a string without having to replace it with a blank spot. This would make question 4 easy to implement","Agree","Agree","No","Strongly agree","Strongly agree","Strongly agree","Strongly agree","Agree","Strongly agree","Strongly agree","Pop-ups are fine!","No, maybe if the code would automatically finish when a new button is clicked, as a pose to it needing the user to click the back button first. "
+"16","2/24/23 14:55:12","2/24/23 16:02:13","anonymous","","More than 3 Years","Not familiar","// checks whether a binary number is divisible by 2
+alphabet = {0, 1}
+module isDiv2 {
+    // move to the end
+    while 0, 1 {
+        move right
+    } if blank {
+        move left
+        // check last letter is 0
+        if 0 {
+            move left
+            if 0,blank{
+                accept
+            }
+            if 1{
+                reject
+            }
+        } if 1, blank {
+            reject
+        }
+    }
+}","// checks whether a binary number is divisible by 2 recursively
+alphabet = {0, 1}
+module isDiv2Rec {
+    // recursive case: not at the end => move closer to the end
+    if 0, 1 {
+        move right
+        goto isDiv2Rec
+    } 
+    // base case: at the end => check final letter 0
+    if blank  {
+        move left
+        // check last letter is 0
+        if 0 {
+            move left
+            if 0,blank{
+                accept
+            }
+            if 1{
+                reject
+            }
+        } if 1, blank {
+            reject
+        }
+    }
+}","// accepts strings of the form a^nb^n for some n >= 0
+// e.g. blank, ab, aabb, aaabbb, etc.
+alphabet = {a, b, c}
+module aNbN {
+    // empty string => base case, accept
+    if blank {
+        accept
+    }
+    // cannot start with b
+    if c {
+        reject
+    }
+    // starts with a => remove the last b
+    if a {
+        changeto blank
+        move right
+        // move to the end
+        while a, b,c  {
+            move right
+        } if blank {
+            move left
+            // the last letter must be a b
+            if a, b, blank {
+                reject
+            } if c {
+                changeto blank
+                move left
+                // move back and restart
+                while a, b , c{
+                    move left
+                } if blank {
+                    move right
+                    goto aNbN
+                }
+            }
+        }
+    }
+    if b{ 
+        move left
+        move right
+        goto bmcm
+    }
+ 
+}
+
+module bmcm{
+    if a,c{
+        reject
+    }
+    if blank{
+        accept
+    }
+    if b{
+        changeto blank
+        move right
+        // move to the end
+        while b, c {
+            move right
+        }
+        if a{
+            reject
+        }
+        if blank {
+            move left
+            // the last letter must be a b
+            if b, a, blank {
+                reject
+            } if c {
+                changeto blank
+                move left
+                // move back and restart
+                while b, c ,a {
+                    move left
+                } if blank {
+                    move right
+                    goto bmcm
+                }
+            }
+        }
+    }
+
+}        ","","","Agree","Disagree","Agree","Strongly Agree","it works I suppose but wasn't the most intuitive","a way to remove spaces would make some questions a lot easier","Agree","Agree","Yes","Strongly agree","Agree","Strongly agree","Strongly agree","Strongly agree","Agree","Strongly agree","Pop-ups are fine!","-"
+"17","2/24/23 15:13:34","2/24/23 16:06:20","anonymous","","1-2 Years","Not familiar","// checks whether a binary number is divisible by 2
+alphabet = {0, 1}
+module isDiv2 {
+    // move to the end
+    while 0, 1 {
+        move right
+    } if blank {
+        move left
+        // check last letter is 0
+        if 0 {
+            move left
+            if 0 {
+                accept
+            } if 1, blank {
+            reject}
+        } if 1, blank {
+            reject
+        }
+    }
+}","// checks whether a binary number is divisible by 4 recursively
+alphabet = {0, 1}
+module isDiv4Rec {
+    // recursive case: not at the end => move closer to the end
+    if 0, 1 {
+        move right
+        goto isDiv4Rec
+    } 
+    // base case: at the end => check final letter 0
+    if blank {
+        move left
+        if 0 {
+            move left
+            if 0 {
+                accept
+            } if 1, blank {
+            reject}
+        } if 1, blank {
+            reject
+        }
+    }
+}","","","","Disagree","Agree","Strongly Agree","Strongly Agree","","I think moving to the end of the tape in one line of code should be added to make testing faster and easier.","Agree","Disagree","No","Strongly agree","Strongly agree","Strongly agree","Strongly agree","Strongly agree","Strongly agree","Strongly agree","Pop-ups are fine!","An option to execute the program automatically to the end instead of pressing step constantly."
