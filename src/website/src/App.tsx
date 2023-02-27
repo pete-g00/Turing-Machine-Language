@@ -93,13 +93,13 @@ function App() {
     transitionTime: 500,
     exampleKey: "isDiv2",
     setEditorTheme: (userConfiguration:UserConfiguration, theme:EditorTheme) => {
-      setUserConfiguration({...userConfiguration, editorTheme: theme});
+      setUserConfiguration({...userConfiguration, editorTheme: theme, isDrawerOpen: false});
     },
     setEditorFontSize: (userConfiguration:UserConfiguration, fontSize:EditorFontSize) => {
-      setUserConfiguration({...userConfiguration, editorFontSize: fontSize});
+      setUserConfiguration({...userConfiguration, editorFontSize: fontSize, isDrawerOpen: false});
     },
     setShowEditorLineNumber:(userConfiguration:UserConfiguration, showLineNumber:boolean) => {
-      setUserConfiguration({...userConfiguration, showEditorLineNumber: showLineNumber});
+      setUserConfiguration({...userConfiguration, showEditorLineNumber: showLineNumber, isDrawerOpen: false});
     },
     openDrawer:(userConfiguration:UserConfiguration) => { 
       setUserConfiguration({...userConfiguration, isDrawerOpen: true});
@@ -108,10 +108,10 @@ function App() {
       setUserConfiguration({...userConfiguration, isDrawerOpen: false});
     },
     setTransitionTime:(userConfiguration:UserConfiguration, transitionTime:number) => {
-      setUserConfiguration({...userConfiguration, transitionTime});
+      setUserConfiguration({...userConfiguration, transitionTime, isDrawerOpen: false});
     },
     setExampleKey: (userConfiguration:UserConfiguration, exampleKey:ExampleKey|undefined) => {
-      setUserConfiguration({...userConfiguration, exampleKey});
+      setUserConfiguration({...userConfiguration, exampleKey, isDrawerOpen: false});
     }
   });
 

@@ -49,8 +49,6 @@ const switchMissingBlank = `alphabet = {a, b}
 module a {
     if a {
         accept
-    } if b {
-        reject
     }
 }`;
 
@@ -230,7 +228,7 @@ test("CodeValidator throws an error if there is no switch case applying to a let
 
     expect(() => {
         codeValidator.validate();
-    }).toThrow(new Error(`The switch block doesn't have a case for each letter in the alphabet.`));
+    }).toThrow(new Error(`The switch block doesn't have a case for the letter: "b".`));
 });
 
 test("CodeValidator throws an error if there is no switch case applying to blank", () => {
@@ -240,7 +238,7 @@ test("CodeValidator throws an error if there is no switch case applying to blank
 
     expect(() => {
         codeValidator.validate();
-    }).toThrow(new Error(`The switch block doesn't have a case for each letter in the alphabet.`));
+    }).toThrow(new Error(`The switch block doesn't have a case for the letters: "b", blank.`));
 });
 
 test("CodeValidator doesn't throw an error for a valid switch block", () => {

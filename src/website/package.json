@@ -23,7 +23,7 @@
     "gh-pages": "^4.0.0",
     "mathjax-react": "^2.0.1",
     "monaco-editor": "^0.33.0",
-    "parser-tml": "^1.2.3",
+    "parser-tml": "^1.4.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.3.0",

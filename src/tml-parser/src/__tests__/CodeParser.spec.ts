@@ -138,7 +138,7 @@ test("CodeParser parses a switch block correctly", () => {
     expect(switchBlock.cases[2]).toBeInstanceOf(IfCaseContext);
     expect(switchBlock.cases[2].values).toEqual(new Set(["1"]));
 
-    expect(switchBlock.position).toEqual(new CodePosition(2, 21, 4, 1));
+    expect(switchBlock.position).toEqual(new CodePosition(2, 20, 4, 5));
 });
 
 test("CodeParser parses a move command correctly", () => {

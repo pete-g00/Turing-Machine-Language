@@ -244,20 +244,24 @@ export class CodeParser {
         const startPosition = this._wrapper.currentPosition;
         const cases:CaseContext[] = [];
 
+        let endPosition:CodePosition;
+
         this._doUntil("}", () => {
+            let newCase:CaseContext;
             if (this._wrapper.currentValue === "if") {
-                cases.push(this._parseIf());
+                newCase = this._parseIf();
             } else if (this._wrapper.currentValue === "while") {
-                cases.push(this._parseWhile());
+                newCase = this._parseWhile();
             } else {
                 throw new CodeError(this._wrapper.currentPosition, `Unexpected start of case: "${this._wrapper.currentValue}".`);
             }
+            cases.push(newCase);
+            endPosition = newCase.position;
         }, false);
         
-        const endPosition = this._wrapper.currentPosition;
-        const position = CodePosition.combine(startPosition, endPosition);
+        const position = CodePosition.combine(startPosition, endPosition!);
         
-        return new SwitchBlockContext(CodePosition.combine(position, endPosition), cases);
+        return new SwitchBlockContext(position, cases);
     }
 
     private _parseIf(): IfCaseContext {

@@ -122,13 +122,16 @@ export class CodeValidator {
 
     public validateSwitchBlock(block: SwitchBlockContext): boolean {
         const caseSet = new Set<string>();
+        const alphabetSet = new Set(this._alphabet);
+        alphabetSet.add("");
+
         let hasFlow = false;
 
         for (const switchCase of block.cases) {
             switchCase.values.forEach((letter) => {
                 if (caseSet.has(letter)) {
                     throw new CodeError(block.position, `Multiple cases present for letter "${letter}".`);
-                } else if (letter !== "" && !this._alphabet!.has(letter)) {
+                } else if (!alphabetSet.delete(letter)) {
                     throw new CodeError(switchCase.position, `The letter "${letter}" is not part of the alphabet.`);
                 }
                 caseSet.add(letter);
@@ -139,8 +142,10 @@ export class CodeValidator {
             }
         }
 
-        if (caseSet.size !== this._alphabet!.size+1) {
-            throw new CodeError(block.position, `The switch block doesn't have a case for each letter in the alphabet.`);
+        if (alphabetSet.size !== 0) {
+            const missingLetters = Array.from(alphabetSet).map(val => val.length === 0 ? "blank" : `"${val}"`);
+            const letter = missingLetters.length === 1 ? "letter" : "letters";
+            throw new CodeError(block.position, `The switch block doesn't have a case for the ${letter}: ${missingLetters.join(", ")}.`);
         }
         
         return hasFlow;

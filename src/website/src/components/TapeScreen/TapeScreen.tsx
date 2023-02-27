@@ -35,9 +35,12 @@ function TapeScreen({ tapeValue, turingMachine, setExecutingPositions, program, 
     const [tapeHeadIndex, setTapeHeadIndex] = useState(2);
     const [canGoBack, setCanGoBack] = useState(true);
     const [canStep, setCanStep] = useState(true);
-    
-    const [stepId, setStepId] = useState<NodeJS.Timeout|undefined>(undefined);
-    const [snackbarId, setSnackbarId] = useState<NodeJS.Timeout|undefined>(undefined);
+    // const [canPlay, setCanPlay] = useState(true);
+    // const [play, setPlay] = useState(false);
+   
+    const stepId = useRef<NodeJS.Timeout|undefined>(undefined);
+    const snackbarId = useRef<NodeJS.Timeout|undefined>(undefined);
+    // const playId = useRef<NodeJS.Timer|undefined>(undefined);
     
     const [msg, setMsg] = useState<string>("");
     const [showSnackbar, setShowSnackbar] = useState(false);
@@ -149,6 +152,15 @@ function TapeScreen({ tapeValue, turingMachine, setExecutingPositions, program, 
         }
     }
 
+    // useEffect(() =>  {
+    //     if (play) {
+    //         handleStep();
+    //         playId.current = setInterval(handleStep, transitionTime + 250);
+    //     } else if (playId.current) {
+    //         clearInterval(playId.current);
+    //     }
+    // }, [play]);
+
     function handleStep() {
         setCanStep(false);
         setCanGoBack(false);
@@ -175,26 +187,27 @@ function TapeScreen({ tapeValue, turingMachine, setExecutingPositions, program, 
         handleSnackbarClose();
         setExecutingPositions(executingPositions ?? []);
         
-        const stepId = setTimeout(() => {
+        stepId.current = setTimeout(() => {
             setCurrentState(tmExecutorRef.current.currentState);
             setCanStep(tmExecutorRef.current.terminationStatus === undefined);
+            // setCanPlay(tmExecutorRef.current.terminationStatus === undefined);
             setCanGoBack(true);
         }, transitionTime);
-        setStepId(stepId);
         
-        const snackbarId = setTimeout(() => {
+        snackbarId.current = setTimeout(() => {
             setShowSnackbar(true);
         }, 100);
-        setSnackbarId(snackbarId);
     }
 
     useEffect(() => {
         setCurrentState(tmExecutorRef.current.currentState);
         return () => {
-            if (stepId) {
-                clearTimeout(stepId);
-            } if (snackbarId) {
-                clearTimeout(snackbarId);
+            if (stepId.current) {
+                clearTimeout(stepId.current);
+            } if (snackbarId.current) {
+                clearTimeout(snackbarId.current);
+            // } if (playId.current) {
+            //     clearInterval(playId.current);
             }
         };
     }, []);
@@ -221,6 +234,9 @@ function TapeScreen({ tapeValue, turingMachine, setExecutingPositions, program, 
             </div>
             <div className='buttons'>
                 <Button color='secondary' onClick={goToTapeInput} disabled={!canGoBack} variant='contained'>Back</Button>
+                {/* <Button onClick={() => setPlay(!play)} disabled={!canPlay} variant='contained'>
+                    {play ? "Pause" : "Play"}
+                </Button> */}
                 <Button onClick={handleStep} disabled={!canStep} variant='contained'>Step</Button>
             </div>
             <Snackbar open={showSnackbar} onClick={() => setShowSnackbar(true)} onClose={handleSnackbarClose} 

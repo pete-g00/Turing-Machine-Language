@@ -379,3 +379,14 @@
 * *2 hours* Evaluation sessions
 * *1 hour* Meeting with Ornela
 
+### 24 Feb 2023
+
+* *3 hours* Evaluation sessions- all sessions done :)
+* *0.5 hours* Fixed position of switch block in `CodeParser`
+* *0.5 hours* Changed `CodeValidator` error for missing switch case so that it specifies what the missing letter is
+* *0.5 hours* Tried adding the play button- initial attempt didn't work (probably since there are many state changes happening at the same time); will try to deal with it later.
+
+## Week 8
+
+### 27 Feb 2023
+
