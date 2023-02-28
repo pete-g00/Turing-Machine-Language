@@ -1,65 +1,93 @@
 \chapter{Evaluation} 
-In the project, there were 2 aspects to evaluate- the TML and the website. Both aspects were evaluated continually through unit tests during production.
+In the project, there were 2 aspects to evaluate- the TML and the website. Both aspects were evaluated continually through unit tests during production and tested using a user evaluation.
 
-After the website had been completed, a user evaluation was conducted on second year computing students. TMs are taught after to students that have few years of programming experience, and for this reason second years were chosen. Note that they had little familiarity, if any, with Turing Machines and were introduced to both TMs and TML during the evaluation session. The aim of the evaluation was to:
+After the website had been completed, a user evaluation was conducted on 18 second year computing students. TMs are taught to students that have few years of programming experience, and for this reason second years were chosen. Note that they had little familiarity, if any, with Turing Machines and were introduced to both TMs and TML during the evaluation session. The aim of the evaluation was for them to get acquainted with the two concepts, and then to:
 \begin{itemize}
     \item compare TMs and TML programs;
-    \item understand whether students believe writing a TML program would help them in drawing a TM; and
-    \item evaluate the structure of the website.
+    \item understand whether writing a TML program would help in drawing a TM; and
+    \item evaluate the website.
 \end{itemize}
-The evaluation session also served as a great opportunity to ask for any more features to be added to the website and the language.
+The evaluation session also served as a great opportunity to ask for any features to be added to the website and the language.
 
-During the evaluation session, students were first introduced to the concept of TML, and expected to understand what language two mystery programs accept. Then, they were introduced to TMs, and expected to do the same thing. Finally, they were asked to write some programs in the TML. Some of the difficult programs to write were optional, although many attempted them. The evaluation took about 50 minutes to be completed. The students were asked to fill out a worksheet. They were expected to use the website throughout the session. This helped them get more familiar with the language and TMs, and allowed them to test their own programs for correctness. It also allowed for the evaluation of both the website and the language. After they had completed the worksheet, they completed a survey to evaluate the language and the website. Both the worksheet and the survey are given in the appendix.
+During the evaluation session, students were first introduced to TML programs. They were then expected to understand what language two mystery TML programs accept. This was done by checking whether the programs accepted some values, which should have helped them understand the way the program operates and decode the language it accepts. They were expected to use the website to help them follow the code and understand the steps in execution. Then, they were introduced to TMs, and expected to decode 2 TMs in a similar manner. Since the website can only execute TML programs, they were given TML programs for the TM. Note however that this did not defeat the purpose of testing TMs since:
+\begin{itemize}
+    \item most students found it easier to follow execution in TMs (a diagram) than TML (a program); and
+    \item the programs given were complete TML programs, which are quite close to TMs.
+\end{itemize}
+Finally, they were asked to write some programs in the TML. Like in the previous sections, they were free to use the website to write the programs and test its correctness. The first few programs were quite similar to the code they had seen before. The remaining programs were somewhat more difficult, and for this reason they were optional. Nonetheless, many students attempted them and wrote impressive programs! The evaluation took about 50 minutes to be completed. The students were asked to fill out a worksheet with their answers. 
+
+After they had completed the worksheet, they completed a survey to evaluate the language and the website. To avoid writing programs on paper, students were asked to copy their code from the final part of the worksheet to the survey. The results of the survey are discussed in detail in the next section. Both the worksheet and the survey are given in the appendix. 
 
 \section{Evaluation Results}
+\subsection{Parser and Language Evaluation}
+The parser was continually tested during production to ensure correctness. This was achieved using unit testing. They were used to test all aspects of the parser, and were extensive. In fact, the unit tests had more than $95\%$ code coverage.
 
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.35]{data/tml-evaluation.png}
+    \caption{A violin plot that summarises the results of the survey relating to the TML with respect to the 4 criteria. The agreement value refers to how much the user agrees to the statement: $-1$ is strongly disagree; $-0.5$ disagree; $0.5$ agree and $1$ strongly agree. The whiskers show the range of answers, e.g. nobody said they strongly disagreed with criterion 1. Moreover, the density is proportional to the number of participants answering the question with that value, e.g. most people answered criterion 1 with the value $0.5$ (agree).}
+    \label{fig:tml-evaluation}
+\end{figure}
 
-
-% Unit tests all pass. 
-
-% User testing results given by section.
-
-\subsection{Language Evaluation}
-The language was continually tested during production to ensure correctness. This was achieved using unit testing. They were used to test all aspects of the parser, and were extensive. In fact, the unit tests had more than $95\%$ code coverage in each part.
-
-During user evaluation, users were asked to evaluate the langugage in the following criteria:
+During user evaluation, users were asked to evaluate the language in the following criteria:
 \begin{enumerate}
     \item TML is easy to understand
     \item TML is easy to write programs in
     \item I was able to fix errors in my code using the error messages provided
     \item I was able to easily reason executing a program on a tape
 \end{enumerate}
-They were asked to rate how much they agreed with each statement, and the result is summarised for each criterion in the violin plot below:
-\begin{figure}[H]
-    \centering
-    \includegraphics[scale=0.75]{data/tml-evaluation.png}
-    \caption{A violin plot that summarises the results of the survey relating to the TML. All the criteria are listed above. The agreement value refers to how much the user agrees to the statement- $-1$ is strongly disagree; $-0.5$ disagree; $0.5$ agree and $1$ strongly agree.}
-\end{figure}
-\noindent It is clear that most students found the language easy to understand. In particular, the comments in the survey showed that the students found the language intuitive. However, when complex programs were being executed, some students were struggling to follow the code and reason its execution. Similarly, some also found it difficult to write complex programs, such as $a^n b^n c^n$, or understand why it is not as easy as some of the other programs they had encountered before, in particular $a^n b^n$. Nonetheless, many found the error messages quite useful and it helped them write correct programs. 
+They were asked to rate how much they agreed with each statement, and the result is summarised for each criterion in Figure \ref{fig:tml-evaluation}. 
 
-The TML was then directly compared to TMs. That is, students were asked to compare TMs and TML programs in the following criteria:
+It is clear that most students found the language easy to understand. However, a smaller number of students believed that the language is easy to write programs in- the solutions to the worksheet illustrate that most students were able to correctly execute a program on a tape, and see whether it accepts a value, but found it harder to write (correct) programs. This is quite expected given that they were only exposed to the language for about an hour.
+
+% the solutions to the worksheet illustrate that most students were able to correctly execute a program on a tape and see whether it accepts a value, but found it harder to describe all the types of values they accept. For instance, for a program that accepts values that are 3 mod 4, some students claimed that it accepts odd numbers. 
+
+Most students found it easy to reason executing a program on a tape- they were able to run the code on the website and follow the code quite easily. Many found the error messages quite useful and it helped them write correct programs, but few disagreed with this. Some of the error messages could have been given more details, for example a missing case in a switch block did not identify what letter in the case was missing. Moreover, there was a minor bug in the position of the switch block (where it ended one line later than the correct position). The feedback from students helped identify these issues, and they were fixed in due time. 
+% Also, some students also did not realise that they could hover over the error to see a message.
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.35]{data/tml-v-tm.png}
+    \caption{A violin plot that summarises the results of the survey that compare TM and TML with respect to the 2 criteria.}
+    \label{fig:tml-v-tm}
+\end{figure}
+
+The TML was then directly compared to TMs. In particular, students were asked to compare TMs and TML programs in the following criteria:
 \begin{enumerate}
     \item I am more confident in writing a program in TML than drawing a TM
     \item I find it easier to reason what a TML program accepts than a TM
 \end{enumerate}
-The students were asked to rate how much they agreed with each statement, and the result is summarised for each criterion in the violin plot below:
-\begin{figure}[H]
-    \centering
-    \includegraphics[scale=0.75]{data/tml-v-tm.png}
-    \caption{A violin plot that summarises the results of the survey that compare TM and TML.}
-\end{figure}
-\noindent The results here are more interesting. Overall, students are more confident with TML than TM. This is somewhat expected since the worksheet focuses much more on TML, and students were not asked to draw a TM. Nonetheless, it is clear that the students agree to a lesser extent that it is easier to reason a TML program than a TM. This is quite expected, and I believe they would have found it easier to reason how a TM executes than a TML program since diagrams are easier to follow than code in general. 
+The students were asked to rate how much they agreed with each statement, and the result is summarised for the two criteria in Figure \ref{fig:tml-v-tm}. 
 
-The students were then asked whether they would consider writing a TML program before drawing a TM.
-\begin{figure}[H]
+Overall, students seem to be more comfortable with TML than TM. They were more confident writing a TML than drawing a TM- this is expected since they were not asked to draw a TM. However, it is surprising that many found it easier to reason a TML program than a TM. This is because many claimed that it is easier to follow a diagram than code. Nonetheless, the students might have found it easier to reason a TML program since the worksheet focuses much more on TML than TM.
+
+% Students were also given an opportunity to make any general comments about the language and any features they would like to be added. Since the language has a similar structure to Java, a language that the students are quite familiar with, they found the language quite intuitive and easy to understand. Some mentioned that they struggled with the semantics of the language when writing code- as they weren't formally introduced to the syntax, this was expected. In particular, some students had changed the order of commands in a basic block, which meant that the code did not execute the way they had expected.
+
+The students were then asked whether they would consider writing a TML program before drawing a TM. The response of this question is summarised in Figure \ref{fig:use-tml}. 
+
+When drawing a TM for some algorithm, it is quite helpful to plan the machine beforehand. TML provides an opportunity where it is possible to reason in detail how the algorithm is meant to execute on a tape without considering the states and transitions in a TM. Moreover, it is quite easy to naturally convert a TML to a TM. I believe this is the main selling point of the language. The results clearly show that many would consider drawing it. The hesitation might result from the little experience that they had gotten.
+% ; I would imagine that they would benefit writing a TML program, especially before drawing some complex TMs.
+
+\begin{figure}
     \centering
-    \includegraphics[scale=0.75]{data/use-tml.png}
+    \includegraphics[scale=0.35]{data/use-tml.png}
     \caption{A histogram that summarises whether the users would consider writing a TML program before drawing a TM. 0 means no; 0.5 means maybe; and 1 means yes.}
+    \label{fig:use-tml}
 \end{figure}
-\noindent When drawing a TM, it is quite helpful to plan the machine beforehand. TML provides an intermediate opportunity where it is possible to reason in quite a low-level how to execute on a tape, but still keeping it a programming language which makes it easy to write. The results clearly show that many would consider drawing it. The hesitation might result from the little experience that they had gotten; I would imagine that they would benefit writing a TML program especially before drawing some complex TMs.
 
 \subsection{Website Evaluation}
+Like with the language, the website was also continually tested during production for correctness. This was achieved through unit testing. Unlike the testing for language, this was however less successful due to the limits in mocking frameworks and time constraints. Nonetheless, the tests covered all the major parts of the website and ensured that all the functionalities implemented were correct.
+% This was because of the use of frameworks in the website. They were mocked during testing, so all the functionalities they provide could not be tested completely.
 
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.35]{data/website-evaluation.png}
+    \caption{A violin plot that summarises the results of the survey relating to the website with respect to the 7 criteria.}
+    \label{fig:website-evaluation}
+\end{figure}
+
+During the user evaluation, the students were expected to use the website to understand TMLs and TMs. For this reason, they were able to evaluate the website from their experience. In the survey, they were asked to evaluate the website in the following 7 criteria:
+% Note that only the homepage could be evaluated; the documentation was not evaluated since I directly explained how the TML programs and TMs work. 
 \begin{enumerate}
     \item The website is easy to follow
     \item The presentation of the website is intuitive
@@ -69,76 +97,23 @@ The students were then asked whether they would consider writing a TML program b
     \item The code execution was easy to follow
     \item The code editor was easy to use
 \end{enumerate}
+The results of the survey are summarised in Figure \ref{fig:website-evaluation}. 
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[scale=0.75]{data/website-evaluation.png}
-    \caption{A violin plot that summarises the results of the survey relating to the website.}
-\end{figure}
+It is evident that most found the website easy to follow and intuitive to use. Initially, there were a few bugs present in the website, e.g. the TM did not change to the latest version when tape execution began. However, in later sessions, most students believed that the website had few bugs. Most also found the website to be fast and complete. 
 
+Some did not find code execution easy to follow- this was particularly the case with long programs where students had to scroll to find the currently executing block of code. Also, many found the code editor easy to use. There were some issues in using the code editor during the first session- the code cannot be edited while being executed, but there was no feedback to inform the user about this issue. In the later sessions, a warning pop-up was added to warn them of this issue and students were able to fix the issue easily.
 
-% How good is your solution? How well did you solve the general problem, and what evidence do you have to support that?
+% Following the user evaluation, it is clear that the TML has a lot of potential. Moreover, it might be easier to learn TML than TMs, although the result is not conclusive. I believe students will benefit from using TML, at least for planning how to draw TMs.
+% TODO: Improve conclusion of evaluation
 
-% \section{Guidance}
-% \begin{itemize}
-%     \item
-%         Ask specific questions that address the general problem.
-%     \item
-%         Answer them with precise evidence (graphs, numbers, statistical
-%         analysis, qualitative analysis).
-%     \item
-%         Be fair and be scientific.
-%     \item
-%         The key thing is to show that you know how to evaluate your work, not
-%         that your work is the most amazing product ever.
-% \end{itemize}
+\section{Limitations to Evaluation}
+Due to the time constraints of the project, there were some limitations to the evaluation, in user evaluation. The biggest limitation was the length of the evaluation session. It was hard to find a balance between a productive session and a short session. 
+% Also, the questions were made quite simple since the intention was not to test the student's capability, but instead 
+% In fact, the first evaluation session took considerably longer than an hour, after which I made substantial changes to the questions (i.e. made some easier and some others optional) to ensure that it fits within an hour!
+For this reason, it was not possible to test the students' ability to draw TMs. Moreover, a significant portion of the question do not require the student to understand TMs or TML programs; they can just run the code on the website and get the answer. This was done to help the students grasp the language easily. When it came to describing the values that a program/TM accepted, it was clear that some had not understood the program. For instance, in a mystery program that accepts values that are 3 mod 4, some students claimed that the program accepts all odd numbers!
+% This was deliberately not sufficient for some of the questions present, and showed that they had not fully understood the program/TM.
+Moreover, although students were asked to write some TM programs, this could not be tested completely. In fact, the core questions only involved making minor changes to the programs they were given; it was only the optional questions that truly tested their ability to write TM programs and reason about them. 
 
-% \section{Evidence}
-% Make sure you present your evidence well. Use appropriate visualisations, 
-% reporting techniques and statistical analysis, as appropriate. The point is not
-% to dump all the data you have but to present an argument well supported by evidence gathered.
+% Finally, the sample size for the evaluation is quite small- only 18 people took part. So, any result from the evaluation is not conclusive.
 
-% If you use numerical evidence, specify reasonable numbers of significant digits; don't state ``18.41141\% of users were successful'' if you only had 20 users. If you average \textit{anything}, present both a measure of central tendency (e.g. mean, median) \textit{and} a measure of spread (e.g. standard deviation, min/max, interquartile range).
-
-% You can use \texttt{siunitx} to define units, space numbers neatly, and set the precision for the whole LaTeX document. 
-
-% % setup siunitx to have two decimal places
-% \sisetup{
-% 	round-mode = places,
-% 	round-precision = 2
-% }
-
-% For example, these numbers will appear with two decimal places: \num{3.141592}, \num{2.71828}, and this one will appear with reasonable spacing \num{1000000}.
-
-
-
-% If you use statistical procedures, make sure you understand the process you are using,
-% and that you check the required assumptions hold in your case. 
-
-% If you visualise, follow the basic rules, as illustrated in Figure \ref{fig:boxplot}:
-% \begin{itemize}
-% \item Label everything correctly (axis, title, units).
-% \item Caption thoroughly.
-% \item Reference in text.
-% \item \textbf{Include appropriate display of uncertainty (e.g. error bars, Box plot)}
-% \item Minimize clutter.
-% \end{itemize}
-
-% See the file \texttt{guide\_to\_visualising.pdf} for further information and guidance.
-
-% \begin{figure}[htb]
-%     \centering
-%     \includegraphics[width=1.0\linewidth]{images/boxplot_finger_distance.pdf}    
-
-%     \caption{Average number of fingers detected by the touch sensor at different heights above the surface, averaged over all gestures. Dashed lines indicate
-%     the true number of fingers present. The Box plots include bootstrapped uncertainty notches for the median. It is clear that the device is biased toward 
-%     undercounting fingers, particularly at higher $z$ distances.
-%     }
-
-%     % use the notation fig:name to cross reference a figure
-%     \label{fig:boxplot} 
-% \end{figure}
-
-
-\section{Evaluation Limitations}
-
+% In terms of unit testing, the website has not been fully tested. This is because some of the functionalities of the website have not been fully mocked. In particular, the editor has not been mocked. This means that it is not possible to validate certain aspects of the editor, for example the user should not be able to edit the website during execution. By using a more sophisticated mocking technique, this should be possible to achieve, but this was not implemented in the project due to time constraints.

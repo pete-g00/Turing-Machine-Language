@@ -45,6 +45,7 @@
 
 \usepackage{microtype} % improve typography
 \usepackage{anyfontsize} % allow any size of font
+\let\openbox\relax
 \usepackage{amsmath,amsfonts,amsbsy,amssymb,amsthm}
 \usepackage[style]{abstract} % abstract styling
 
@@ -58,15 +59,18 @@
 \usepackage[compact]{titlesec} % section heading formatting
 \usepackage{color} % colors
 \usepackage[table,svgnames]{xcolor}
-\usepackage{parskip} % adjustable line spacing
 \usepackage{lstautogobble, listings} % nice code listings
 \usepackage{tikz}
 
 \usetikzlibrary{automata, positioning, arrows}
 
 % remove dots from ToC
+\let\starttoc\relax
 \usepackage[titles]{tocloft} 
 \renewcommand{\cftdot}{}
+
+\usepackage{parskip} % adjustable line spacing
+
 % increase spacing in ToC to avoid ascenders and descenders colliding
 \renewcommand\cftsecafterpnum{\vskip 3pt}
 \renewcommand\cftbeforechapskip{5pt}

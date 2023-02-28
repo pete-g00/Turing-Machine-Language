@@ -11,7 +11,7 @@ A \emph{Turing Machine} (TM) is a collection $(Q, \Sigma, \delta, q_0)$, where:
     \item $\delta \colon Q \setminus \{q_Y, q_N\} \times \Sigma^+ \to Q \times \Sigma^+ \times \{\texttt{left}, \texttt{right}\}$, where $\Sigma^+ = \Sigma \cup \{\texttt{blank}\}$, is the transition function; and
     \item $q_0 \in Q$ is the starting state.
 \end{itemize}
-We can represent a TM as a directed graph, with vertices as states and edges as transitions. For example, the following is a TM:
+This definition is taken from \cite{dawson2007essential}. We can represent a TM as a directed graph, with vertices as states and edges as transitions. For example, the following is a TM:
 \begin{figure}[H]
     \centering
     \begin{tikzpicture}

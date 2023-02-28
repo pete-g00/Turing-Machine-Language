@@ -392,3 +392,7 @@
 
 * *1 hour* Analysed some evaluation results using python
 * *2 hours* Started working on evaluation section in the dissertation- language evaluation is mostly done
+
+### 28 Feb 2023
+
+* *3 hours* Completed evaluation
