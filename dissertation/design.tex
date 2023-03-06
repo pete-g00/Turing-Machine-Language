@@ -1,0 +1,34 @@
+\chapter{Design}
+% TODO: Expand on this? Make it 2 pages long
+\section{Language}
+The Turing Machine Language (TML) should be a language equivalent to TMs in tape execution. That is, for any TM that can be run on some tape, there should exist a TML program that can run on the same tape exactly in the same manner.
+
+For TML to replicate TMs, it must support the following 3 operations:
+\begin{itemize}
+    \item we can change the tapehead value to some letter in the alphabet;
+    \item we can move the tapehead pointer left or right; and
+    \item we can move from one state to another (including the accept and the reject state).
+\end{itemize}
+The first two operations are expected to be directly supported. The third operation might be implicitly supported since the language need not have the concept of a state.
+
+In TMs, the transition function depends on tapehead value and the current state. We expect this to be supported within the TML. Since the TML might not support states, this should be done in a way that combines well with the 3 main operations of a TM.
+
+It is important that TML is not just another representation for TMs. The aim of the TML is that it is equivalent to TMs, but more closely resembles a traditional programming language (PL) than a TM. For this reason, the language should follow syntax that is common in traditional PLs. It should also ensure that the details of TM are abstracted- it is meant to be an intermediate representation of a TM.
+
+\section{Parser}
+The parser should take a program in TML and convert it into a TM or execute it on a tape. This will be done in multiple steps as given below:
+\begin{itemize}
+    \item it should perform syntactic analysis on the source code and try to convert it into an AST or report a syntax error;
+    \item it should then perform contextual analysis on the AST to check for any non-syntactical errors, e.g. the equivalent of a missing case of the transition function $\delta$ or an undefined state;
+    \item it should then convert the AST into a TM; and
+    \item it should also be able to execute the program on a tape. 
+\end{itemize}
+
+It is important that the parser be written in a way that is compatible with web deployment- the parser will be used in the product. Moreover, since the website is expected to have live syntax highlighting, the error messages should be precise and clear; they should help the user fix the bug in their code.
+
+\section{Product}
+The website should allow the parser to be used. In particular, it should allow the user to type in a program and then:
+\begin{itemize}
+    \item convert it into a TM; or
+    \item run it on a tape, one step at a time.
+\end{itemize}

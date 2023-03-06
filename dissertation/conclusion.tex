@@ -3,23 +3,19 @@
 % Summarise the whole project for a lazy reader who didn't read the rest (e.g. a prize-awarding committee). This chapter should be short in most dissertations; maybe one to three pages.
 % \section{Guidance}
 % \begin{itemize}
-%     \item
-%         Summarise briefly and fairly.
-%     \item
-%         You should be addressing the general problem you introduced in the
-%         Introduction.        
-%     \item
-%         Include summary of concrete results (``the new compiler ran 2x
-%         faster'')
-%     \item
-%         Indicate what future work could be done, but remember: \textbf{you
+%     \item Summarise briefly and fairly.
+%     \item You should be addressing the general problem you introduced in the Introduction.        
+%     \item Include summary of concrete results (``the new compiler ran 2x faster'')
+%     \item Indicate what future work could be done, but remember: \textbf{you
 %         won't get credit for things you haven't done}.
 % \end{itemize}
 
-% \section{Summary}
+\section{Summary}
+TODO
 % Summarise what you did; answer the general questions you asked in the introduction. What did you achieve? Briefly describe what was built and summarise the evaluation results.
 
-% \section{Reflection}
+\section{Reflection}
+TODO
 % Discuss what went well and what didn't and how you would do things differently if you did this project again.
 
 \section{Future Work}
@@ -29,18 +25,55 @@ There are many additions that can be made to the product in future. Some of thes
 \subsection{Language}
 Although the language is equivalent to TMs, it is still quite low-level. There are many common paradigms that can be added to the language. These include:
 \begin{enumerate}
-    \item the ability to traverse to the end (or the start) in one command, e.g. \texttt{move start};
+    \item the ability to traverse to the end (or the start) in one command, e.g. \texttt{move end}; and
     \item an else clause (an if block for the remaining characters); 
     % \item the ability to shift all the characters by one blank space to left or right, e.g. \texttt{shift left} and \texttt{shift right}; and
     \item the ability for modules to be parametrised with respect to letters.
 \end{enumerate}
-The first feature is a very common feature seen in plenty of programs. It was brought up plenty of times during the evaluation sessions and given as an example of a feature to add in the survey. The second point is also somewhat common and was suggested by a student. These two features should not be difficult to add to the language. 
+We illustrate these issues with the following program:
+\begin{lstlisting}[language=TML]
+// accept strings that end in opposite letters
+alphabet={a, b}
+module oppositeLetters {
+    if a {
+        move right
+        while a, b {
+            move right
+        } if blank {
+            move left
+            if b {
+                accept
+            } if a, blank {
+                reject
+            }
+        }
+    } if b {
+        move right
+        while a, b {
+            move right
+        } if blank {
+            move left
+            if a {
+                accept
+            } if b, blank {
+                reject
+            }
+        }
+    }
+}
+\end{lstlisting}
+
+The first feature is a very common feature found in program- many programs involving some check on the final character. For example, in the program above, which is relatively simple, we are traversing to the end twice- at lines 5-8 and 17-21. This issue was brought up plenty of times during the evaluation sessions and was also given as an example of a feature to add in the survey. It would be a highly beneficial feature to add and should be quite a simple extension.
+
+The second point is also somewhat common and was suggested in the survey. At many points during execution, we want to do something for a single letter and something different for the other letters. For instance, at lines 10-13, we want the program to accept the string if and only if the letter is a \texttt{b}. If the alphabet was longer, this would be quite inefficient. Also, another point that was raised during the survey was that the language only makes use of pattern-matching, and could be more flexible. Hence, this would be a great feature to be added. 
 
 % The final feature was also discovered during the survey. Students were quite frustrated when they realised that the programs they had written would not work since it would introduce a blank entry within the middle of the tape. This feature would certainly remedy this issue, but adding this feature might make TML much simpler than TMs- students are \emph{expected} to write programs in a way that ensures that no spaces are added to the tape. Nonetheless, it is possible to write a module that shifts values to the left or the right, so if implemented, this can be added as an in-built module.
 
-The final feature is quite interesting. There are many programs where some modules are very similar and only differ in a character. For instance, in the \texttt{palindrome} program with alphabet $\{\texttt{a}, \texttt{b}\}$, the case where the first letter is \texttt{a} or \texttt{b} are almost identical, but only differ in the letters to accept or reject. Hence, this would be a great feature to add, and would get rid of many duplicate/similar code within programs! This would also serve as a benefit to TMs since the ability to parametrise is not possible there.
+The final feature is quite interesting. There are many programs where some modules are very similar and only differ in a character. In particular, the program above has 2 essentially mirrored blocks at lines 4-16 and 16-28. In fact, the only difference in these lines of code is at lines 10/12 and 22/24, where the letters \texttt{a} and \texttt{b} are the other way round. So, I believe this would be a useful feature, and would get rid of many duplicate/similar code within programs! Adding this feature would also serve as a benefit to TMs since this issue also exists in TMs.
 
-Another feature that could be added to the language is the ability to convert a TM into a `good' TML program. Currently, the proof of equivalence only provides a way to convert TMs into complete TML programs. Moreover, the proof relies on a one-way conversion from valid TML programs to complete TML programs. Hence, it would be a good idea to consider converting a TM (or equivalent, a complete TML program) to a TML program that is nested, and not complete. One way to do so would be to achieve maximum nesting by replacing \texttt{goto} commands with the actual module, however this is not optimal- there would be a lot of duplicate code present. Instead, it might be a good idea to only replace modules that are only called once, and to keep modules that are called multiple times separate. 
+Finally, there is an open question about the language- the ability to convert a TM into a `good' TML program. Currently, the proof of equivalence makes use of an algorithm to convert a valid TML program to a complete TML program, but not vice versa. Complete TML programs can be thought of as another representation for TMs, and so add no further benefit to the language. It is the ability to nest statements within if blocks that really makes the language rich and different to TMs. For this reason, I believe it would be a good idea to devise an algorithm to convert a TM (or a complete TML program) to a nested TML program.
+
+% One way to do so would be to achieve maximum nesting by replacing \texttt{goto} commands with the actual module, however this is not optimal- there would be a lot of duplicate code present. Instead, it might be a good idea to only replace modules that are only called once, and to keep modules that are called multiple times separate. The main benefit of this is that complete TML programs are essentially another representation of TMs and quite distant from TML programs. I believe valid, non-complete
 
  \subsection{Website}
 There are many possible improvements to the website, which were discovered during production and user evaluation. These were some of the features that can be added:
@@ -48,11 +81,11 @@ There are many possible improvements to the website, which were discovered durin
     \item support for direct execution of a TM;
     \item a play button on the tape section to execute long programs on long tapes without pressing the step button hundreds of times;
     \item the ability to collapse the panels; and
-    \item the ability to customise the number of tape entries to be shown.
+    \item the ability to customise the number of tape entries to be shown so that it is easier to follow code execution on long strings.
 \end{itemize}
 All of these are great features that could be added to the website and would make it more usable. They would also make it easier to keep track of code execution. 
 
-Another feature that can be added is to make the website more responsive. The FSM is currently being produced using the graphviz framework. The resulting image has hard-coded dimensions which makes it hard to make the website responsive. It is not completely possible to make the graph fixed; only the maximum size can be specified. Moreover, for complex FSMs with 20 nodes, the nodes are quite small so it is hard to follow code. To fix this, one of the following features could be added:
+Another feature that can be added is to make the website more responsive. The FSM is currently being produced using the graphviz framework. The resulting image has hard-coded dimensions which makes it hard to make the panel responsive. It is not completely possible to make the graph fixed; only the maximum size can be specified. Moreover, the constraints are not taken into consideration when the FSM is produced. This means that for complex FSMs with about 20 nodes, the nodes are quite small so it is hard to follow execution. To fix this, one of the following features could be added:
 \begin{itemize}
     \item the ability to zoom in and drag the FSM panel; or
     \item the ability to scroll the FSM panel.

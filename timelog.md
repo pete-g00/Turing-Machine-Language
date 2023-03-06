@@ -400,3 +400,15 @@
 ### 1 Mar 2023
 
 * *1 hour* Proof read the evaluation
+
+### 2 Mar 2023
+
+* *1 hour* Weekly meeting with Ornela
+
+## Week 9
+
+### 6 Mar 2023
+
+* *0.5 hours* Added motivation and objectives
+* *1.5 hours* Moved TML content to appendix and replaced it with design and implementation
+* *0.5 hours* Added design section for parser and website (probably will need to make it longer?)

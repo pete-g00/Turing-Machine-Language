@@ -1,0 +1,59 @@
+// accepts strings that are equal to their reverse
+alphabet = {a, b}
+module palindrome {
+    // base case: accept
+    if blank {
+        accept
+    } 
+    // a: remove it and check the final character is a
+    if a {
+        changeto blank
+        move right
+        // move to the end
+        while a, b {
+            move right
+        } if blank {
+            move left
+            // restart if a (or blank)
+            if blank, a {
+                changeto blank
+                move left
+                goto restart
+            } 
+            // ends in b => reject
+            if b {
+                reject
+            }
+        }
+    }
+    // b: remove it and check the final character is b
+    if b {
+        changeto blank
+        move right
+        // move to the end
+        while a, b {
+            move right
+        } if blank {
+            move left
+            // restart if b (or blank)
+            if blank, b {
+                changeto blank
+                move left
+                goto restart
+            } 
+            // ends in a => accept
+            if a {
+                reject
+            }
+        }
+    }
+}
+// go to the start and restart execution
+module restart {
+    while a, b {
+        move left
+    } if blank {
+        move right
+        goto palindrome
+    }
+}
