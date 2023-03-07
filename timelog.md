@@ -412,3 +412,9 @@
 * *0.5 hours* Added motivation and objectives
 * *1.5 hours* Moved TML content to appendix and replaced it with design and implementation
 * *0.5 hours* Added design section for parser and website (probably will need to make it longer?)
+
+### 7 Mar 2023
+
+* *0.5 hours* Added example for TM execution in background
+* *1.5 hours* Added background for parser
+* *0.5 hours* Updated design for parser

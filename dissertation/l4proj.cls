@@ -62,7 +62,7 @@
 \usepackage{lstautogobble, listings} % nice code listings
 \usepackage{tikz}
 
-\usetikzlibrary{automata, positioning, arrows}
+\usetikzlibrary{automata, positioning, arrows, shapes}
 
 % remove dots from ToC
 \let\starttoc\relax

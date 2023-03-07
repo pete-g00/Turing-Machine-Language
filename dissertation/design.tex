@@ -1,6 +1,8 @@
 \chapter{Design}
 % TODO: Expand on this? Make it 2 pages long
 \section{Language}
+% TODO: Some mention of general language design? e.g. non-ambiguous?
+
 The Turing Machine Language (TML) should be a language equivalent to TMs in tape execution. That is, for any TM that can be run on some tape, there should exist a TML program that can run on the same tape exactly in the same manner.
 
 For TML to replicate TMs, it must support the following 3 operations:
@@ -16,19 +18,25 @@ In TMs, the transition function depends on tapehead value and the current state.
 It is important that TML is not just another representation for TMs. The aim of the TML is that it is equivalent to TMs, but more closely resembles a traditional programming language (PL) than a TM. For this reason, the language should follow syntax that is common in traditional PLs. It should also ensure that the details of TM are abstracted- it is meant to be an intermediate representation of a TM.
 
 \section{Parser}
-The parser should take a program in TML and convert it into a TM or execute it on a tape. This will be done in multiple steps as given below:
-\begin{itemize}
-    \item it should perform syntactic analysis on the source code and try to convert it into an AST or report a syntax error;
-    \item it should then perform contextual analysis on the AST to check for any non-syntactical errors, e.g. the equivalent of a missing case of the transition function $\delta$ or an undefined state;
-    \item it should then convert the AST into a TM; and
-    \item it should also be able to execute the program on a tape. 
-\end{itemize}
+The parser should take a program in TML and convert it into a TM or execute it on a tape. 
 
-It is important that the parser be written in a way that is compatible with web deployment- the parser will be used in the product. Moreover, since the website is expected to have live syntax highlighting, the error messages should be precise and clear; they should help the user fix the bug in their code.
+It should first perform lexical analysis that produces a stream of tokens. However, since we expect the language to be quite simple, this stage might be unnecessary- it should be fine to just use a stream of source code phrases.
+
+Next, the stream of tokens should be parsed into an AST. Although there are many ways to implement the parser, the parser should be able to correctly identify any syntax errors, and give clear and succinct error messages.
+
+There are many frameworks that can perform lexical and syntactic analysis given a grammar definition for the language. It might be beneficial to use these since they are more likely to be correct and robust. Moreover, for complex languages, it can be quite difficult and time-consuming to construct a correct parser by hand. The TML is expected to be quite simple, so this might not be a relevant issue.
+
+After the AST has been constructed, semantic analysis should be performed. Since the language is expected to be simple, it will likely not make use of a type system. Hence, there should be no need to do type checking. On the other hand, it is expected that the language makes use of identifiers, e.g. to identify the equivalent of states for transition. Hence, it is expected that there is some scope checking in this stage. Also, like with a FSM representation of TM, we should also ensure that the transition data is complete (i.e. we specify where we transition to for each letter in the alphabet).
+
+Finally, the AST should be used to generation code. There are 2 things to be done here- converting a program into a TM and executing it. To do so, we would need to have some representation of a TM. It is likely a good idea to use the formal definition instead of a directed graph representation- the formal definition should make execution much easier to implement.
+
+It is possible to avoid defining execution and just rely on execution of a TM (and hence create a true compiler). However, it might be more optimal to define execution directly on TML programs. In particular, the language might provide shortcuts that TM does not have which could make execution more efficient.
+
+It is important that the parser be written in a way that is compatible with web deployment- the parser will be used in the product. Moreover, since the website is expected to have live syntax highlighting, the error messages should help the user fix any bugs in their code.
 
 \section{Product}
 The website should allow the parser to be used. In particular, it should allow the user to type in a program and then:
 \begin{itemize}
     \item convert it into a TM; or
-    \item run it on a tape, one step at a time.
+    \item run it on a valid tape, one step at a time.
 \end{itemize}

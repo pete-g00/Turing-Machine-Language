@@ -32,7 +32,7 @@ Although the language is equivalent to TMs, it is still quite low-level. There a
 \end{enumerate}
 We illustrate these issues with the following program:
 \begin{lstlisting}[language=TML]
-// accept strings that end in opposite letters
+// accept strings that start and end with opposite letters
 alphabet={a, b}
 module oppositeLetters {
     if a {
@@ -75,7 +75,9 @@ Finally, there is an open question about the language- the ability to convert a 
 
 % One way to do so would be to achieve maximum nesting by replacing \texttt{goto} commands with the actual module, however this is not optimal- there would be a lot of duplicate code present. Instead, it might be a good idea to only replace modules that are only called once, and to keep modules that are called multiple times separate. The main benefit of this is that complete TML programs are essentially another representation of TMs and quite distant from TML programs. I believe valid, non-complete
 
- \subsection{Website}
+% TODO: Maybe some mention of extension to Church-Turing Thesis (like a direct proof of equivalence between lambda-calculus and TML?)
+
+ \subsection{Product}
 There are many possible improvements to the website, which were discovered during production and user evaluation. These were some of the features that can be added:
 \begin{itemize}
     \item support for direct execution of a TM;
