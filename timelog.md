@@ -418,3 +418,8 @@
 * *0.5 hours* Added example for TM execution in background
 * *1.5 hours* Added background for parser
 * *0.5 hours* Updated design for parser
+
+### 8 Mar 2023
+
+* *1.5 hours* Updated design and started implementation for parser
+* *2.5 hours* Proof-read the entire file and made changes

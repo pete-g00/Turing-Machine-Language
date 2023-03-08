@@ -1,7 +1,7 @@
 \begin{appendices}
 \chapter{TML Specification}
 
-In this chapter, we will define the syntax of the Turing Machine Language starting with an example. We next analyse the syntax and define execution of a valid TML program on a tape in a similar manner to the execution of a TM.
+In this chapter, we will define the syntax of the TML starting with an example. We next analyse the syntax and define execution of a valid TML program on a tape in a similar manner to the execution of a TM.
 
 Consider the following TML program.
 \lstinputlisting[language=TML]{code/isDiv2.txt}
@@ -15,27 +15,32 @@ A program in TML will be used to execute on a tape, so the syntax used guides us
     \item The body of a \textit{while} command must be composed of a single basic block. The basic block cannot have a \textit{flow} command. This is because when we execute a \textit{while} block, the next block to run is the switch block it is in; we cannot accept, reject or go to another module.
     \item A switch block must be the final block present; it cannot be followed by a basic block.
 \end{itemize}
-% The EBNF for the TML and examples of syntax errors are given in the appendix. 
 
-The EBNF of the TML is given below:
-\begin{align*}
-    \textit{program} &= \textit{alphabet} \ \textit{module}^+ \\
-    \textit{alphabet} &= \texttt{alphabet} \ \texttt{=} \ \texttt{\{} \ \textit{seq-val} \ \texttt{\}} \\
-    \textit{module} &= \texttt{module} \ \textit{id} \ \texttt{\{} \ \textit{block}^+ \ \texttt{\}} \\
-    \textit{block} &= \textit{basic-block} \ | \ \textit{switch-block} \\
-    \textit{switch-block} &= \textit{case-block}^+ \\
-    \textit{case-block} &= \textit{if-block} \ | \ \textit{while-block} \\
-    \textit{if-block} &= \texttt{if} \ \textit{seq-val} \ \texttt{\{} \textit{block}^+ \texttt{\}} \\
-    \textit{while-block} &= \texttt{while} \ \textit{seq-val} \ \texttt{\{} \ \textit{core-com}^+ \ \texttt{\}} \\
-    \textit{basic-block} &= (\textit{core-com} \ | \ \textit{flow-com})^+ \\
-    \textit{core-com} &= \texttt{move} \ \textit{direction} \ | \ \texttt{changeto} \ \textit{value} \\
-    \textit{flow-com} &= \texttt{goto} \ \textit{id} \ | \ \textit{terminate} \\
-    \textit{terminate} &= \texttt{reject} \ | \ \texttt{accept} \\
-    \textit{direction} &= \texttt{left} \ | \ \texttt{right} \\
-    \textit{seq-val} &= (\textit{value} \texttt{,})^* \ \textit{value} \\
-    \textit{value} &= \texttt{blank} \ | \ \texttt{a} \ | \ \texttt{b} \ | \ \texttt{c} \ | \ \dots \ | \ \texttt{z} \ | \ \texttt{0} \ | \ \texttt{1} \ | \ \dots \ | \ \texttt{9} \\
-    \textit{id} &= (\texttt{a} \ | \ \texttt{b} \ | \ \texttt{c} \ | \ \dots \ | \ \texttt{z} \ | \ \texttt{A} \ | \ \texttt{B} \ | \ \texttt{C} \ | \ \dots \ | \ \texttt{Z})^+
-\end{align*}
+\begin{figure}[htb]
+    \centering
+    \begin{align*}
+        \textit{program} &= \textit{alphabet} \ \textit{module}^+ \\
+        \textit{alphabet} &= \texttt{alphabet} \ \texttt{=} \ \texttt{\{} \ \textit{seq-val} \ \texttt{\}} \\
+        \textit{module} &= \texttt{module} \ \textit{id} \ \texttt{\{} \ \textit{block}^+ \ \texttt{\}} \\
+        \textit{block} &= \textit{basic-block} \ | \ \textit{switch-block} \\
+        \textit{switch-block} &= \textit{case-block}^+ \\
+        \textit{case-block} &= \textit{if-block} \ | \ \textit{while-block} \\
+        \textit{if-block} &= \texttt{if} \ \textit{seq-val} \ \texttt{\{} \textit{block}^+ \texttt{\}} \\
+        \textit{while-block} &= \texttt{while} \ \textit{seq-val} \ \texttt{\{} \ \textit{core-com}^+ \ \texttt{\}} \\
+        \textit{basic-block} &= (\textit{core-com} \ | \ \textit{flow-com})^+ \\
+        \textit{core-com} &= \texttt{move} \ \textit{direction} \ | \ \texttt{changeto} \ \textit{value} \\
+        \textit{flow-com} &= \texttt{goto} \ \textit{id} \ | \ \textit{terminate} \\
+        \textit{terminate} &= \texttt{reject} \ | \ \texttt{accept} \\
+        \textit{direction} &= \texttt{left} \ | \ \texttt{right} \\
+        \textit{seq-val} &= (\textit{value} \texttt{,})^* \ \textit{value} \\
+        \textit{value} &= \texttt{blank} \ | \ \texttt{a} \ | \ \texttt{b} \ | \ \texttt{c} \ | \ \dots \ | \ \texttt{z} \ | \ \texttt{0} \ | \ \texttt{1} \ | \ \dots \ | \ \texttt{9} \\
+        \textit{id} &= (\texttt{a} \ | \ \texttt{b} \ | \ \texttt{c} \ | \ \dots \ | \ \texttt{z} \ | \ \texttt{A} \ | \ \texttt{B} \ | \ \texttt{C} \ | \ \dots \ | \ \texttt{Z})^+
+    \end{align*}
+    \caption{The EBNF of the TML.}
+    \label{fig:tml_ebnf}
+\end{figure}
+
+The EBNF of the TML is Figure \ref{fig:tml_ebnf}.
 
 We will now consider how to execute a tape on a valid TML program. Let $P$ be a TML program with alphabet $\Sigma$ and let $T$ be a tape on $\Sigma$. We execute $P$ on $T$ inductively, as follows:
 \begin{itemize}
@@ -43,7 +48,7 @@ We will now consider how to execute a tape on a valid TML program. Let $P$ be a 
     \item At the start, the tape is $T$; the tapehead index is $0$; and the block is the first block in the first module in $P$. 
     \item At some point during the execution, assume that we have the tape $S$, tapehead index $j$, with tapehead value $T(j) = t$, and a block $b$. We define the next triple as follows:
     \begin{itemize}
-        \item if $b$ is a switch block, we take the first block from the case corresponding to the tapehead value- because the program is valid, this is a basic block; we will now refer to this block as $b$.
+        \item if $b$ is a \textit{switch} block, we take the first block from the case corresponding to the tapehead value- because the program is valid, this is a basic block; we will now refer to this block as $b$.
         \item if $b$ has a \textit{changeto} \texttt{val} command, the next tape $T'$ is given by 
         \[T'(x) = \begin{cases}
             \texttt{val} & x = i \\
@@ -68,143 +73,142 @@ We will now consider how to execute a tape on a valid TML program. Let $P$ be a 
     If execution is not terminated, execution continues with the next triplet.
 \end{itemize}
 
-We now illustrate the execution process. So, consider the following TML program:
-\lstinputlisting[language=TML]{code/palindrome.txt}
-We will execute the program on the following tape.
-\begin{figure}[H]
-    \centering
-    \begin{tikzpicture}
-        \draw[thick] (-0.25, 0) -- (0, 0);
-        \foreach \x[count=\i] in {a, b, a} {
-            \draw[thick] (\i*0.5-0.25, 0) -- (\i*0.5, 0);
-            \node at (\i*0.5-0.125, 0.3) {\texttt{\x}};
-        }
-        \draw[thick] (1.75, 0) -- (2, 0);
+% TODO: Explain execution process in not too much detail
+% We now illustrate the execution process. So, consider the following TML program:
+% \lstinputlisting[language=TML]{code/isDiv2.txt}
+% We will execute the program on the following tape.
+% \begin{figure}[H]
+%     \centering
+%     \begin{tikzpicture}
+%         \foreach \x[count=\i] in {, a, b, a, } {
+%             \draw[thick] (\i*0.5-0.25, 0) -- (\i*0.5, 0);
+%             \node at (\i*0.5-0.125, 0.3) {\texttt{\x}};
+%         }
 
-        \draw[->, thick] (0.375, -0.5) -- (0.375, -0.1);
-    \end{tikzpicture}
-\end{figure}
-\noindent The arrow points at the tapehead value. We first execute the first block in the module \texttt{palindrome}. Since the tapehead value is \texttt{a}, we execute the basic block at lines 5-20. So, we change the tapehead value to \texttt{blank}, and the tapehead moves to the right by one step. Since this is an \textit{if}-block, without a flow command, and there is a block following this one, the next block to be executed is the switch block at lines 8-19. Now, the current tape is the following.
-\begin{figure}[H]
-    \centering
-    \begin{tikzpicture}
-        \draw[thick] (-0.25, 0) -- (0, 0);
-        \foreach \x[count=\i] in {b, a} {
-            \draw[thick] (\i*0.5-0.25, 0) -- (\i*0.5, 0);
-            \node at (\i*0.5-0.125, 0.3) {\texttt{\x}};
-        }
-        \draw[thick] (1.25, 0) -- (1.5, 0);
+%         \draw[->, thick] (0.875, -0.5) -- (0.875, -0.1);
+%     \end{tikzpicture}
+% \end{figure}
+% \noindent The arrow points at the tapehead value. We first execute the first block in the module \texttt{palindrome}. Since the tapehead value is \texttt{a}, we execute the basic block at lines 5-20. So, we change the tapehead value to \texttt{blank}, and the tapehead moves to the right by one step. Since this is an \textit{if}-block, without a flow command, and there is a block following this one, the next block to be executed is the switch block at lines 8-19. Now, the current tape is the following.
+% \begin{figure}[H]
+%     \centering
+%     \begin{tikzpicture}
+%         \draw[thick] (-0.25, 0) -- (0, 0);
+%         \foreach \x[count=\i] in {b, a} {
+%             \draw[thick] (\i*0.5-0.25, 0) -- (\i*0.5, 0);
+%             \node at (\i*0.5-0.125, 0.3) {\texttt{\x}};
+%         }
+%         \draw[thick] (1.25, 0) -- (1.5, 0);
 
-        \draw[->, thick] (0.375, -0.5) -- (0.375, -0.1);
-    \end{tikzpicture}
-\end{figure}
-\noindent The current block is a switch block. The tapehead value is \texttt{b}, so we are at the \textit{while} command at line 9. The basic block here only contains a \textit{move} command. So, we leave the tape as is, and the tapehead moves to the right once. This is a \textit{while} command, so the next block to execute is still this switch block. The current tape state is the following.
-\begin{figure}[H]
-    \centering
-    \begin{tikzpicture}
-        \draw[thick] (-0.25, 0) -- (0, 0);
-        \foreach \x[count=\i] in {b, a} {
-            \draw[thick] (\i*0.5-0.25, 0) -- (\i*0.5, 0);
-            \node at (\i*0.5-0.125, 0.3) {\texttt{\x}};
-        }
-        \draw[thick] (1.25, 0) -- (1.5, 0);
+%         \draw[->, thick] (0.375, -0.5) -- (0.375, -0.1);
+%     \end{tikzpicture}
+% \end{figure}
+% \noindent The current block is a switch block. The tapehead value is \texttt{b}, so we are at the \textit{while} command at line 9. The basic block here only contains a \textit{move} command. So, we leave the tape as is, and the tapehead moves to the right once. This is a \textit{while} command, so the next block to execute is still this switch block. The current tape state is the following.
+% \begin{figure}[H]
+%     \centering
+%     \begin{tikzpicture}
+%         \draw[thick] (-0.25, 0) -- (0, 0);
+%         \foreach \x[count=\i] in {b, a} {
+%             \draw[thick] (\i*0.5-0.25, 0) -- (\i*0.5, 0);
+%             \node at (\i*0.5-0.125, 0.3) {\texttt{\x}};
+%         }
+%         \draw[thick] (1.25, 0) -- (1.5, 0);
 
-        \draw[->, thick] (0.875, -0.5) -- (0.875, -0.1);
-    \end{tikzpicture}
-\end{figure}
-\noindent The current block is still a switch block. The tapehead value is \texttt{a}, so we execute the same \textit{while} command at line 9. Moreover, the next block to execute is still the switch block. Now, the current tape state is the following.
-\begin{figure}[H]
-    \centering
-    \begin{tikzpicture}
-        \draw[thick] (-0.25, 0) -- (0, 0);
-        \foreach \x[count=\i] in {b, a} {
-            \draw[thick] (\i*0.5-0.25, 0) -- (\i*0.5, 0);
-            \node at (\i*0.5-0.125, 0.3) {\texttt{\x}};
-        }
-        \draw[thick] (1.25, 0) -- (1.5, 0);
+%         \draw[->, thick] (0.875, -0.5) -- (0.875, -0.1);
+%     \end{tikzpicture}
+% \end{figure}
+% \noindent The current block is still a switch block. The tapehead value is \texttt{a}, so we execute the same \textit{while} command at line 9. Moreover, the next block to execute is still the switch block. Now, the current tape state is the following.
+% \begin{figure}[H]
+%     \centering
+%     \begin{tikzpicture}
+%         \draw[thick] (-0.25, 0) -- (0, 0);
+%         \foreach \x[count=\i] in {b, a} {
+%             \draw[thick] (\i*0.5-0.25, 0) -- (\i*0.5, 0);
+%             \node at (\i*0.5-0.125, 0.3) {\texttt{\x}};
+%         }
+%         \draw[thick] (1.25, 0) -- (1.5, 0);
 
-        \draw[->, thick] (1.375, -0.5) -- (1.375, -0.1);
-    \end{tikzpicture}
-\end{figure}
-\noindent For the third time, we are executing the same switch block. Now, however, the tapehead value is \texttt{blank}, so we execute the first block of the \textit{if} command at line 5, i.e. we move to the left. Since this is an \textit{if} command and this is not the last block in the if command, the next block to execute is the switch block at lines 12-18.
-\begin{figure}[H]
-    \centering
-    \begin{tikzpicture}
-        \draw[thick] (-0.25, 0) -- (0, 0);
-        \foreach \x[count=\i] in {b, a} {
-            \draw[thick] (\i*0.5-0.25, 0) -- (\i*0.5, 0);
-            \node at (\i*0.5-0.125, 0.3) {\texttt{\x}};
-        }
-        \draw[thick] (1.25, 0) -- (1.5, 0);
+%         \draw[->, thick] (1.375, -0.5) -- (1.375, -0.1);
+%     \end{tikzpicture}
+% \end{figure}
+% \noindent For the third time, we are executing the same switch block. Now, however, the tapehead value is \texttt{blank}, so we execute the first block of the \textit{if} command at line 5, i.e. we move to the left. Since this is an \textit{if} command and this is not the last block in the if command, the next block to execute is the switch block at lines 12-18.
+% \begin{figure}[H]
+%     \centering
+%     \begin{tikzpicture}
+%         \draw[thick] (-0.25, 0) -- (0, 0);
+%         \foreach \x[count=\i] in {b, a} {
+%             \draw[thick] (\i*0.5-0.25, 0) -- (\i*0.5, 0);
+%             \node at (\i*0.5-0.125, 0.3) {\texttt{\x}};
+%         }
+%         \draw[thick] (1.25, 0) -- (1.5, 0);
 
-        \draw[->, thick] (0.875, -0.5) -- (0.875, -0.1);
-    \end{tikzpicture}
-\end{figure}
-\noindent Now, the current block is a switch block. The tapehead value is \texttt{a}, so we take the basic block at lines 12-16. The value of the tapehead becomes \texttt{blank}, and moves to the left. The next block to execute is the switch block in \texttt{restart}.
-\begin{figure}[H]
-    \centering
-    \begin{tikzpicture}
-        \draw[thick] (-0.25, 0) -- (0, 0);
-        \foreach \x[count=\i] in {b} {
-            \draw[thick] (\i*0.5-0.25, 0) -- (\i*0.5, 0);
-            \node at (\i*0.5-0.125, 0.3) {\texttt{\x}};
-        }
-        \draw[thick] (0.75, 0) -- (1, 0);
+%         \draw[->, thick] (0.875, -0.5) -- (0.875, -0.1);
+%     \end{tikzpicture}
+% \end{figure}
+% \noindent Now, the current block is a switch block. The tapehead value is \texttt{a}, so we take the basic block at lines 12-16. The value of the tapehead becomes \texttt{blank}, and moves to the left. The next block to execute is the switch block in \texttt{restart}.
+% \begin{figure}[H]
+%     \centering
+%     \begin{tikzpicture}
+%         \draw[thick] (-0.25, 0) -- (0, 0);
+%         \foreach \x[count=\i] in {b} {
+%             \draw[thick] (\i*0.5-0.25, 0) -- (\i*0.5, 0);
+%             \node at (\i*0.5-0.125, 0.3) {\texttt{\x}};
+%         }
+%         \draw[thick] (0.75, 0) -- (1, 0);
 
-        \draw[->, thick] (0.375, -0.5) -- (0.375, -0.1);
-    \end{tikzpicture}
-\end{figure}
-\noindent Since the current tapehead value is \texttt{b}, we execute the basic block at line 39. So, we move to the left, and the tape is left as is. Moreover, since this is a while block, the next block to execute is still the switch block.
-\begin{figure}[H]
-    \centering
-    \begin{tikzpicture}
-        \draw[thick] (-0.25, 0) -- (0, 0);
-        \foreach \x[count=\i] in {b} {
-            \draw[thick] (\i*0.5-0.25, 0) -- (\i*0.5, 0);
-            \node at (\i*0.5-0.125, 0.3) {\texttt{\x}};
-        }
-        \draw[thick] (0.75, 0) -- (1, 0);
+%         \draw[->, thick] (0.375, -0.5) -- (0.375, -0.1);
+%     \end{tikzpicture}
+% \end{figure}
+% \noindent Since the current tapehead value is \texttt{b}, we execute the basic block at line 39. So, we move to the left, and the tape is left as is. Moreover, since this is a while block, the next block to execute is still the switch block.
+% \begin{figure}[H]
+%     \centering
+%     \begin{tikzpicture}
+%         \draw[thick] (-0.25, 0) -- (0, 0);
+%         \foreach \x[count=\i] in {b} {
+%             \draw[thick] (\i*0.5-0.25, 0) -- (\i*0.5, 0);
+%             \node at (\i*0.5-0.125, 0.3) {\texttt{\x}};
+%         }
+%         \draw[thick] (0.75, 0) -- (1, 0);
 
-        \draw[->, thick] (-0.125, -0.5) -- (-0.125, -0.1);
-    \end{tikzpicture}
-\end{figure}
-\noindent Since the current tapehead state is \texttt{blank}, we execute the basic block at lines 40-43. So, we move to the left, and the tape is left as is. The next block to execute is the switch block at \texttt{palindrome}.
-\begin{figure}[H]
-    \centering
-    \begin{tikzpicture}
-        \draw[thick] (-0.25, 0) -- (0, 0);
-        \foreach \x[count=\i] in {b} {
-            \draw[thick] (\i*0.5-0.25, 0) -- (\i*0.5, 0);
-            \node at (\i*0.5-0.125, 0.3) {\texttt{\x}};
-        }
-        \draw[thick] (0.75, 0) -- (1, 0);
+%         \draw[->, thick] (-0.125, -0.5) -- (-0.125, -0.1);
+%     \end{tikzpicture}
+% \end{figure}
+% \noindent Since the current tapehead state is \texttt{blank}, we execute the basic block at lines 40-43. So, we move to the left, and the tape is left as is. The next block to execute is the switch block at \texttt{palindrome}.
+% \begin{figure}[H]
+%     \centering
+%     \begin{tikzpicture}
+%         \draw[thick] (-0.25, 0) -- (0, 0);
+%         \foreach \x[count=\i] in {b} {
+%             \draw[thick] (\i*0.5-0.25, 0) -- (\i*0.5, 0);
+%             \node at (\i*0.5-0.125, 0.3) {\texttt{\x}};
+%         }
+%         \draw[thick] (0.75, 0) -- (1, 0);
 
-        \draw[->, thick] (0.375, -0.5) -- (0.375, -0.1);
-    \end{tikzpicture}
-\end{figure}
-\noindent Since the current tapehead state is \texttt{b}, we execute the basic block at lines 21-22. So, we change the tapehead value to \texttt{blank}, move to the right. This is a while block, so the next block to be executed is still the switch block.
-\begin{figure}[H]
-    \centering
-    \begin{tikzpicture}
-        \draw[thick] (-0.25, 0) -- (0, 0);
-        \draw[thick] (0.25, 0) -- (0.5, 0);
-        \draw[thick] (0.75, 0) -- (1, 0);
+%         \draw[->, thick] (0.375, -0.5) -- (0.375, -0.1);
+%     \end{tikzpicture}
+% \end{figure}
+% \noindent Since the current tapehead state is \texttt{b}, we execute the basic block at lines 21-22. So, we change the tapehead value to \texttt{blank}, move to the right. This is a while block, so the next block to be executed is still the switch block.
+% \begin{figure}[H]
+%     \centering
+%     \begin{tikzpicture}
+%         \draw[thick] (-0.25, 0) -- (0, 0);
+%         \draw[thick] (0.25, 0) -- (0.5, 0);
+%         \draw[thick] (0.75, 0) -- (1, 0);
 
-        \draw[->, thick] (0.875, -0.5) -- (0.875, -0.1);
-    \end{tikzpicture}
-\end{figure}
-\noindent At this point, the tapehead index moves between the blank values as we move to the basic block at line 3. Then, the execution terminates and we accept the tape.
+%         \draw[->, thick] (0.875, -0.5) -- (0.875, -0.1);
+%     \end{tikzpicture}
+% \end{figure}
+% \noindent At this point, the tapehead index moves between the blank values as we move to the basic block at line 3. Then, the execution terminates and we accept the tape.
 
 \chapter{Proof of Equivalence}
 In this chapter, we give a proof of equivalence between TMs and TML programs. This is done in many steps that involve:
 \begin{itemize}
-    \item proving that a TM can be converted to a complete TML program with the same behaviour;
-    \item proving that a complete TML program can be converted to a TM with the same behaviour; and
-    \item proving that a valid TML program can be converted to a complete TML program with the same behaviour.
+    \item proving that a TM can be converted to a complete TML program;
+    \item proving that a complete TML program can be converted to a TM; and
+    \item proving that a valid TML program can be converted to a complete TML program.
 \end{itemize}
 
 \section{Complete TML Programs}
-When we defined execution of a valid TML program on a tape above, we said that a basic block need not have all 3 types of commands (\textit{changeto}, \textit{move} and a \textit{flow} command), but in the execution above, we have established some `default' ways in which a program gets executed. In particular,
+When we defined execution of a valid TML program on a tape in the specification, we said that a basic block need not have all 3 types of commands (\textit{changeto}, \textit{move} and a \textit{flow} command), but in the execution above, we have established some `default' ways in which a program gets executed. In particular,
 \begin{itemize}
     \item if the \textit{changeto} command is missing, we do not change the value of the tape;
     \item if the \textit{move} command is missing, we move left;
@@ -333,7 +337,7 @@ module simple2 {
 This program obeys the definition of a complete program.
 
 \begin{theorem} \label{thm:complete_TM}
-    Let $P$ be a valid TML program. Then, $P$ and its completion $P^+$ execute on every valid tape $T$ in the same way. That is,
+    Let $P$ be a valid TML program. Then, $P$ and its completion $P^+$ execute on every tape $T$ in the same way. That is,
     \begin{itemize}
         \item for every valid index $n$, if we have tape $T_n$, tapehead index $i_n$ and module $m_n$ with executing block $b_n$ for the TM program $P$, and we have tape $S_n$, tapehead index $j_n$ and module $t_n$, then $T_n = S_n$, $i_n = j_n$, and $t_n$ is the corresponding complete module block of $b_n$;
         \item $P$ terminates execution on $T$ if and only if $P^+$ terminates execution on $T$, with the same final status (\texttt{accept} or \texttt{reject}).
@@ -425,7 +429,7 @@ Moreover, we can construct the program $P$ with:
 We say that $P$ is \emph{the corresponding program for $M$}.
 
 \begin{theorem} \label{thm:TM_to_TMP}
-    Let $M$ be a TM, and let $P$ be the corresponding program for $M$. Then, $M$ and $P$ execute on every valid tape $T$ in the same way. That is, 
+    Let $M$ be a TM, and let $P$ be the corresponding program for $M$. Then, $M$ and $P$ execute on every tape $T$ in the same way. That is, 
     \begin{itemize}
         \item for every valid index $n$, if we have tape $T_n$, tapehead index $i_n$ and module $m_n$ for the TM program $P$, and we have tape $S_n$, tapehead index $j_n$ and state $q_n$ for the TM $M$, then $T_n = S_n$, $i_n = j_n$ and $m_n$ is the corresponding module for $q_n$;
         \item $M$ terminates execution on $T$ if and only if $P$ terminates execution on $T$, with the same final status (\texttt{accept} or \texttt{reject}).
@@ -549,7 +553,7 @@ Then, its corresponding TM is the following:
 \end{figure}
 
 \begin{theorem}
-    Let $P$ be a complete TM program, and let $M$ be the corresponding TM for $P$. Then, $P$ and $M$ execute on every valid tape $T$ in the same way. That is,
+    Let $P$ be a complete TM program, and let $M$ be the corresponding TM for $P$. Then, $P$ and $M$ execute on every tape $T$ in the same way. That is,
     \begin{itemize}
         \item for every valid index $n$, if we have tape $T_n$, tapehead index $i_n$ and module $m_n$ for TM program $P$, and we have tape $S_n$, tapehead index $j_n$ and state $q_n$ for the TM $M$, then $T_n = S_n$, $i_n = j_n$ and $q_n$ is the corresponding state for $m_n$;
         \item $P$ terminates execution on $T$ if and only if $M$ terminates execution on $T$, with the same final status (\texttt{accept} or \texttt{reject}).
@@ -588,6 +592,11 @@ Then, its corresponding TM is the following:
 \end{proof}
 
 Hence, we have established that for any valid TML program, there is a TM, and vice versa.
+
+\section{TML as a model of computation}
+Since TML programs and TMs are equivalent, this implies that TML programs are a model for computation. Note that while we have given a proof for equivalence for TMs, this representation is based on accepting and rejecting programs only. This is a class of TMs, but there are other classes of TMs as well. In particular, it is also possible for a TM to halt instead of accepting or rejecting.
+
+Although the equivalence is limited to a subclass of TMs, we can add another flow command \texttt{halt} that mimics the halting behaviour. However, this is not necessary- we can use the accept state (or equally the reject state) to mimic the behaviour of halting. Since accepting or rejecting results in the program halting, we can simply disregard the final result, and possibly read the output from the tape to infer the actual result.
 
 \chapter{Evaluation Content}
 \section{Worksheet}

@@ -1,115 +1,149 @@
 \chapter{Implementation}
-\section{Language}
+\section{Parser}
 
-The TML has been implemented in a way that closely resembles the operations in a TM. In particular, 
-\begin{itemize}
-    \item it expects an alphabet like a TM;
-    \item it makes use of \texttt{move} commands to move the tapehead value in some direction;
-    \item it makes use of \texttt{changeto} commands to change the tapehead value to some letter in the alphabet.
-\end{itemize}
-Instead of states, the TML has modules. A module can be thought of as a state, although a module is more expressible than a state. We want modules to also be thought of as functions or methods within a traditional PL. To allow for flow of code to go from one module to another, we can make use of \texttt{goto} commands. We can go to the accept and reject states using the keywords \texttt{accept} and \texttt{reject} respectively.
-
-The following program illustrates a simple program in TML with all the basic operations:
-\begin{lstlisting}[language=TML]
-alphabet = {a, b}
-module first {
-    changeto blank
-    move right
-    goto second
-}
-module second {
-    move left
-    accept
-}
-\end{lstlisting}
-A program is run starting from the first module. In this case, we first start at module \texttt{first}. Here, the first tape value is removed, the tape pointer moves to the right and we go to module \texttt{b} and continue execution. Note that we allow recursion- line 5 can be replaced with \texttt{goto first}.
-
-To represent the transition function in TMs, the language makes use of pattern-matching. Since this should resemble a traditional PL, this is done using \texttt{if} cases. This is shown in the example below.
-\begin{lstlisting}[language=TML]
-if a {
-    move right
-    accept
-} if b, blank {
-    changeto blank
-}
-\end{lstlisting}
-With these constructs, we have constructed a language that is equivalent to TMs. 
-
-Although the language is already equivalent to TMs, we will add some more flexibility in the language since all programs that can be written with these constructs are quite similar to TMs. To mitigate this, we add nesting within \texttt{if} statements. That way, we can write programs that are more comparable to normal programs written in other languages, such as the program below.
-\lstinputlisting[language=TML]{code/isDiv2Rec.txt}
-In this program, we have nested an \texttt{if} block within an \texttt{if} block in lines 11-15.
+The parser was written in TypeScript. Although there are many frameworks that could have been used for lexical and syntactic analysis, these were not chosen. The main reason for this is that the parser was meant to be used within a website. In particular, it was expected that the parser became an node package manager (NPM) package. Moreover, TML is quite a simple language, making this task relatively easy and short.
 
 \begin{figure}[htb]
     \centering
     \begin{tikzpicture}
-        \node[state, accepting] (q0) at (0, 0) {$q_0$};
-        \node[state] (q1) at (2.5, -1) {$q_1$};
-        \node[state, fill=green, opacity=0.6] (A) at (2.5, 1) {$A$};
-        \node[state, fill=red, opacity=0.6] (R) at (5, -1) {$R$};
+        \node[draw, label={0:\texttt{CodeWrapper}}] (CW) at (0, 0) {Lexical Analysis};
+        \node[draw, label={0:\texttt{CodeParser}}] (CP) at (0, -1.5) {Syntactic Analysis};
+        \node[draw, label={0:\texttt{CodeValidator}}] (CV) at (0, -3) {Semantic Analysis};
+        \node[draw, label={180:\texttt{CodeConverter}}] (CC) at (-2, -4.5) {Code Generation};
+        \node[draw, label={0:\texttt{CodeExecutor}}] (CE) at (2, -4.5) {Code Execution};
 
-        \draw[->] (q0) -- node[above, rotate=20] {$0|\#, R$} (A);
-        \draw[->] (q0) -- node[below, rotate=-20] {$1, R$} (q1);
-        \draw[->] (q1) edge[loop below] node {$0|1, R$} (q1);
-        \draw[->] (q1) -- node[below] {$\#, L$} (R);
+        \draw[->] (0, 1) -- node[left] {source program} (CW);
+        \draw[->] (CW) -- node[left] {program stream} (CP);
+        \draw[->] (CP) -- node[left] {program context} (CV);
+        \draw[->] (CV) -- node[left] {program context} (CC);
+        \draw[->] (CV) -- node[right] {program context} (CE);
+        \draw[->] (CC) -- node[left] {Turing Machine} (-2, -5.5);
     \end{tikzpicture}
-    \caption{A TM with a self-loop at the state $q_1$}
-    \label{fig:self-loop-TM}
+    \caption{The parsing process. The process is given inside the box. The class used to achieve the process is given in label, outside of the box. The flow of data is also shown.}
+    \label{fig:parsing_process}
 \end{figure}
-Although nesting has made the language more like a typical PL, there is still one issue- a self-loop in a non-starting state. To see this, we consider the TM at Figure \ref{fig:self-loop-TM}. Currently, the following is the only way to represent this TM as a TML program:
-\begin{lstlisting}[language=TML]
-alphabet = {0, 1}
-module q0 {
-    if 0, blank {
-        move right
-        accept
-    } if 1 {
-        move right
-        goto q1
-    }
-}
-module q1 {
-    if 0, 1 {
-        move right
-        goto q1
-    } if blank {
-        move left
-        reject
-    }
-}
-\end{lstlisting}
-What we have is a \emph{complete program}- there is a one-to-one correspondence between a module and a state. It is not possible to combine the 2 modules- recursion would convert the self-loop of $q_1$ to a transition from $q_1$ to $q_0$. It is always possible to represent a TM as a complete program, but this representation is very close to a TM. We want there to be another way to represent this program that resembles a PL better.
 
-To allow for self-loops using nesting, we introduce a new construct- a \texttt{while} case. This is similar to an \texttt{if} case, but after the block is executed, we stay at the same block (which does not necessarily mean that the same case is run). This is precisely a self-loop. We can now convert the TM above to a single module:
-\begin{lstlisting}[language=TML]
-alphabet = {0, 1}
-module program {
-    if 0, blank {
-        move right
-        accept
-    } if 1 {
-        move right
-        while 0, 1 {
-            move right
-        } if blank {
-            move left
-            reject
+The entire parsing process is summarised in Figure \ref{fig:parsing_process}.
+
+
+\subsection{Lexical Analysis}
+
+During lexical analysis, a stream of source code was produced. Although the source code was not enriched into tokens, the position of the code was tracked. This was to ensure that, in case of an error, the right section of code could be highlighted. This is done using the class \texttt{CodeWrapper}. 
+
+To produce a stream of tokens, the iterator design pattern was used. The iterator design pattern allows us to get the current value from a collection in a way that abstracts the data structure (\cite{gamma1995design}). In particular, the pattern was used to abstract the string representation of the source code and return a single entry from the code at a time. 
+
+\subsection{Syntactic Analysis}
+\begin{figure}[htb]
+    \centering
+    \begin{tikzpicture}[
+        level 1/.style={sibling distance=5cm},
+        level 2/.style={sibling distance=6.5cm},
+        level 3/.style={sibling distance=3.5cm},
+    ]
+        \node[draw] {\texttt{Context}}
+        child {
+            node[draw] {\texttt{CommandContext}}
+            child {
+                node[draw] {\texttt{FlowChangeContext}}
+                child {
+                    node[draw] {\texttt{GoToContext}}
+                }
+            }
+            child {
+                node[draw] {\texttt{CoreCommandContext}}
+                child {
+                    node[draw] {\texttt{MoveContext}}
+                }
+                child {
+                    node[draw] {\texttt{ChangeToContext}}
+                }
+            }
         }
-    }
-}
-\end{lstlisting}
+        child {
+            node[draw] {\texttt{ProgramContext}}
+        };
+    \end{tikzpicture}
+    \caption{A snippet of the \texttt{Context} class hierarchy. All the non-leaf classes are abstract.}
+    \label{fig:context_hierarchy}
+\end{figure}
 
-The formal syntax of the language is given in the appendix, along with a proof of equivalence between TMs and TML programs in terms of code execution. The proof of equivalence is composed of several proofs, which involve:
+Next, the code is parsed. This is done using the class \texttt{CodeParser}. 
+
+The result of the parsing is a \texttt{ProgramContext}, which represents the root of the AST. Subclasses of the \texttt{Context} class are used to represent different statements in the class, such as \texttt{MoveContext} for \textit{move} commands and \texttt{GoToContext} for \textit{goto} commands. A snippet of the class hierarchy for \texttt{Context} is shown in Figure \ref{fig:context_hierarchy}.
+
+The parsing process results in the construction of the AST, such as the one in Figure \ref{fig:TML_AST}. To descend to a child, we make use of the instance fields. For instance, \texttt{ProgramContext} has the following fields:
 \begin{itemize}
-    \item converting a TM into a complete TML program;
-    \item converting a valid TML program into a complete TML program; and
-    \item converting a complete TML program into a TM program.
+    \item \texttt{alphabet} for \texttt{AlphabetContext}; and
+    \item \texttt{modules} for an array of \texttt{ModuleContext}.
 \end{itemize}
 
-\section{Parser}
+The parser is recursive-descent and top-down in nature, as we can see in the \texttt{parseProgram} method below.
+\begin{lstlisting}[language=TypeScript]
+parseProgram() {
+    var alphabet = parseAlphabet();
+    
+    var modules = [];
+    while (code.moveNext()) {
+        modules.add(parseModule());
+    }
+    
+    return new ProgramContext(position, alphabet, modules);
+}
+\end{lstlisting}
+Note that the code given above is simplified from the actual implementation.
+
+If the program has syntax errors, then it will not be possible to produce an AST. For instance, the alphabet for the program might not been provided. This is detected by the parser since it makes use of predictive parsing. In particular, the parser looks at the next value and determines if it is legal; otherwise, it throws a \texttt{SyntaxError}.
+
+\subsection{Semantic Analysis}
 TODO
-% TODO: Parser was written using TypeScript instead of using ANTLR for web use
+
+% We traverse the AST using the visitor design pattern (\cite{gamma1995design}). Here, every node in the AST is represent by some child class of the \texttt{Context} class, e.g. \texttt{IfContext} for if statements. The \texttt{Context} class has an abstract method \texttt{accept} that allows us to visit different nodes. We can then make use of this when traversing the AST.
+
+% We illustrate the visitor design pattern with an example. So, assume that we have the following class to represent if statements.
+% \begin{lstlisting}[language=TypeScript]
+% class IfContext extends Context {    
+%     accept<T>(validator:CodeVisitor<T>):T? {
+%         return validator.visitIf(this);
+%     }
+
+%     // ... relevant methods for if context
+% }
+% \end{lstlisting}
+%     In that case, we can define the following method to `visit' an if statement and validate it.
+% \begin{lstlisting}[language=TypeScript]
+% class TypeValidator implements CodeVisitor<Type> {
+%     visit(context:Context):Type? {
+%         return context.accept(this);
+%     }
+    
+%     // validate that the condition is of type bool 
+%     visitIf(ifContext:IfContext):Type? {
+%         var type = visit(ifContext.condition);
+%         if (type != Type.BOOL) {
+%             throw new TypeError("Expected if condition to be of type bool.");
+%         }
+        
+%         return undefined;
+%     }
+
+%     // ... other validator methods
+% }
+% \end{lstlisting}
+% When traversing the AST, we typically want to aggregate the result or share the result with the parent. For this reason, we typically return a specific type of values within each visit method. In the example above, we make use of the class \texttt{Type}, which represents the type of the result, if relevant.
+
+% To run the \texttt{TypeValidator}, we visit the entire program.
+
+% The advantage of using the visitor design pattern is that we can traverse all the nodes without altering any of the \texttt{Context} classes; we can just construct another \texttt{Visitor} class. However, if we wanted to add another \texttt{Context} subclass, then we would need to amend all the \texttt{Visitor} classes. We expect the language to be pretty static, so this is perfectly fine in our case.
+
+
+
+\subsection{TM Generation}
+TODO
+
+\subsection{Code Execution}
+TODO
+
 % TODO: Parser makes use of the visitor design pattern, specify in particular what each one uses
-% TODO: A syntax tree is given
 % TODO: Some validation rules are given
 % TODO: TM representation is given
 % TODO: TM converter and TML converter are explained

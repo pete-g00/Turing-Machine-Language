@@ -1,15 +1,15 @@
 \chapter{Requirements}
 
-I used MoScoWs to specify the requirements for the project. In particular, the requirements were partitioned into one of the 4 sections: must have, should have, could have and will not have. Since the project has multiple parts, each part had its own MoScoW section.
+I used MoScoWs to specify the requirements for the project. In particular, the requirements were partitioned into one of the 4 sections: must have, should have, could have and will not have. Since the project has multiple parts, each part had its own MoScoW section. The final section provides non-functional requirements for each section.
 
 \section{Developing TML}
 
 \paragraph{Must Have} A specification document for the TML must be created. The specification should include the following:
 \begin{itemize}
-    \item a formal and an informal definition for the language;
-    \item how to execute a program on a valid tape; and
-    \item a proof of equivalence between TMs and TML programs (which involves constructing a TM for a TML program, and vice versa).
+    \item a formal and an informal definition for the language; and
+    \item how to execute a program on a valid tape.
 \end{itemize}
+Along with the specification, a proof of equivalence between TMs and TML programs should also be provided.
 
 \paragraph{Should Have} The specification should include examples. In particular, there should be examples of valid and invalid programs, and those that illustrate the proofs (e.g. how to convert a TM into a TML program) so that it is easier to follow.
 
@@ -24,7 +24,7 @@ I used MoScoWs to specify the requirements for the project. In particular, the r
     \item execute a program context on a valid tape.
 \end{itemize}
 
-\paragraph{Should Have} The parser should be able to convert a program context to a TM. Compared to the 3 must-have requirements, this requirement was considered to be of the lowest priority, and so was considered a should-have.
+\paragraph{Should Have} The parser should be able to convert a program context to a TM. \textit{Compared to the 3 must-have requirements, this requirement was considered to be of the lowest priority, and so was considered a should-have.}
 
 \paragraph{Could Have} The parser should be able to execute a TM on a tape. This might help in the website to illustrate execution on the converted TM.
 
@@ -45,6 +45,13 @@ I used MoScoWs to specify the requirements for the project. In particular, the r
 \paragraph{Could Have} The editor could support error detection. The user could be able to configure the website, e.g. change the editor theme, the editor font size and the speed of tape execution. The website could convert a program to its definition as a TM. The website could support automatic placement of states (within the FSM) in an aesthetic manner instead of having the user drag it.
 
 \paragraph{Will Not Have} The editor will not be able to automatically fix errors. The website will not be able to execute a TM on a tape (without a program). The website will not able to convert a TM into a TML program.
+
+\section{Non-Functional Requirements}
+\paragraph{Must Have} The parser must support web deployment. The parser should be correct.
+
+\paragraph{Should Have} The language should resemble a traditional programming language. The website should be fast and easy to use.
+
+% The language should not be ambiguous.
 
 % \section{Guidance}
 % Make it clear how you derived the constrained form of your problem via a clear and logical process. 

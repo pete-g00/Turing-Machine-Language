@@ -1,4 +1,4 @@
-# Week 7 Agenda
+# Week 8 Agenda
 
 ## Work Completed This Week 
 * Completed evaluation section in dissertation

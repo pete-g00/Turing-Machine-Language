@@ -4,21 +4,26 @@
 \pagenumbering{arabic} 
 
 \section{Motivation}
-Turing Machine (TM) is a model of computation that is typically taught to computing students after some years of coding experience. They are normally taught the concept using finite state machines (FSM). This is quite different to how they have been taught programming previously, and they might find it easier to learn the concept in a way that resembles coding closely. This project presents a language to represent TMs.
+Turing Machines are a model of computation that is typically taught to computing students after some years of coding experience. They are normally taught the concept using finite state machines. This is quite different to how they have been taught programming previously, and they might find it easier to learn the concept in a way that resembles coding closely. This project presents a language to represent TMs.
 
 \section{Objectives}
-There are 3 parts to the project- defining the language, creating the parser for the language and finally creating a website that allows a user to make use of the parser.
+There are 3 parts to the project:
+\begin{enumerate}
+    \item defining the language, 
+    \item creating the parser for the language and 
+    \item creating a website that allows a user to make use of the parser.
+\end{enumerate}
 
-The first aim is to define a programming language to represent TMs, called the Turing Machine Language (TML). A TM can be executed on a (valid) tape, and this is what programs in TML will try to simulate. Hence, the language should be able to represent all the operations that a TM supports. 
+The first aim is to define a programming language to represent Turing machines, called the Turing Machine Language. A Turing machine can be executed on a tape, and this is what the language will simulate. 
 
-Next, a parser will be created for TML. This parser should be able to take in a string representation of a program, and then parse it into a program context. Then, a program context can be:
+Next, a parser will be created for the language. This parser should be able to take in a string representation of a program, and then parse it into a program context. Then, a program context can be:
 \begin{itemize}
     \item validated to ensure it has no errors;
-    \item converted into a TM; and
-    \item executed on a valid tape (string).
+    \item converted into a Turing machine; and
+    \item executed on a tape.
 \end{itemize}
 
-Finally, a website will be created to allow the user to access the parser. It should feature an editor to allow users to type in a TML program. The user would then be able to convert it into a TM, or execute it on a valid tape.
+Finally, a website will be created to allow the user to access the parser. It should feature an editor to allow users to type a program. The user would then be able to convert it into a Turing machine, or execute it on a valid tape.
 
 \section{Summary}
 TODO

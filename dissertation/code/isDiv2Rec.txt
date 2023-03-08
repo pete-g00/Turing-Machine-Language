@@ -1,3 +1,4 @@
+// checks whether a binary number is divisible by 2, recursively
 alphabet = {0, 1}
 module isDiv2Rec {
     // recursive case: not at the end => move closer to the end
