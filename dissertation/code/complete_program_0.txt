@@ -1,0 +1,7 @@
+alphabet = {a, b}
+module simpleProgram {
+    changeto b
+    move left
+    move right
+    accept
+}

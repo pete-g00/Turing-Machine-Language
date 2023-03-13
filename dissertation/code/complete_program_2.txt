@@ -1,0 +1,14 @@
+alphabet = {a, b}
+module simple1 {
+    if a, b, blank {
+        changeto b
+        move left
+        goto simple2
+    }
+}
+module simple2 {
+    if a, b, blank {
+        move right
+        accept
+    }
+}

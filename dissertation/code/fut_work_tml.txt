@@ -1,0 +1,29 @@
+// accept strings that start and end in opposite letters
+alphabet={a, b}
+module oppositeLetters {
+    if a {
+        move right
+        while a, b {
+            move right
+        } if blank {
+            move left
+            if b {
+                accept
+            } if a, blank {
+                reject
+            }
+        }
+    } if b {
+        move right
+        while a, b {
+            move right
+        } if blank {
+            move left
+            if a {
+                accept
+            } if b, blank {
+                reject
+            }
+        }
+    }
+}

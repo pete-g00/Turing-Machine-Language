@@ -10,29 +10,11 @@ The TML has been designed in a way that closely resembles the operations in a TM
 Instead of states, the TML has modules. A module can be thought of as a state, although a module is more expressible than a state. We want modules to also be thought of as functions or methods in a traditional PL. To allow for flow of code to go from one module to another, we can make use of \texttt{goto} commands. We can go to the \textit{accept} and \textit{reject} states using the keywords \texttt{accept} and \texttt{reject} respectively.
 
 The following program illustrates a simple program in TML with all the basic operations:
-\begin{lstlisting}[language=TML]
-alphabet = {a, b}
-module first {
-    changeto blank
-    move right
-    goto second
-}
-module second {
-    move left
-    accept
-}
-\end{lstlisting}
+\lstinputlisting[language=TML]{code/simple_program.txt}
 A program is run starting from the first module. In this case, we first start at module \texttt{first}. Here, the first tape value is removed, the tape pointer moves to the right and we go to module \texttt{b} and continue execution. Note that we allow recursion- line 5 can be replaced with \texttt{goto first}.
 
 To represent the transition function in TMs, the language makes use of pattern-matching. Since this should resemble a traditional PL, this is done using \texttt{if} cases. This is shown in the example below.
-\begin{lstlisting}[language=TML]
-if a {
-    move right
-    accept
-} if b, blank {
-    changeto blank
-}
-\end{lstlisting}
+\lstinputlisting[language=TML]{code/pattern_matching.txt}
 
 Although the language is already equivalent to TMs, we will add some more flexibility to the language since all programs that can be written with these constructs are quite similar to TMs. To mitigate this, we add nesting within \texttt{if} statements. That way, we can write programs that are more comparable to normal programs written in other languages, such as the program below.
 \lstinputlisting[language=TML]{code/isDiv2Rec.txt}
@@ -55,27 +37,7 @@ In this program, we have nested an \texttt{if} block within an \texttt{if} block
     \label{fig:self-loop-TM}
 \end{figure}
 Although nesting has made the language more like a typical PL, there is still one issue- a self-loop in a non-starting state. To see this, we consider the TM at Figure \ref{fig:self-loop-TM}. Currently, the following is the only way to represent this TM as a TML program:
-\begin{lstlisting}[language=TML]
-alphabet = {0, 1}
-module q0 {
-    if 0, blank {
-        move right
-        accept
-    } if 1 {
-        move right
-        goto q1
-    }
-}
-module q1 {
-    if 0, 1 {
-        move right
-        goto q1
-    } if blank {
-        move left
-        reject
-    }
-}
-\end{lstlisting}
+\lstinputlisting[language=TML]{code/forced_complete_program.txt}
 What we have is a \emph{complete program}- there is a one-to-one correspondence between a module and a state. It is not possible to combine the 2 modules- recursion would convert the self-loop of $q_1$ to a transition from $q_1$ to $q_0$. It is always possible to represent a TM as a complete program, but this representation is very close to a TM. We want there to be another way to represent this program that resembles a PL better.
 
 To allow for self-loops using nesting, we introduce a new construct- a \texttt{while} case. This is similar to an \texttt{if} case, but after the block is executed, we stay at the same block. Note that this does not necessarily mean that the same case is run. This is precisely a self-loop. We can now convert the TM to a single module:
@@ -211,7 +173,7 @@ We also check that the letter of a \texttt{changeto} command is one of the lette
 \subsection{TM Generation}
 Next, the AST is used to generate a TM. There are many choices to represent a TM- the formal definition of TMs or FSM representation. To allow for more flexibility during code execution, the formal definition of TMs was chosen. 
 
-TODO: Explain the generation process in some detail (abstractly)
+% TODO: Explain the generation process in some detail (abstractly)
 
 \subsection{TML Execution}
 
@@ -220,9 +182,113 @@ The AST is also used for executing a TML program on a tape. Since a TML program 
 % It is important that the parser be written in a way that is compatible with web deployment- the parser will be used in the product. Moreover, since the website is expected to have live syntax highlighting, the error messages should help the user fix any bugs in their code.
 
 \section{Product}
-TODO
-% The website should allow the parser to be used. In particular, it should allow the user to type in a program and then:
-% \begin{itemize}
-%     \item convert it into a TM; or
-%     \item run it on a valid tape, one step at a time.
-% \end{itemize}
+
+The website was planned to have multiple pages, which included:
+\begin{itemize}
+    \item the \emph{homepage} that allowed the user to make use of the parser;
+    \item the \emph{documentation} pages that explained TM and the TML; and
+    \item some pages to illustrate syntax and validation (non-syntax) \emph{errors}.
+\end{itemize}
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics{images/Index webpage prototype.png}
+    \caption{A prototype for the website homepage.}
+    \label{fig:homepage_prototype}
+\end{figure}
+
+A prototype of the homepage was created to plan its layout. This is given in Figure \ref{fig:homepage_prototype}. The editor is placed on the left; the TM on the upper half of the right section; and the tape execution on bottom right. The toolbar features a button to go to the documentation, along with the ability to fill the editor with some example code. The editor can be compiled to a TM, and executed on a tape after the user types an input value. The execute button performs one step in execution, while the play button continually executes the program until it terminates. Note that this does not completely match the implementation.
+
+\subsection{TM Conversion}
+The website allows live conversion of a (valid) TML program into a TM. This includes constructing the FSM representation of a TM from the program. This is the main conversion since it is quite easy to follow the diagram during execution. To help the user do so, the current state/transition is also highlighted in the FSM.
+
+\begin{table}[htb]
+    \centering
+    \begin{tabular}{c|ccc}
+        & $0$ & $1$ & $\#$ \\
+        \hline
+        $q_0$ & $(R, 0, q_0)$ & $(R, 1, q_0)$ & $(L, \#, q_1)$ \\
+        $q_1$ & $(L, 0, q_A)$ & $(L, 1, q_R)$ & $(L, 1, q_R)$ 
+    \end{tabular}
+    \caption{A transition table.}
+    \label{tbl:table_isDiv2}
+\end{table}
+
+The website also allows the user to convert a TML program into a formal definition of a TM program. The result defines all the states and then presents a transition table, such as the one in Table \ref{tbl:table_isDiv2}. In this example, the non-terminating states are $q_0$ and $q_1$, and the alphabet $\Sigma = \{0, 1\}$. Moreover, the transition table says that $\delta(q_0, 0) = (R, 0, q_0)$, meaning that, during execution:
+\begin{itemize}
+    \item the tapehead pointer moves to the \emph{right};
+    \item the tapehead value stays $\emph{0}$; and 
+    \item the current state remains $\emph{q}_\emph{0}$
+\end{itemize}
+
+\subsection{Tape Execution}
+The user can input a valid string in the alphabet and execute the TML program on a tape. The tape panel feature 15 visible tape entries (spots for an input value). The tape panel animates the execution process in the tape entries, which involves:
+\begin{itemize}
+    \item changing the tapehead value; and
+    \item moving the tape to the left or the right.
+\end{itemize}
+Note that a \textit{move} command moves the \textit{pointer}, not the tape. Hence, the command \texttt{move left} moves the \textit{tape} to the right; the tapehead position remains constant.
+
+\begin{figure}[htb]
+    \centering
+    \begin{subfigure}{0.3\textwidth}
+        \centering
+        \begin{tikzpicture}
+            \foreach \x in {0, 4} {
+                \draw[opacity=0.6] (\x*0.5, 0) -- (\x*0.5+0.25, 0);
+                \node[opacity=0.6] at (\x*0.5+0.125, -0.25) {\texttt{\x}};
+            }
+            \foreach \x in {1, 2, 3} {
+                \draw (\x*0.5, 0) -- (\x*0.5+0.25, 0);
+                \node at (\x*0.5+0.125, -0.25) {\texttt{\x}};
+            }
+
+            \draw[thick, dotted] (0.375, 0) -- (0.375, 0.35);
+            \draw[thick, dotted] (1.875, 0) -- (1.875, 0.35);
+        \end{tikzpicture}
+        \caption{}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.3\textwidth}
+        \centering
+        \begin{tikzpicture}
+            \foreach \x in {0, 1} {
+                \draw[opacity=0.6] (\x*0.5, 0) -- (\x*0.5+0.25, 0);
+                \node[opacity=0.6] at (\x*0.5+0.125, -0.25) {\texttt{\x}};
+            }
+            \foreach \x in {2, 3, 4} {
+                \draw (\x*0.5, 0) -- (\x*0.5+0.25, 0);
+                \node at (\x*0.5+0.125, -0.25) {\texttt{\x}};
+            }
+
+            \draw[thick, dotted] (0.875, 0) -- (0.875, 0.35);
+            \draw[thick, dotted] (2.375, 0) -- (2.375, 0.35);
+        \end{tikzpicture}
+        \caption{}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.3\textwidth}
+        \centering
+        \begin{tikzpicture}
+            \foreach \x[evaluate={int(mod(\x, 5))} as \y] in {5, 1} {
+                \draw[opacity=0.6] (\x*0.5, 0) -- (\x*0.5+0.25, 0);
+                \node[opacity=0.6] at (\x*0.5+0.125, -0.25) {\texttt{\y}};
+            }
+
+            \foreach \x in {2, 3, 4} {
+                \draw (\x*0.5, 0) -- (\x*0.5+0.25, 0);
+                \node at (\x*0.5+0.125, -0.25) {\texttt{\x}};
+            }
+
+            \draw[thick, dotted] (0.875, 0) -- (0.875, 0.35);
+            \draw[thick, dotted] (2.375, 0) -- (2.375, 0.35);
+        \end{tikzpicture}
+        \caption{}
+    \end{subfigure}
+    \caption{The transition process for tape entries.}
+    \label{fig:tape_movement}
+\end{figure}
+
+For the tape movement animation to look smooth, there are always 2 tape entries to either side of the tape. That way, if the tape gets moved to left or right, there will be a tape entry to show. This is illustrated in Figure \ref{fig:tape_movement} (a)- the tape entries 0 and 4 are out of frame and therefore invisible. 
+
+When the tape moves, there will be 2 tape entries on one side. For instance, if the tape moves to the left in Figure \ref{fig:tape_movement} (a), then we get Figure \ref{fig:tape_movement} (b). After the transition has completed, we instantly move the most extreme tape entry to the other side. In the example, we move tape entry 0 to the right, leading to the tape state given in Figure \ref{fig:tape_movement} (c). At this point, we also change the tape value of entry 0 so that it matches tape value at index 5.

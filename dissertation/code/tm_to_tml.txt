@@ -1,0 +1,16 @@
+alphabet = {0, 1}
+module has0 {
+    if 1 {
+        changeto 1
+        move right
+        goto has0
+    } if 0 {
+        changeto 0
+        move right
+        accept
+    } if blank {
+        changeto blank
+        move left
+        reject
+    }
+}

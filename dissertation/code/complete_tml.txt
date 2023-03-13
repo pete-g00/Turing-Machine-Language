@@ -1,0 +1,27 @@
+alphabet = {0, 1}
+module isOdd {
+    // move to the end
+    while 0 {
+        changeto 0
+        move right
+    } while 1 {
+        changeto 1
+        move right
+    } if blank {
+        changeto blank
+        move left
+        goto isOddCheck
+    }
+}
+module isOddCheck {
+    // accept if and only if the value is 1
+    if 0, blank {
+        changeto 0
+        move left
+        reject
+    } if 1 {
+        changeto blank
+        move left
+        accept
+    }
+}

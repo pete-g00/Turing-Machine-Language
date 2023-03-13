@@ -1,11 +1,12 @@
 import { CodeError } from "./CodeError";
-import { ProgramContext, ModuleContext, BasicBlockContext, CoreBasicBlockContext, SwitchBlockContext, IfCaseContext, WhileCaseContext, ChangeToContext, GoToContext, BlockContext } from "./Context";
+import { CodeVisitor } from "./CodeVisitor";
+import { ProgramContext, ModuleContext, BasicBlockContext, CoreBasicBlockContext, SwitchBlockContext, IfCaseContext, WhileCaseContext, ChangeToContext, GoToContext, BlockContext, AlphabetContext } from "./Context";
 
 /**
  * `CodeValidator` ensures that the parsed TM program is valid by performing multiple checks on it.
  * 
  */
-export class CodeValidator {
+export class CodeValidator extends CodeVisitor<boolean> {
     /**
      * The alphabet of the program
      */
@@ -35,12 +36,13 @@ export class CodeValidator {
      * We use boolean to record whether a block has a *flow* command, and returns false in every other case.
      */
     public constructor(program:ProgramContext) {
+        super();
         this._program = program;
         this._moduleNames = new Set<string>();
     }
 
     public validate() {
-        this._program.validate(this);
+        this.visit(this._program);
     }
 
     /**
@@ -62,13 +64,21 @@ export class CodeValidator {
         }
     }
     
-    public validateProgram(program: ProgramContext): void {
-        this._alphabet = this._program.alphabet.values;
+    public visitProgram(program: ProgramContext): boolean {
+        this.visit(program.alphabet);
         this._addModuleNames(program);
         
         for (const module of program.modules) {
-            module.validate(this);
+            this.visit(module);
         }
+
+        return true;
+    }
+
+    public visitAlphabet(context: AlphabetContext): boolean {
+        this._alphabet = context.values;
+        
+        return true;
     }
 
     /**
@@ -95,7 +105,7 @@ export class CodeValidator {
                 hasSwitch = true;
             }
 
-            if (blocks[i].validate(this)) {
+            if (this.visit(blocks[i])) {
                 hasFlow = true;
             }
         }
@@ -103,24 +113,32 @@ export class CodeValidator {
         return hasFlow;
     }
 
-    public validateModule(module: ModuleContext): void {
+    public visitModule(module: ModuleContext): boolean {
         this._validateBlocks(module.blocks, false);
+        return true;
     }
 
-    public validateBasicBlock(block: BasicBlockContext): boolean {
-        block.changeToCommand?.validate(this);
-        block.flowCommand?.validate(this);
+    public visitBasicBlock(block: BasicBlockContext): boolean {
+        if (block.changeToCommand !== undefined) {
+            this.visit(block.changeToCommand);
+        }
+
+        if (block.flowCommand !== undefined) {
+            this.visit(block.flowCommand);
+        }
         
         return block.flowCommand !== undefined;
     }
     
-    public validateCoreBlock(block: CoreBasicBlockContext): boolean {
-        block.changeToCommand?.validate(this);
+    public visitCoreBlock(block: CoreBasicBlockContext): boolean {
+        if (block.changeToCommand !== undefined) {
+            this.visit(block.changeToCommand);
+        }
 
         return false;
     }
 
-    public validateSwitchBlock(block: SwitchBlockContext): boolean {
+    public visitSwitchBlock(block: SwitchBlockContext): boolean {
         const caseSet = new Set<string>();
         const alphabetSet = new Set(this._alphabet);
         alphabetSet.add("");
@@ -137,7 +155,7 @@ export class CodeValidator {
                 caseSet.add(letter);
             });
             
-            if (switchCase.validate(this)) {
+            if (this.visit(switchCase)) {
                 hasFlow = true;
             }
         }
@@ -151,25 +169,42 @@ export class CodeValidator {
         return hasFlow;
     }
 
-    public validateIf(block: IfCaseContext): boolean {
+    public visitIf(block: IfCaseContext): boolean {
+        console.log("Visiting if");
         return this._validateBlocks(block.blocks, true);
     }
     
-    public validateWhile(block: WhileCaseContext): boolean {
-        block.block.validate(this);
+    public visitWhile(block: WhileCaseContext): boolean {
+        this.visit(block.block);
 
         return false;
     }
 
-    public validateChangeTo(command: ChangeToContext)  {
+    public visitChangeTo(command: ChangeToContext): boolean  {
         if (command.value !== "" && !this._alphabet!.has(command.value)) {
             throw new CodeError(command.position, `The letter "${command.value}" is not part of the alphabet.`);
         }
+
+        return true;
     }
 
-    public validateGoTo(command: GoToContext) {
+    public visitGoTo(command: GoToContext) : boolean {
         if (!this._moduleNames.has(command.identifier)) {
             throw new CodeError(command.position, `Undefined module "${command.identifier}".`);
         }
+
+        return true;
+    }
+
+    public visitTermination(): boolean {
+        return true;
+    }
+
+    public visitMove(): boolean {
+        return true;
+    }
+    
+    public visitCoreBasicBlock(): boolean {
+        return true;
     }
 }

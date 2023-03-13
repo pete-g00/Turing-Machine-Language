@@ -1,0 +1,10 @@
+alphabet = {a, b}
+module first {
+    changeto blank
+    move right
+    goto second
+}
+module second {
+    move left
+    accept
+}

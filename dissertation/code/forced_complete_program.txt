@@ -1,0 +1,19 @@
+alphabet = {0, 1}
+module q0 {
+    if 0, blank {
+        move right
+        accept
+    } if 1 {
+        move right
+        goto q1
+    }
+}
+module q1 {
+    if 0, 1 {
+        move right
+        goto q1
+    } if blank {
+        move left
+        reject
+    }
+}

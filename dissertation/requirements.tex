@@ -1,6 +1,13 @@
 \chapter{Requirements}
 
-I used MoScoWs to specify the requirements for the project. In particular, the requirements were partitioned into one of the 4 sections: must have, should have, could have and will not have. Since the project has multiple parts, each part had its own MoScoW section. The final section provides non-functional requirements for each section.
+MoScoWs were used to specify the requirements for the project. In particular, the requirements were partitioned into one of the 4 levels of priority:
+\begin{itemize}
+    \item \emph{must have}- this feature is required to construct the minimum viable product; 
+    \item \emph{should have}- this feature is required for the product to be practically useful;
+    \item \emph{could have}- this feature is a stretch goal but is plausible; and
+    \item \emph{will not have}- this feature is not something that can be implemented in the given time (or conflicts with another feature).
+\end{itemize} 
+Since the project has 3 distinct aspects. For this reason, each part had its own MoScoW section. Both functional and non-functional requirements are given.
 
 \section{Developing TML}
 
@@ -11,7 +18,7 @@ I used MoScoWs to specify the requirements for the project. In particular, the r
 \end{itemize}
 Along with the specification, a proof of equivalence between TMs and TML programs should also be provided.
 
-\paragraph{Should Have} The specification should include examples. In particular, there should be examples of valid and invalid programs, and those that illustrate the proofs (e.g. how to convert a TM into a TML program) so that it is easier to follow.
+\paragraph{Should Have} The specification should include examples. In particular, there should be examples of valid and invalid programs, and those that illustrate the proofs (e.g. how to convert a TM into a TML program) so that it is easier to follow. The language should resemble a traditional programming language.
 
 \paragraph{Could Have} The specification could connect TML program with the Church-Turing Thesis. In particular, a proof of equivalence could be explored between TML program and $\lambda$-calculus.
 
@@ -23,6 +30,7 @@ Along with the specification, a proof of equivalence between TMs and TML program
     \item validate a program context; and 
     \item execute a program context on a valid tape.
 \end{itemize}
+Moreover, the parser must support web deployment and be correct.
 
 \paragraph{Should Have} The parser should be able to convert a program context to a TM. \textit{Compared to the 3 must-have requirements, this requirement was considered to be of the lowest priority, and so was considered a should-have.}
 
@@ -30,7 +38,7 @@ Along with the specification, a proof of equivalence between TMs and TML program
 
 \paragraph{Will Not Have} The parser will not be able to convert a TM into a TML program.
 
-\section{The Product- Website}
+\section{The Product}
 
 \paragraph{Must Have} The website must:
 \begin{itemize}
@@ -39,23 +47,26 @@ Along with the specification, a proof of equivalence between TMs and TML program
     \item be able to execute a program on a valid tape, one step at a time.
 \end{itemize}
 
-\paragraph{Should Have} The code editor should support syntax highlighting. Assuming that the initial FSM representation rendered by the website places the states in a random manner, without considering which states are linked and should be placed closer, the user should be able to drag them around.
-% TODO: Illustrate this?
+\begin{figure}[htb]
+    \centering
+    \begin{tikzpicture}
+        \node[state, accepting] (q0) at (0, 0) {$q_0$};
+        \node[state] (q1) at (2.5, 0) {$q_1$};
+        \node[state, fill=green, opacity=0.6] (A) at (5, 0) {$A$};
+        \node[state, fill=red, opacity=0.6] (R) at (7.5, 0) {$R$};
+
+        \draw[->] (q0) edge[loop above] node {$0|1, R$} (q0);
+        \draw[->] (q0) -- node[above] {$\#, L$} (q1);
+        \draw[->] (q1) -- node[above] {$0, L$} (A);
+        \draw[->] (q1) -- node[above, pos=0.75] {$1|\#, L$} (R);
+    \end{tikzpicture}
+    \caption{A possible initial rendering of a FSM}
+    \label{fig:bad_FSM}
+\end{figure}
+
+\paragraph{Should Have} The code editor should support syntax highlighting. Assuming that the website does not make use of any fancy FSM assignment algorithm, i.e. it would produce an initial rendering of FSM such as the one in Figure \ref{fig:bad_FSM}, the user should be able to drag states within the FSM to place them in a better position. The website should be fast and easy to use.
 
 \paragraph{Could Have} The editor could support error detection. The user could be able to configure the website, e.g. change the editor theme, the editor font size and the speed of tape execution. The website could convert a program to its definition as a TM. The website could support automatic placement of states (within the FSM) in an aesthetic manner instead of having the user drag it.
 
 \paragraph{Will Not Have} The editor will not be able to automatically fix errors. The website will not be able to execute a TM on a tape (without a program). The website will not able to convert a TM into a TML program.
 
-\section{Non-Functional Requirements}
-\paragraph{Must Have} The parser must support web deployment. The parser should be correct.
-
-\paragraph{Should Have} The language should resemble a traditional programming language. The website should be fast and easy to use.
-
-% The language should not be ambiguous.
-
-% \section{Guidance}
-% Make it clear how you derived the constrained form of your problem via a clear and logical process. 
-
-% The analysis chapter explains the process by which you arrive at a concrete design. In software 
-% engineering projects, this will include a statement of the requirement capture process and the
-% derived requirements.

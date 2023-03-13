@@ -1,0 +1,36 @@
+alphabet = {a, b}
+module moveToEnd {
+    while a {
+        changeto a
+        move right
+    } while b {
+        changeto b
+        move right
+    } if blank {
+        changeto blank
+        move left
+        goto checkAFirst
+    }
+}
+module checkAFirst {
+    if a {
+        changeto blank
+        move left
+        goto checkASecond
+    } if b, blank {
+        changeto blank
+        move left
+        reject
+    }
+}
+module checkASecond {
+    if a {
+        changeto blank
+        move left
+        accept
+    } if b, blank {
+        changeto blank
+        move left
+        reject
+    }
+}

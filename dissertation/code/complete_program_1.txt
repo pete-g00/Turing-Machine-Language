@@ -1,0 +1,10 @@
+alphabet = {a, b}
+module simple1 {
+    changeto b
+    move left
+    goto simple2
+}
+module simple2 {
+    move right
+    accept
+}

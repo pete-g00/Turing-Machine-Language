@@ -423,3 +423,20 @@
 
 * *1.5 hours* Updated design and started implementation for parser
 * *2.5 hours* Proof-read the entire file and made changes
+
+### 9 Mar 2023
+* *0.5 hours* Expanded example for TM execution
+* *1 hour* Changed example for TML program execution
+* *1.5 hour* Changed the parser so that it adhered strictly to the visitor design pattern
+
+### 10 Mar 2023
+* *0.5 hours* Moved all code from file to the code folder 
+
+## Week 10
+
+### 13 Mar 2023
+
+* *1.5 hours* Added design for product
+* *2.5 hours* Added implementation for product
+* *1 hour* Proofread future work
+* *1.5 hours* Proofread background

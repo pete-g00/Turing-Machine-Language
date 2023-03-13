@@ -1,0 +1,6 @@
+if a {
+    move right
+    accept
+} if b, blank {
+    changeto blank
+}

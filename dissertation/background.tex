@@ -47,12 +47,12 @@ Although based on Turing's work on \cite{turing1936computable}, this definition,
     \label{fig:tm_isDiv2}
 \end{figure}
 
-We can represent a TM as a finite state machine (FSM). This is a directed graph, with vertices as states and edges as transitions. An example is given in Figure \ref{fig:tm_isDiv2}. In this case, the alphabet $\Sigma = \{0, 1\}$. The blank symbol is denoted by $\#$. The initial state is denoted by $q_0$; the accept state $A$ and the reject state $R$. Every edge corresponds to an evaluation of the transition function $\delta$, e.g. $\delta(q_1, 0) = (A, \texttt{blank}, \texttt{left})$. 
+We can represent a TM as a \emph{finite state machine} (FSM). This is a directed graph, with vertices as states and edges as transitions. An example is given in Figure \ref{fig:tm_isDiv2}. In this case, the alphabet $\Sigma = \{0, 1\}$. The \texttt{blank} symbol is denoted by $\#$. The initial state is denoted by $q_0$; the accept state $A$ and the reject state $R$. Every edge corresponds to an evaluation of the transition function $\delta$, e.g. $\delta(q_1, 0) = (A, \texttt{blank}, \texttt{left})$. 
 
-The figure presents two ways of representing a FSM- subfigure (a) shows all the transitions, while subfigure (b) only shows the transitions where the tapehead value is getting changed. It also combines certain letters if they are not being changed. We will make use of the shorthand FSM representation from now.
+The figure presents two ways of representing a FSM- subfigure (a) shows all the transitions, while subfigure (b) only shows the transitions where the tapehead value is getting changed. It also combines letters with similar transitions. We will make use of the shorthand notation.
 
 \subsection{Executing a TM on a tape}
-Let $\Sigma$ be an alphabet. A \emph{tape} $T$ on $\Sigma$ is a function $T\colon \mathbb{Z} \to \Sigma^+$. In particular, the tape has infinite entries in both directions. 
+Let $\Sigma$ be an alphabet. A \emph{tape} $T$ on $\Sigma$ is a function $T\colon \mathbb{Z} \to \Sigma^+$. That is, the tape has infinite entries in both directions. Moreover, each tape entry contains a value from the alphabet, or the \texttt{blank} symbol. 
 
 \begin{figure}[htb]
     \centering
@@ -65,7 +65,7 @@ Let $\Sigma$ be an alphabet. A \emph{tape} $T$ on $\Sigma$ is a function $T\colo
     \caption{A TM tape on $\{0, 1\}$.}
     \label{fig:tape_example}
 \end{figure}
-We can represent a tape using a figure. For instance, let $\Sigma = \{0, 1\}$, and let $T$ be the tape on $\Sigma$ given below:
+We can represent a tape using a figure. For instance, let $\Sigma = \{0, 1\}$, and let $T$ be the tape on $\Sigma$ given as follows:
 \[T(x) = \begin{cases}
     0 & x \in \{0, 2, 3\} \\
     1 & x \in \{1\} \\
@@ -75,22 +75,12 @@ Then, Figure \ref{fig:tape_example} represents the tape $T$. We will assume that
 
 We can execute a TM on a tape. Let $M$ be a TM with alphabet $\Sigma$, and let $T$ be a tape on $\Sigma$. We execute $M$ on $T$ inductively, as follows:
 \begin{itemize}
-    \item At any point during execution, we maintain 3 objects:
-    \begin{enumerate}
-        \item a tape on $\Sigma$, 
-        \item a (current) state in $M$ and 
-        \item an index in the tape (called the \emph{tapehead index}). 
-    \end{enumerate}
-    
-    \item At the start,
-    \begin{enumerate}
-        \item the tape is $T$; 
-        \item the tapehead index is $0$; and
-        \item the current state is the initial state $q_0$. 
-    \end{enumerate}
+    \item At any point during execution, we maintain 3 objects: a tape on $\Sigma$; a (current) state in $M$; and an index in the tape (called the \emph{tapehead index}).  
+
+    \item At the start, the tape is $T$; the tapehead index is $0$; and the current state is the initial state $q_0$. 
     
     \item At some point during the execution, assume that we have the tape $S$, tapehead index $j$, with \emph{tapehead value} $T(j) = t$, and a non-terminating state $q$ (i.e. not $A$ or $R$). Denote $\delta(q, t) = (q', t', \texttt{dir})$. Then, 
-    \begin{enumerate}
+    \begin{itemize}
         \item the next state is $q'$;
         \item the next tape is $S'$, where
         \[S'(x) = \begin{cases}
@@ -103,26 +93,13 @@ We can execute a TM on a tape. Let $M$ be a TM with alphabet $\Sigma$, and let $
             j+1 & \texttt{dir} = \texttt{right} \\
             j-1 & \texttt{dir} = \texttt{left}.
         \end{cases}\]
-    \end{enumerate}
+    \end{itemize}
     If the state $q'$ is not a terminating state, then the execution continues with these 3 objects. Otherwise, execution is terminated with terminating state $q'$.
 \end{itemize}
 
-We illustrate this process with the TM in Figure \ref{fig:tm_isDiv2} with the tape in Figure \ref{fig:tape_example}:
-\begin{itemize}
-    \item Initially, 
-    \begin{enumerate}
-        \item the tape is the given tape;
-        \item $q_0$ is the current state; and 
-        \item the tapehead index is $0$, with value $1$.
-    \end{enumerate}
-    \item According to the FSM, we have $\delta(q_0, 1) = (q_0, 1, R)$. Hence,
-    \begin{enumerate}
-        \item the tape remains unchanged;
-        \item $q_0$ is still the current state; and
-        \item and the tapehead index becomes $1$, with value is \texttt{0}.
-    \end{enumerate}
-    \item The transition for \texttt{0} and \texttt{1} are the same with respect to $q_0$. This means that we keep moving to the right until we end up at a blank symbol. At that point, the following is the state of the tape:
-    \begin{figure}[H]
+\begin{figure}[htb]
+    \centering
+    \begin{subfigure}{0.4\textwidth}
         \centering
         \begin{tikzpicture}
             \foreach \x[count=\i] in {, 1, 0, 0, 0, } {
@@ -131,19 +108,9 @@ We illustrate this process with the TM in Figure \ref{fig:tm_isDiv2} with the ta
             }
             \draw[->] (2.875, -0.5) -- (2.875, -0.1);
         \end{tikzpicture}
-    \end{figure}
-    The arrow points at the tapehead value. We are still at the state $q_0$, and the tape has not been altered.
-    
-    \item Now, since the tapehead value is \texttt{blank}, we move to the left and the current state becomes $q_1$. The tape has still not been changed. The current value is now $0$.
-    
-    \item We have $\delta(q_1, 0) = (A, \texttt{blank}, L)$. So, 
-    \begin{enumerate}
-        \item the tapehead value changes to from $0$ to blank;
-        \item the current state becomes $A$; and
-        \item the tapehead pointer move to the left, at index $2$.
-    \end{enumerate}
-    Since $A$ is a terminating state, execution terminates, with result accept. The final tape state is the following:
-    \begin{figure}[H]
+        \caption{}
+    \end{subfigure}
+    \begin{subfigure}{0.4\textwidth}
         \centering
         \begin{tikzpicture}
             \foreach \x[count=\i] in {, 1, 0, 0, , } {
@@ -152,9 +119,36 @@ We illustrate this process with the TM in Figure \ref{fig:tm_isDiv2} with the ta
             }
             \draw[->] (1.875, -0.5) -- (1.875, -0.1);
         \end{tikzpicture}
-    \end{figure}
+        \caption{}
+    \end{subfigure}
+    \caption{Some of the tape states during execution.}
+    \label{fig:tm_tape_execution}
+\end{figure}
+We illustrate this process with the TM in Figure \ref{fig:tm_isDiv2} with the tape in Figure \ref{fig:tape_example}:
+\begin{itemize}
+    \item Initially, the tape is the given tape; $q_0$ is the current state; and the tapehead index is $0$, with value $1$.
+    
+    \item According to the FSM, we have $\delta(q_0, 1) = (q_0, 1, R)$. Hence,
+    \begin{itemize}
+        \item the tape remains unchanged;
+        \item $q_0$ is still the current state; and
+        \item and the tapehead index becomes $1$, with value \texttt{0}.
+    \end{itemize}
+    
+    \item The transition for \texttt{0} and \texttt{1} are the same with respect to $q_0$. This means that we keep moving to the right, until we end up at a blank symbol. At that point, the state of the tape is given in Figure \ref{fig:tm_tape_execution} (a). The arrow points at the tapehead entry. We are still at the state $q_0$, and the tape has not been altered.
+    
+    \item Now, since the tapehead value is \texttt{blank}, we move to the left and the current state becomes $q_1$. The tape has still not been changed. The current value is now $0$.
+    
+    \item We have $\delta(q_1, 0) = (A, \texttt{blank}, L)$. So, 
+    \begin{itemize}
+        \item the tapehead value changes to from $0$ to blank;
+        \item the current state becomes $A$; and
+        \item the tapehead pointer move to the left, to index $2$.
+    \end{itemize}
+    Since $A$ is a terminating state, execution terminates, with result \texttt{accept}. The final tape state is given in Figure \ref{fig:tm_tape_execution} (b).
+    
 \end{itemize}
-So, the TM works as follows:
+So, the TM in Figure \ref{fig:tm_isDiv2} executes as follows:
 \begin{itemize}
     \item we use the state $q_0$ to traverse to the first blank symbol (i.e. the end of the string), and then move to the state $q_1$;
     \item at state $q_1$, we accept the string if and only if the current tapehead value is \texttt{0}
@@ -162,9 +156,9 @@ So, the TM works as follows:
 Hence, this TM accepts binary numbers if and only if they are divisible by 2.
 
 \subsection{TM as a model of computation}
-Turing initially proposed TMs as the `correct' model of computation in \cite{turing1936computable}. This result is referred to as the \emph{Church-Turing Thesis}. It is a thesis since it is informal in nature; it is just a \textit{belief} that the correct model of computation is the model generated by TMs. 
+Turing initially proposed TMs as the `correct' model of computation in \cite{turing1936computable}. This result is referred to as the \emph{Church-Turing Thesis}. It is a thesis since it is informal in nature; it is just a \textit{belief} that the correct model of computation is the model given by TMs. 
 
-In this paper, he also showed that TMs and $\lambda$-calculus are equivalent to TMs. Hence, he showed that $\lambda$-calculus is also the correct model of computation. There have been many other models of computations proposed, such as general recursive functions. It is widely regarded that TMs (and all the equivalent models) represent the correct model of computation. This is because many of the originally proposed models of computation turned out to be equivalent (\cite{copeland2004essential}).
+In this paper, Turing also showed that TMs and $\lambda$-calculus are equivalent. Hence, it follows that $\lambda$-calculus is also the correct model of computation. There have been many other models of computations proposed, such as general recursive functions. It is widely regarded that TMs (and all the equivalent models) represent the correct model of computation. This is because many of the originally proposed models of computation turned out to be equivalent (\cite{copeland2004essential}).
 
 \section{Parser}
 A \emph{compiler} is a program that takes source code in a programming language (PL) and translates it into a program in another, target, PL. During the process, the compiler also detects any errors, such as syntax and type errors. 
@@ -172,20 +166,20 @@ A \emph{compiler} is a program that takes source code in a programming language 
 \begin{figure}[htb]
     \centering
     \begin{tikzpicture}
-        \node[draw, text width=2cm, align=center] (LA) at (0, 0) {Lexical Analysis};
-        \node[draw, text width=2cm, align=center] (SA) at (0, -2.5) {Syntactic Analysis};
-        \node[draw, text width=2cm, align=center] (CA) at (0, -5) {Semantic Analysis};
-        \node[draw, text width=2cm, align=center] (CG) at (0, -7.5) {Code \\ Generation};
+        \node[draw] (LA) at (0, 0) {Lexical Analysis};
+        \node[draw] (SA) at (0, -1.5) {Syntactic Analysis};
+        \node[draw] (CA) at (0, -3) {Semantic Analysis};
+        \node[draw] (CG) at (0, -4.5) {Code Generation};
         
-        \draw[->] (0, 1.5) -- node[right] {source code} (LA);
-        \draw[->] (LA) -- node[right, text width=2cm, align=left] {token \\ stream} (SA);
+        \draw[->] (0, 1) -- node[right] {source code} (LA);
+        \draw[->] (LA) -- node[right] {token stream} (SA);
         
-        \draw[->] (SA) -- node[above, text width=2cm, align=center] {syntax \\ errors} (3, -2.5);
+        \draw[->] (SA) -- node[above] {syntax errors} (4.5, -1.5);
         \draw[->] (SA) -- node[right] {AST} (CA);
-        \draw[->] (CA) -- node[above, text width=2cm, align=center] {scope/type \\ errors} (3, -5);
+        \draw[->] (CA) -- node[above] {scope/type errors} (4.5, -3);
         
         \draw[->] (CA) -- node[right] {AST} (CG);
-        \draw[->] (CG) -- node[text width=2cm, align=left, right] {result \\ program} (0, -9);
+        \draw[->] (CG) -- node[right] {result program} (0, -5.5);
     \end{tikzpicture}
     \caption{The data flow between the compilation phases.}
     \label{fig:compilation_process}
@@ -194,12 +188,11 @@ A \emph{compiler} is a program that takes source code in a programming language 
 We will now consider the different phases of the compilation process. This is summarised in Figure \ref{fig:compilation_process}. This figure, along with most of the content in this section, has been adapted from \cite{aho2007compilers}.
 
 \subsection{Lexical Analysis}    
-First, we perform \emph{lexical analysis}. In this stage, the source code is enriched to make it ready for parsing. In particular, we generate a stream of source code, which reads the program word by word. Then, it produces a stream of \emph{tokens}. A token is a word in source code along with a label. For instance, consider the mathematical expression \texttt{1 + 2}. We can convert this expression into 3 tokens: \texttt{(1, NUM)}, \texttt{(+, PLUS)} and \texttt{(2, NUM)}. 
+During the compilation process, we first perform \emph{lexical analysis}. In this stage, the source code is enriched to make it ready for parsing. In particular, we generate a stream of source code, which reads the program word by word. Then, it produces a stream of \emph{tokens}. A token is a word in source code along with a label. For instance, consider the mathematical expression \texttt{1 + 2}. We can convert this expression into 3 tokens: \texttt{(1, NUM)}, \texttt{(+, PLUS)} and \texttt{(2, NUM)}. 
 
 \subsection{Syntactic Analysis}
-Next, we try to parse the token stream into an (abstract) syntax tree (AST). If there are syntax errors present in the program, then it is not possible to construct a syntax tree. This will be detected during this phase, at which point we can throw a syntax error.
 
-A syntax tree represents the program as a tree of nodes. Typically, the internal nodes represent operations and the leaves represent their arguments. An AST is a compact representation of a syntax tree that does not feature all the nodes. The abstract syntax tree for the expression \texttt{(1 + 2) * (3 + 4)} is given in Figure \ref{fig:AST_example}.
+Next, we try to parse the token stream into an \emph{abstract syntax tree} (AST). If there are syntax errors present in the program, then it is not possible to construct an AST. This will be detected during the process, at which point we can throw a syntax error.
 
 \begin{figure}[htb]
     \centering
@@ -231,38 +224,20 @@ A syntax tree represents the program as a tree of nodes. Typically, the internal
     \label{fig:AST_example}
 \end{figure}
 
-There are many ways to parse the stream of tokens. A common method is \emph{recursive-descent} parsing. Here, we recursively parse the source code and generate nodes within the AST. For instance, we initially start by parsing a program. If we then encounter an expression, and this is allowed in the grammar of the language, we parse an expression. 
+An AST represents the program as a tree. Typically, the internal nodes represent operations, whereas the leaves represent their arguments. The AST for the expression \texttt{(1 + 2) * (3 + 4)} is given in Figure \ref{fig:AST_example}.
 
-One way of recursive-descent parsing is by \emph{top-down} parsing. In this case, we produce the parent node of the AST and then generate its children. 
+There are many ways to parse the stream of tokens. A common method is \emph{recursive-descent parsing}. Here, we have a parser function for each construct in the language, such as a \textit{program}, an \textit{if} command, an \textit{expression}, etc. We look at the next token value and choose the right function.
 
-The simplest form of recursive-descent parsing is called \emph{predictive parsing}. This applies when the next token determines what structure it is to be parsed. For instance, if we see the token \texttt{if}, then we know we are parsing an \textit{if} command. Such a parser makes use of the \texttt{match} method- this is used to match the next token value.
+One way of performing recursive-descent parsing is by \emph{top-down parsing}. In this case, we produce the parent node of the AST and then generate its children. 
 
-% A snippet of a recursive-descent class \texttt{CodeParser} is given below, which illustrates how an if statement might be parsed.
-% \begin{lstlisting}[language=TypeScript]
-% class CodeParser {
-%     parseIf():IfContext {
-%         match("if");
-%         var condition = parseExpr();
-        
-%         match("then");
-%         var expr1 = parseExpr();
-        
-%         match("else");
-%         var expr2 = parseExpr();
-
-%         return new IfContext(condition, expr1, expr2);
-%     }
-
-%     // ... other parsing methods
-% }
-% \end{lstlisting}
+The simplest form of recursive-descent parsing is called \emph{predictive parsing}. This applies when the next token determines what structure it is to be parsed. For instance, if we see the token \texttt{if}, then we know we are parsing an \textit{if} command.
 
 \subsection{Semantic Analysis}
-Now, we traverse the AST and check that there were no errors in the source code. Typically, there are 2 types of things to check in this stage- type and scope errors. 
+Now, we traverse the AST and check that there are no errors in the source code. Typically, there are 2 types of things to check in this stage- \emph{type errors} and \emph{scope errors}. 
 
-In type errors, we check whether the AST has some type mismatch, e.g. \texttt{1 + true}. If there are no errors, then we will have assigned types to each variable. This information will likely be used during code generation.
+In type errors, we check whether the AST has some type mismatch, e.g. \texttt{1 + true}. We can detect this by keeping track of the types of the identifiers and see if they are legal.
 
-In scope errors, we check whether some identifier present in code is undefined. To do so, we need to keep track of all the variables that are in scope at this point. In terms of functions, there is a design choice here- we can have all functions in scope from the start, or add them to scope as they are encountered. 
+In scope errors, we ensure that all the identifiers present in code are defined. To do so, we need to keep track of all the variables that are in scope. In terms of functions, there is a design choice here- we can have all functions in scope from the start, or add them to scope as they are encountered. Another thing to consider is recursion- to allow recursion, the function must be in scope as soon as it is declared.
 
 \subsection{Code Generation}
-Finally, we convert the AST into code in the target language. In particular, we traverse the tree left-to-right and convert each phrase from the source language to the target. This can also be done using the visitor design pattern. Here, the return type is expected to be a representation of the target language.
+Finally, we convert the AST into code in the target language. In particular, we traverse the tree and convert each phrase from the source language to the target.
