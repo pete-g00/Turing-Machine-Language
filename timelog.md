@@ -440,3 +440,8 @@
 * *2.5 hours* Added implementation for product
 * *1 hour* Proofread future work
 * *1.5 hours* Proofread background
+
+### 14 Mar 2023
+
+* *1.5 hours* Proofread parser design
+* *1.5 hours* Proofread parser implementation

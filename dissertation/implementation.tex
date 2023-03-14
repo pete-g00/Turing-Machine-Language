@@ -1,7 +1,7 @@
 \chapter{Implementation}
 \section{Parser}
 
-The parser was written in TypeScript. Although there are many frameworks that could have been used for lexical and syntactic analysis, these were not chosen. The main reason for this is that the parser was meant to be used within a website. In particular, it was expected that the parser became an node package manager (NPM) package. Moreover, TML is quite a simple language, making this task relatively easy and short.
+The parser was written in TypeScript. Although there are many frameworks that could have been used for lexical and syntactic analysis, these were not chosen. The main reason for this is that the parser was meant to be used within a website. In particular, the parser was expected to become an node package manager (NPM) package. Moreover, TML is quite a simple language, which made this task relatively easy and short.
 
 \begin{figure}[htb]
     \centering
@@ -30,7 +30,7 @@ The entire parsing process is summarised in Figure \ref{fig:parsing_process}.
 
 During lexical analysis, a stream of source code was produced. Although the source code was not enriched into tokens, the position of the code was tracked. This was to ensure that, in case of an error, the right section of code could be highlighted. This is done using the class \texttt{CodeWrapper}. 
 
-To produce a stream of tokens, the iterator design pattern was used. The iterator design pattern allows us to get the current value from a collection in a way that abstracts the data structure (\cite{gamma1995design}). In particular, the pattern was used to abstract the string representation of the source code and return a single entry from the code at a time. 
+To produce a stream of tokens, the \emph{iterator design pattern} was used. The iterator design pattern allows us to get the current value from a collection in a way that abstracts the data structure (\cite{gamma1995design}). In particular, the pattern was used to abstract the string representation of the source code and return a single entry from the code at a time. 
 
 \subsection{Syntactic Analysis}
 \begin{figure}[htb]
@@ -77,13 +77,13 @@ The parsing process results in the construction of the AST, such as the one in F
     \item \texttt{modules} for an array of \texttt{ModuleContext}.
 \end{itemize}
 
-The parser is recursive-descent and top-down in nature, as we can see in the \texttt{parseProgram} method below.
+The parser is recursive-descent, meaning that we delegate the parsing procedure to a method that parses a specific construct. For example, \texttt{parseModule} parses a \textit{module}, while \texttt{parseIf} parses an \textit{if} command. A snippet of the method \texttt{parseProgram} is given below.
 \begin{lstlisting}[language=TypeScript]
-parseProgram() {
-    var alphabet = parseAlphabet();
+parseProgram():ProgramContext {
+    var alphabet:AlphabetContext = parseAlphabet();
     
-    var modules = [];
-    while (code.moveNext()) {
+    var modules:ModuleContext[] = [];
+    while (this.code.moveNext()) {
         modules.add(parseModule());
     }
     
@@ -92,45 +92,47 @@ parseProgram() {
 \end{lstlisting}
 Note that the code given above is simplified from the actual implementation.
 
-If the program has syntax errors, then it will not be possible to produce an AST. For instance, the alphabet for the program might not been provided. This is detected by the parser since it makes use of predictive parsing. In particular, the parser looks at the next value and determines if it is legal; otherwise, it throws a \texttt{SyntaxError}.
-
 \subsection{Semantic Analysis}
-During semantic analysis, we traverse the AST using the \emph{visitor design pattern}. The visitor design pattern allows us to construct the same method for a class hierarchy without making changes to the classes (\cite{gamma1995design}). In particular, we want to create a method to validate each \texttt{Context}.
+During semantic analysis, we traverse the AST using the \emph{visitor design pattern}. The visitor design pattern allows us to construct the same method for a class hierarchy without making changes to the classes (\cite{gamma1995design}). In this case, we want to create a method to validate each \texttt{Context}. Moreover, the semantic analysis is conducted by the class \texttt{CodeValidator}, which implements \texttt{CodeVisitor} to accommodate the visitor design pattern.
 
-To allow for visitor design pattern, a concrete \texttt{Context} class implements the method \texttt{validate}. Each concrete class makes use of the right method from the \texttt{CodeValidator} class. We illustrate this with an example. Consider the following snippet of \texttt{GoToContext}.
+To allow for visitor design pattern, a concrete \texttt{Context} class implements the method \texttt{visit}. Each concrete class makes use of the right method from the abstract \texttt{CodeVisitor} class. We illustrate this with an example. Consider the following snippet of \texttt{GoToContext}.
 \begin{lstlisting}[language=TypeScript]
 class GoToContext extends FlowChangeContext {    
     identifier:string;
     
-    validate(validator:CodeValidator):void {
-        return validator.validateGoTo(this);
+    visit<T>(visitor:CodeVisitor<T>):T {
+        return visitor.visitGoTo(this);
     }
 
     // ... other methods for goto context
 }
 \end{lstlisting}
-    In that case, we can define the following method to `visit' a \textit{goto} statement and validate it.
+    Each \texttt{Context} class makes use of the right visitor method given in \texttt{CodeVisitor}. Now, in the \texttt{CodeValidator} class, we can define the following method that `visits' a \textit{goto} statement and validates it.
 \begin{lstlisting}[language=TypeScript]
-class TypeValidator {
-    validate(context:Context):void {
-        return context.validate(this);
+class CodeValidator extends CodeVisitor<boolean> {
+    visit(context:Context):boolean {
+        return context.visit(this);
     }
     
     // validate that the goto identifier a module name
-    validateGoTo(gotoContext:GoToContext):void {
+    visitGoTo(gotoContext:GoToContext):boolean {
         if (!moduleNames.contains(gotoContext.identifier)) {
             throw new CodeError("Undefined name- " + identifier);
         }
+
+        return true;
     }
 
-    // ... other validator methods
+    // ... other visitor methods
 }
 \end{lstlisting}
-To run the \texttt{CodeValidator}, we validate \texttt{ProgramContext}.
+To run the \texttt{CodeValidator}, we visit \texttt{ProgramContext}.
 
-When traversing the AST, we typically want to aggregate the result or share the result with the parent. For this reason, we typically return a specific type of values within each visit method. 
+When traversing the AST, we typically want to aggregate the result or share it with the parent. For this reason, we typically return a specific type of values within each visit method. To allow any type to be returned, the class \texttt{CodeVisitor} has a type parameter that represents the return type of each \texttt{visit} method.
 
-In \texttt{CodeValidator}, we return \texttt{true} if a block has a flow command. This data is used in containers that have multiple blocks, such as a module. We throw an error if a non-final block has a flow command. Note that we always return \texttt{true}, e.g. even in \texttt{ProgramContext}, since the pattern must be followed by all the subclasses of \texttt{Context}. 
+In \texttt{CodeValidator}, we return \texttt{boolean} values. In particular, we return \texttt{true} if a block has a \textit{flow} command. This data is used in containers that have multiple blocks, such as a module. We throw an error if a non-final block has a \textit{flow} command. In the example code above, a block with a \textit{goto} command returns \texttt{true} since it is a \textit{flow} command. 
+
+% A disadvantage of using the visitor design pattern is that the return value might not make sense in all subclasses. For instance, the value returned by \texttt{ProgramContext} does not make a difference in the validation process. There are other constructs as well for which the value does not make sense. In all these cases, to adhere to the pattern, we return \texttt{true}.
 
 The advantage of using the visitor design pattern is that we have a way of traversing the AST without altering any of the \texttt{Context} classes; we can just construct a \texttt{Visitor} class. However, if we wanted to add another \texttt{Context} subclass, then we would need to amend all the \texttt{Visitor} classes. We expect the language to be pretty static, so this is perfectly fine in our case.
 
@@ -138,14 +140,16 @@ The advantage of using the visitor design pattern is that we have a way of trave
 \subsection{TM Generation}
 Next, we convert the AST into a TM. The TM is implemented in the class \texttt{TuringMachine} and mimics the definition of a TM.
 
-We traverse the AST using the visitor design pattern. Initially, we define the TM and add relevant states and transitions during the traversal. The visitor methods return the label of the next state, if applicable to the context. This is defined in a very complex manner, depending on whether we have an \textit{if} or a \textit{while} command, or none at all.
+We traverse the AST using the visitor design pattern. Initially, we define the TM and add relevant states and transitions during the traversal. 
+
+The visitor methods return the label of the next state, if applicable to the context. This is defined in a very complex manner, depending on whether we have an \textit{if} or a \textit{while} command, or none at all. Hence, we delegate this responsibility from a switch block to the relevant case command!
 
 \subsection{Code and TM Execution}
 Finally, a validated program can be executed using \texttt{CodeExecutor}. This class follows the iterator design pattern. In particular, we can make use of the method \texttt{execute} to run one step in execution. This method returns \texttt{false} if and only if execution has not terminated. The steps of execution are defined precisely in the language specification, given in the appendix.
 
 Unlike the previous two stages, code execution does not make use of the visitor design pattern. This is because we do not need to traverse the AST in one go to convert the program. Instead, it makes more sense to use the iterator design pattern- this supports execution one step at a time.
 
-TM execution has also been implemented in the class \texttt{TMExecutor}. This also makes use of the iterator design pattern and supports execution one step at a time.
+TM execution has been implemented in the class \texttt{TMExecutor}. This also makes use of the iterator design pattern and supports execution one step at a time. The definition of TM execution is given in the background section.
 
 \section{Product}
 Due to the complex nature of the website, it made use of many APIs.

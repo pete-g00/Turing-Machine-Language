@@ -4,10 +4,10 @@
 In this chapter, we will define the syntax of the TML, starting with an example. We next analyse the syntax and define execution of a valid TML program on a tape in a similar manner to the execution of a TM.
 
 Consider the following TML program.
-\lstinputlisting[language=TML]{code/isDiv2.txt}
-A program in TML will be used to execute on a tape, so the syntax used guides us in executing the program on a tape.
+\lstinputlisting[language=TML]{code/isEven.txt}
+A program in TML is used to execute on a tape, so the syntax used guides us in executing the program on a tape. 
 \begin{itemize}
-    \item A valid TML \emph{program} is composed of the \emph{alphabet}, followed by one or more \emph{modules}. In the example above, the alphabet of the program is $\{0, 1\}$, and the program has a single module called \texttt{isEven}.
+    \item A valid TML \emph{program} is composed of an \emph{alphabet}, followed by one or more \emph{modules}. In the example above, the alphabet of the program is $\{0, 1\}$, and the program has a single module called \texttt{isEven}.
     \item A module contains one or more \emph{blocks} (a specific sequence of commands). There are two types of blocks- \emph{basic blocks} and \emph{switch blocks}.
     \item A basic block consists of \emph{basic commands} (\textit{changeto}, \textit{move} or \textit{flow} command). A basic block consists of at least one basic command, but it is not necessary for a basic block to be composed of all the basic commands. If multiple commands are present in a basic block, they must be in the following order- \textit{changeto}, \textit{move} and \textit{flow} command. In the program above, there is are many basic blocks, e.g. at lines 4, 6, 8-9 and 11-12. We do not say that line 8 is a basic block by itself; we want the basic block to be as long as possible.
     \item A \emph{switch block} consists of cases (\textit{if} or \textit{while} commands), each of which corresponds to one or more letters. A switch block must contain precisely one case for each of the letter in the alphabet, including the \texttt{blank} letter. The first block within a case block cannot be another switch block. In the program above, there is a switch block at lines 3-14 and a nested switch block at lines 7-13.
@@ -85,9 +85,7 @@ We will now consider how to execute a tape on a valid TML program. Let $P$ be a 
     \label{fig:tml_tape_example}
 \end{figure}
  
-We will now illustrate this process. So, consider the following TML program:
-\lstinputlisting[language=TML]{code/isDiv2.txt}
-We execute this program on the tape at Figure \ref{fig:tml_tape_example}.
+We will now illustrate this process. We execute the program \texttt{isEven} on the tape at Figure \ref{fig:tml_tape_example}.
 \begin{itemize}
     \item Initially, the tape is the given tape; the current block is at lines 5-15; and the tapehead index is $0$, with value $1$.
     
@@ -115,7 +113,7 @@ We execute this program on the tape at Figure \ref{fig:tml_tape_example}.
 
     \item The tapehead value is currently \texttt{0}. So,  
     \begin{itemize}
-        \item the tape remains unchanged;
+        \item the tape value changes to \texttt{blank};
         \item we have reached the \texttt{accept} command; and
         \item the tapehead pointer move to the left (by default), to index $2$.
     \end{itemize}
@@ -123,7 +121,7 @@ We execute this program on the tape at Figure \ref{fig:tml_tape_example}.
     \begin{figure}[H]
         \centering
         \begin{tikzpicture}
-            \foreach \x[count=\i] in {, 1, 0, 0, 0, } {
+            \foreach \x[count=\i] in {, 1, 0, 0, , } {
                 \draw[thick] (\i*0.5-0.25, 0) -- (\i*0.5, 0);
                 \node at (\i*0.5-0.125, 0.3) {\texttt{\x}};
             }
@@ -179,7 +177,7 @@ This program obeys the definition of a complete program.
 \begin{theorem} \label{thm:complete_TM}
     Let $P$ be a valid TML program. Then, $P$ and its completion $P^+$ execute on every tape $T$ in the same way. That is,
     \begin{itemize}
-        \item for every valid index $n$, if we have tape $T_n$, tapehead index $i_n$ and module $m_n$ with executing block $b_n$ for the TM program $P$, and we have tape $S_n$, tapehead index $j_n$ and module $t_n$, then $T_n = S_n$, $i_n = j_n$, and $t_n$ is the corresponding complete module block of $b_n$;
+        \item for every valid index $n$, if we have tape $T_n$, tapehead index $i_n$ and module $m_n$ with executing block $b_n$ for the TML program $P$, and we have tape $S_n$, tapehead index $j_n$ and module $t_n$, then $T_n = S_n$, $i_n = j_n$, and $t_n$ is the corresponding complete module block of $b_n$;
         \item $P$ terminates execution on $T$ if and only if $P^+$ terminates execution on $T$, with the same final status (\texttt{accept} or \texttt{reject}).
     \end{itemize}
 \end{theorem}
@@ -213,10 +211,8 @@ This program obeys the definition of a complete program.
     In that case, $P$ and $P^+$ execute on $T$ the same way by induction.
 \end{proof}
 
-Because of the equivalence between valid and complete programs, we will assume that every valid program is complete from now on.
-
 \section{Equivalence of TMs and TMLs}
-In this section, we will show that there is an equivalence between TMs and valid TML programs. We will first construct a valid TML program for a TM and then show that it has the same behaviour as the TM. Later, we will construct a TM for a complete TML program, and show the equivalence in this case as well.
+In this section, we will show that there is an equivalence between TMs and valid TML programs. We will first construct a valid TML program for a TM and then show that it has the same behaviour as the TM. Later, we will construct a TM for a TML program, and show the equivalence in this case as well.
 
 \begin{figure}[htb]
     \centering
@@ -237,7 +233,7 @@ We will first illustrate how to convert a TM to a (complete) TML program. So, co
 In general, we convert each (non-terminating) state in the TM $M$ to a TML module. The following is how we create the module:
 \begin{itemize}
     \item the module contains a single \textit{switch} command;
-    \item for each letter $\sigma$ in the alphabet $\Sigma^+$, denote $\delta(q, \sigma) = (q', \sigma', \texttt{dir})$. We add a case in the \textit{switch} command corresponding to letter $\sigma$ with the following commands:
+    \item for each letter $\sigma$ in the alphabet $\Sigma^+$, denote $\delta(q, \sigma) = (q', \sigma', \texttt{dir})$. We add an \textit{if} case in the \textit{switch} command corresponding to letter $\sigma$ with the following commands:
     \begin{itemize}
         \item \texttt{changeto} $\sigma'$
         \item \texttt{move} \textit{dir}
@@ -250,12 +246,12 @@ Moreover, we can construct the program $P$ with:
     \item modules corresponding to every state $q$ in $M$;
     \item the module corresponding to the initial state $q_0$ placed at the top.
 \end{itemize}
-We say that $P$ is \emph{the corresponding program for $M$}.
+We say that $P$ is the \emph{corresponding program for $M$}.
 
 \begin{theorem} \label{thm:TM_to_TMP}
     Let $M$ be a TM, and let $P$ be the corresponding program for $M$. Then, $M$ and $P$ execute on every tape $T$ in the same way. That is, 
     \begin{itemize}
-        \item for every valid index $n$, if we have tape $T_n$, tapehead index $i_n$ and module $m_n$ for the TM program $P$, and we have tape $S_n$, tapehead index $j_n$ and state $q_n$ for the TM $M$, then $T_n = S_n$, $i_n = j_n$ and $m_n$ is the corresponding module for $q_n$;
+        \item for every valid index $n$, if we have tape $T_n$, tapehead index $i_n$ and module $m_n$ for the TML program $P$, and we have tape $S_n$, tapehead index $j_n$ and state $q_n$ for the TM $M$, then $T_n = S_n$, $i_n = j_n$ and $m_n$ is the corresponding module for $q_n$;
         \item $M$ terminates execution on $T$ if and only if $P$ terminates execution on $T$, with the same final status (\texttt{accept} or \texttt{reject}).
     \end{itemize}
 \end{theorem}
@@ -275,7 +271,7 @@ We say that $P$ is \emph{the corresponding program for $M$}.
         and the next state is $q_{n+1}$. 
         
         \begin{itemize}
-            \item We know that the module $m_n$ in TM program $P$ corresponds to the state $q_n$, so it has a \texttt{changeto} $\sigma_{n+1}$ command for the case $\sigma_n$. In the case, the next tape for $P$ is:
+            \item We know that the module $m_n$ in TML program $P$ corresponds to the state $q_n$, so it has a \texttt{changeto} $\sigma_{n+1}$ command for the case $\sigma_n$. In the case, the next tape for $P$ is:
             \[S_{n+1}(x) = \begin{cases}
                 S_n(x) & x \neq i_n \\
                 \sigma_{n+1} & \text{otherwise}.
@@ -304,7 +300,7 @@ We say that $P$ is \emph{the corresponding program for $M$}.
     In that case, $P$ and $M$ execute on $T$ the same way by induction.
 \end{proof}
 
-Next, we construct a TM for a (complete) TML program. This process is essentially the inverse of the one we saw converting a complete TML program to a TM. In particular, for each module $m$ in $P$, we construct the state $q$ as follows- for each letter $\sigma$ in $\Sigma^+$, we define $\delta(q, \sigma) = (q', \sigma', \texttt{dir})$, where:
+Next, we construct a TM for a TML program. This process is essentially the inverse of the one we saw converting a TML program to a TM. In particular, for each module $m$ in $P$, we construct the state $q$ as follows- for each letter $\sigma$ in $\Sigma^+$, we define $\delta(q, \sigma) = (q', \sigma', \texttt{dir})$, where:
 \begin{itemize}
     \item the value $\sigma'$ is the letter given in the \textit{changeto} command within $m$;
     \item the value \texttt{dir} is the direction given in the \textit{move} command within $m$;
@@ -337,18 +333,18 @@ Then, the TM with all the states $q$, the same alphabet $\Sigma$, the transition
     \label{fig:tm_from_tml}
 \end{figure}
 
-We now illustrate this process with an example. So, consider the following complete TM program:
+We now illustrate this process with an example. So, consider the following TML program:
 \lstinputlisting[language=TML]{code/tml_to_tm.txt}
 Then, its corresponding TM is given in Figure \ref{fig:tm_from_tml}.
 \begin{theorem}
-    Let $P$ be a complete TM program, and let $M$ be the corresponding TM for $P$. Then, $P$ and $M$ execute on every tape $T$ in the same way. That is,
+    Let $P$ be a TML program, and let $M$ be the corresponding TM for $P$. Then, $P$ and $M$ execute on every tape $T$ in the same way. That is,
     \begin{itemize}
-        \item for every valid index $n$, if we have tape $T_n$, tapehead index $i_n$ and module $m_n$ for TM program $P$, and we have tape $S_n$, tapehead index $j_n$ and state $q_n$ for the TM $M$, then $T_n = S_n$, $i_n = j_n$ and $q_n$ is the corresponding state for $m_n$;
+        \item for every valid index $n$, if we have tape $T_n$, tapehead index $i_n$ and module $m_n$ for TML program $P$, and we have tape $S_n$, tapehead index $j_n$ and state $q_n$ for the TM $M$, then $T_n = S_n$, $i_n = j_n$ and $q_n$ is the corresponding state for $m_n$;
         \item $P$ terminates execution on $T$ if and only if $M$ terminates execution on $T$, with the same final status (\texttt{accept} or \texttt{reject}).
     \end{itemize}
 \end{theorem}
 \begin{proof}
-    We prove this as well by induction on the execution step of the tape. 
+    Without loss of generality, assume that $P$ is complete. We prove this as well by induction on the execution step of the tape. 
     \begin{itemize}
         \item At the start, we have the same tape $T$ for both $P$ and $M$, with tapehead index $0$. Moreover, the initial state $q_0$ in $M$ corresponds to the first module in $P$. So, the result is true if $n = 0$. 
         

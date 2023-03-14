@@ -3,30 +3,30 @@
 
 The TML has been designed in a way that closely resembles the operations in a TM. In particular, 
 \begin{itemize}
-    \item it expects an alphabet like a TM;
+    \item it expects an \texttt{alphabet} like a TM;
     \item it makes use of \texttt{move} commands to move the tapehead pointer in some direction;
     \item it makes use of \texttt{changeto} commands to change the tapehead value to some letter in the alphabet.
 \end{itemize}
-Instead of states, the TML has modules. A module can be thought of as a state, although a module is more expressible than a state. We want modules to also be thought of as functions or methods in a traditional PL. To allow for flow of code to go from one module to another, we can make use of \texttt{goto} commands. We can go to the \textit{accept} and \textit{reject} states using the keywords \texttt{accept} and \texttt{reject} respectively.
+Instead of states, the TML has \emph{modules}. A module simulates a state in TMs, although it is more expressible than a state. We want modules to also be thought of as functions in a traditional PL. To allow for flow of code to go from one module to another, we make use of \texttt{goto} commands. We can go to the \textit{accept} and \textit{reject} states using the keywords \texttt{accept} and \texttt{reject} respectively.
 
 The following program illustrates a simple program in TML with all the basic operations:
 \lstinputlisting[language=TML]{code/simple_program.txt}
-A program is run starting from the first module. In this case, we first start at module \texttt{first}. Here, the first tape value is removed, the tape pointer moves to the right and we go to module \texttt{b} and continue execution. Note that we allow recursion- line 5 can be replaced with \texttt{goto first}.
+The execution of a program starts at the first module. In this case, we first start at module \texttt{first}. Here, the first tape value is removed, the tape pointer moves to the right and we go to module \texttt{b} and continue execution. Note that we allow recursion- line 5 can be replaced with \texttt{goto first}.
 
-To represent the transition function in TMs, the language makes use of pattern-matching. Since this should resemble a traditional PL, this is done using \texttt{if} cases. This is shown in the example below.
+To represent the transition function in TMs, the language makes use of pattern-matching. Since this should resemble a traditional PL, this is done using \texttt{if} commands. This is shown in the example below.
 \lstinputlisting[language=TML]{code/pattern_matching.txt}
 
-Although the language is already equivalent to TMs, we will add some more flexibility to the language since all programs that can be written with these constructs are quite similar to TMs. To mitigate this, we add nesting within \texttt{if} statements. That way, we can write programs that are more comparable to normal programs written in other languages, such as the program below.
+Although the language is already equivalent to TMs, the programs that we can currently write are quite similar to TMs. To mitigate this, we add nesting within \texttt{if} statements. That way, we can write programs that are more comparable to normal programs written in other languages, such as the program below.
 \lstinputlisting[language=TML]{code/isDiv2Rec.txt}
-In this program, we have nested an \texttt{if} block within an \texttt{if} block in lines 11-15.
+In this program, we have nested an \texttt{if} block within an \texttt{if} block in lines 12-15.
 
 \begin{figure}[htb]
     \centering
     \begin{tikzpicture}
         \node[state, accepting] (q0) at (0, 0) {$q_0$};
-        \node[state] (q1) at (2.5, -1.1) {$q_1$};
-        \node[state, fill=green, opacity=0.6] (A) at (2.5, 1.1) {$A$};
-        \node[state, fill=red, opacity=0.6] (R) at (5, -1.1) {$R$};
+        \node[state] (q1) at (2.5, -1) {$q_1$};
+        \node[state, fill=green, opacity=0.6] (A) at (2.5, 1) {$A$};
+        \node[state, fill=red, opacity=0.6] (R) at (5, -1) {$R$};
 
         \draw[->] (q0) -- node[above, rotate=20] {$0|\#, R$} (A);
         \draw[->] (q0) -- node[below, rotate=-20] {$1, R$} (q1);
@@ -36,11 +36,11 @@ In this program, we have nested an \texttt{if} block within an \texttt{if} block
     \caption{A TM with a self-loop at the state $q_1$}
     \label{fig:self-loop-TM}
 \end{figure}
-Although nesting has made the language more like a typical PL, there is still one issue- a self-loop in a non-starting state. To see this, we consider the TM at Figure \ref{fig:self-loop-TM}. Currently, the following is the only way to represent this TM as a TML program:
+Although nesting has made the language more like a typical PL, this is not enough. In particular, if we have a self-loop at a non-starting state, then the program cannot be written compactly. To see this, we consider the TM at Figure \ref{fig:self-loop-TM}. Currently, the following is the only way to represent this TM as a TML program:
 \lstinputlisting[language=TML]{code/forced_complete_program.txt}
-What we have is a \emph{complete program}- there is a one-to-one correspondence between a module and a state. It is not possible to combine the 2 modules- recursion would convert the self-loop of $q_1$ to a transition from $q_1$ to $q_0$. It is always possible to represent a TM as a complete program, but this representation is very close to a TM. We want there to be another way to represent this program that resembles a PL better.
+What we have is a \emph{complete program}- there is a one-to-one correspondence between a module and a state. It is not possible to combine the 2 modules- because the block corresponding to $q_1$ would be nested within $q_0$, recursion would convert the self-loop at $q_1$ into a transition from $q_1$ to $q_0$. We want there to be another way to represent this program that resembles a traditional PL better.
 
-To allow for self-loops using nesting, we introduce a new construct- a \texttt{while} case. This is similar to an \texttt{if} case, but after the block is executed, we stay at the same block. Note that this does not necessarily mean that the same case is run. This is precisely a self-loop. We can now convert the TM to a single module:
+To allow for self-loops to be nested, we introduce a new construct- a \texttt{while} command. This is similar to an \texttt{if} command, but after the block is executed, we stay at the same block. Note that this does not necessarily mean that the same \textit{case} is run. This is precisely a self-loop. We can now convert the TM to a single module:
 \begin{lstlisting}[language=TML]
 alphabet = {0, 1}
 module program {
@@ -59,29 +59,15 @@ module program {
 }
 \end{lstlisting}
 
-The formal syntax of the language is given in the appendix, along with a proof of equivalence between TMs and TML programs in terms of code execution. The proof of equivalence is composed of several proofs, which involve:
+The formal syntax of the language is given in the appendix, along with a proof of equivalence between TMs and TML programs in terms of tape execution. The proof of equivalence is composed of several proofs, which involve:
 \begin{itemize}
-    \item converting a TM into a complete TML program;
+    \item converting a TM into a (complete) TML program;
     \item converting a valid TML program into a complete TML program; and
     \item converting a complete TML program into a TM program.
 \end{itemize}
-% \section{Language}
-% The Turing Machine Language (TML) is a language equivalent to TMs in tape execution. That is, for any TM that can be run on some tape, there exists a TML program that can run on the same tape in the same manner.
-
-% TML, like TMs, it supports the following 2 operations directly:
-% \begin{itemize}
-%     \item we can change the tapehead value to some letter in the alphabet; and
-%     \item we can move the tapehead pointer left or right; 
-% \end{itemize}
-% Since the TML does not make use of states, it implicitly supports moving from one state to another. Moreover, TML also supports a representation of the transition function $\delta$ that accommodates the 3 operations.
-
-% In TMs, the transition function depends on tapehead value and the current state. This is also supported within the TML.
-% Since the TML does not support states, this should be done in a way that combines well with the 3 main operations of a TM.
-
-% An important design choice for the language is that TML is not just another representation for TMs. The aim of the TML is that it is equivalent to TMs, but more closely resembles a traditional programming language (PL) than a TM. For this reason, TML follows syntax that is common in traditional PLs. Moreover,  the language abstracts the details of TM- it is meant to be an intermediate representation of a TM.
 
 \section{Parser}
-The parser takes a program in TML and produces a corresponding TM. It also allows for the execution of the TM on a tape. It does so in many steps.
+The parser takes a program in TML and produces a corresponding TM. It also allows for the execution of a TML program, and a TM, on a tape. It does so in many steps.
 
 \subsection{Lexical Analysis}
 The first stage of parsing is lexical analysis, where we produce a stream of tokens from the source code. Since the TML is quite simple, this was decided to be unnecessary- we make use of a stream of source code.
@@ -133,8 +119,7 @@ The first stage of parsing is lexical analysis, where we produce a stream of tok
     \label{fig:TML_AST}
 \end{figure}
 
-Next, the stream of source code is parsed into an AST. The AST has a node for each command. 
-We illustrate this process with an example. For instance, assume we have the following source code.
+Next, the stream of source code is parsed into an AST. The AST has a node for each command. We illustrate this process with an example. So, assume we have the following source code.
 \begin{lstlisting}[language=TML]
 alphabet={a, b}
 module first {
@@ -144,7 +129,9 @@ module first {
 \end{lstlisting}
 Then, the parsing process results in the construction of the AST given in Figure \ref{fig:TML_AST}. 
 
-The parser is top-down recursive-descent in nature. In particular, when parsing the program above, we try to construct the AST from the root and then fill out the branches and the leaves. In particular, for the program above:
+The parser is top-down in nature. In particular, when parsing the program above, we try to construct the AST from the root and then fill out the branches and the leaves. Because the language does not have any complex parsing rules, we also make use of predictive parsing.
+
+We construct the AST given as follows:
 \begin{enumerate}
     \item We first parse it as a program and construct the root node of the AST;
     \item We detect the alphabet at line 1, so we construct the alphabet branch in the AST; and 
@@ -152,19 +139,18 @@ The parser is top-down recursive-descent in nature. In particular, when parsing 
 \end{enumerate}
 If successful, this process will result in an AST.
 
-If the parser cannot construct an AST, then the program has some syntax error. In that case, the parser throws an error with a clear and succinct message.
-
+If the parser cannot construct an AST, then the program has some syntax error. In that case, the parser throws an error with a clear and a succinct message.
 
 \subsection{Semantic Analysis}
-After the AST has been constructed, semantic analysis is performed. Since the TML is quite simple, it does not have a type system. Hence, there is be no need to do type checking. On the other hand, the language makes use of identifiers, e.g. module names. So, we perform scope checking in this stage. This is done by traversing the AST once.
+After the AST has been constructed, we perform semantic analysis. The TML does not have a type system, meaning that we do not need to do type checking. On the other hand, the language makes use of identifiers, e.g. module names. So, we perform scope checking in this stage. This is done by traversing the AST once.
 
 % Hence, it is expected that there is some scope checking in this stage. Also, like with a FSM representation of TM, it is also ensured that the transition data is complete (i.e. we specify where we transition to for each letter in the alphabet). The AST is traversed using the visitor design pattern.
 
 % During semantic analysis, we traverse the AST to check for any non-syntax errors. All the checks are done in a single traversal of the AST.
 
-During this phase, we ensure that a \texttt{goto} command refers to a module that is already present in code. By design, we allow the module to be defined anywhere within the document. Moreover, we also check that a module is not defined twice, and is not called \texttt{accept} or \texttt{reject}.
+During this phase, we ensure that a \texttt{goto} command refers to a module that is already present in code. By design, we allow the module to be defined anywhere within the document. Moreover, we check that a module is not defined twice, and is not called \texttt{accept} or \texttt{reject}. We also validate that the letter of a \texttt{changeto} command is one of the letters in the \texttt{alphabet} or \texttt{blank}. 
 
-We also check that the letter of a \texttt{changeto} command is one of the letters in the \texttt{alphabet} or \texttt{blank}. Moreover, there is also a check to validate that a \textit{switch} block contains precisely one case for each letter in the alphabet, i.e. there are no duplicate cases and the cases check all the letters, including \texttt{blank}.
+Moreover, there is also a check to ensure that a \textit{switch} block contains precisely one case for each letter in the alphabet. That is, there are no duplicate cases present, and the cases check all the letters, including \texttt{blank}.
 
 
 % There are many frameworks that can perform lexical and syntactic analysis given a grammar definition for the language. It might be beneficial to use these since they are more likely to be correct and robust. Moreover, for complex languages, it can be quite difficult and time-consuming to construct a correct parser by hand. The TML is expected to be quite simple, so this might not be a relevant issue.
@@ -173,13 +159,15 @@ We also check that the letter of a \texttt{changeto} command is one of the lette
 \subsection{TM Generation}
 Next, the AST is used to generate a TM. There are many choices to represent a TM- the formal definition of TMs or FSM representation. To allow for more flexibility during code execution, the formal definition of TMs was chosen. 
 
+% The conversion of a TML program to a TM is done as follows:??
+
 % TODO: Explain the generation process in some detail (abstractly)
 
 \subsection{TML Execution}
 
 The AST is also used for executing a TML program on a tape. Since a TML program is compiled to a TM, this stage could have been avoided- we could make use of executing TM on a tape. However, this was also included since the execution of a TML program was thought to be more efficient, since it abstracts many of the technicalities presented by TMs. For example, in TMs, each letter in a state should have a different transition, whereas TML supports the same transition for every letter.
 
-% It is important that the parser be written in a way that is compatible with web deployment- the parser will be used in the product. Moreover, since the website is expected to have live syntax highlighting, the error messages should help the user fix any bugs in their code.
+The execution of a TML program follows the rules given in the specification. This is included in the appendix. Similarly, the execution of a TM follows the rules given in the background section.
 
 \section{Product}
 
