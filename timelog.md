@@ -445,3 +445,33 @@
 
 * *1.5 hours* Proofread parser design
 * *1.5 hours* Proofread parser implementation
+
+### 15 Mar 2023
+
+* *1 hour* Proofread product design
+* *1 hour* Proofread product implementation
+
+### 16 Mar 2023
+
+* *1 hour* Weekly meeting with Ornela
+
+### 17 Mar 2023
+
+* *0.5 hours* Restored the language specification and proof of equivalence
+* *1 hour* Updated READMEs
+
+### 18 Mar 2023
+
+
+### 19 Mar 2023
+
+
+## Week 11
+
+### 20 Mar 2023
+
+
+### 21 Mar 2023
+
+
+### 24 Mar 2023

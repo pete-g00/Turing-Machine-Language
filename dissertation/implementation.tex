@@ -138,11 +138,18 @@ The advantage of using the visitor design pattern is that we have a way of trave
 
 
 \subsection{TM Generation}
-Next, we convert the AST into a TM. The TM is implemented in the class \texttt{TuringMachine} and mimics the definition of a TM.
+Next, we convert the AST into a TM. 
+
+The TM is implemented in the class \texttt{TuringMachine} and mimics the definition of a TM. In particular, a TM is composed of many instances of \texttt{TMState}, which represent states within a TM. A TM state instance has a method \texttt{transition} that takes in a letter and returns the transition data, as a \texttt{TMChange}. A \texttt{TMChange} shows:
+\begin{itemize}
+    \item the next state value;
+    \item the direction to move; and
+    \item the value the tapehead value will become.
+\end{itemize}
 
 We traverse the AST using the visitor design pattern. Initially, we define the TM and add relevant states and transitions during the traversal. 
 
-The visitor methods return the label of the next state, if applicable to the context. This is defined in a very complex manner, depending on whether we have an \textit{if} or a \textit{while} command, or none at all. Hence, we delegate this responsibility from a switch block to the relevant case command!
+The visitor methods return the label of the next state, if applicable. This is defined in a very complex manner, depending on whether we have an \textit{if} or a \textit{while} command, or none at all! Hence, we delegate this responsibility from a \textit{switch} block to the relevant case command.
 
 \subsection{Code and TM Execution}
 Finally, a validated program can be executed using \texttt{CodeExecutor}. This class follows the iterator design pattern. In particular, we can make use of the method \texttt{execute} to run one step in execution. This method returns \texttt{false} if and only if execution has not terminated. The steps of execution are defined precisely in the language specification, given in the appendix.
@@ -152,43 +159,32 @@ Unlike the previous two stages, code execution does not make use of the visitor 
 TM execution has been implemented in the class \texttt{TMExecutor}. This also makes use of the iterator design pattern and supports execution one step at a time. The definition of TM execution is given in the background section.
 
 \section{Product}
+% Screenshots of the website homepage, documentation and error pages are given in the appendix. 
+
 Due to the complex nature of the website, it made use of many APIs.
 
-At the start of the implementation, 3 frameworks were considered for the website:
-% TODO: Source all 3 frameworks
+\subsection{Website Framework}
+
+Initially, 3 frameworks were considered to implement the website:
 \begin{itemize}
-    \item the \emph{Webpack} framework- it has little overhead, allows for a lot of flexibility, but does not directly have components (such as toolbar and drawer) or support state management;
-    \item the \emph{React} framework- it has a rich collection of components and supports state management directly;
-    \item the \emph{Angular} framework- like React, it has a rich collection of components and supports state management.
+    \item the \emph{Webpack} framework - it has little overhead, allows for a lot of flexibility, but does not directly provide components (such as toolbar and drawer) or support state management (\cite{webpack});
+    \item the \emph{React} framework- it has significantly more overhead than Webpack, but it also provides a rich collection of components and supports state management directly (\cite{react});
+    \item the \emph{Angular} framework- it has even more overhead than React, but, like React, it has a rich collection of components and supports state management (\cite{angular}).
 \end{itemize}
 
-% The React framework was chosen because it has a rich collection of components (such as a toolbar and a drawer) and has direct support for \emph{state management}. 
-\emph{State management} was an important consideration when choosing the framework since the website tracks many states, such as the value of the editor and the current TM. Hence, it is particularly important that state management is readily supported by the framework. For this reason, webpack was not chosen.
+\emph{State management} was an important consideration when choosing the framework since the website tracks many states, such as the value of the editor and the current TM. Managing state manually would increase the complexity of the project, and could easily be avoided by choosing the right framework. For this reason, webpack was not chosen.
 
-Both React and Angular would have been equally good choices for the project. React was chosen as there are more APIs that readily integrate with React compared to Angular, includes some of the APIs used in this project. This is true since React is more widely used than Angular.
-% TODO: Source
-The React framework supports coding in either JavaScript or TypeScript. The project made use of the TypeScript version for type safety.
-
-% The React framework makes use of components when rendering, which can be nested. This allows the website to be modularised. For instance, the homepage component was broken into 3 components- editor, TM and tape. These components can be further broken down into components, e.g. the TM component is composed of the FSM component and the definition component.
-
-% Components also allow for reuse. For instance, the tape component makes use of 17 tape entry components that have the same behaviour. Moreover, the homepage and the documentation pages share the editor, tape and TM components.
-
-The website made use of \emph{Material Design}. The components provided by the API are common-purpose, such as tables and drawers, and are easy to configure. Moreover, Material design is quite widespread since all Google products make use of it. 
-% TODO: Source
-Hence, the user is expected to recognise these common constructs and should be able to easily interact with them. For instance, the user can recognise that a settings icon allows them to customise the website in some way. Furthermore, Material Design helps keep the website consistent and responsive.
-
-Screenshots of the website homepage, documentation and error pages are given in the appendix.
+Both React and Angular would have been equally good choices for the project. React was chosen as there are more APIs that readily integrate with React compared to Angular, including some of the APIs used in this project. This is true since React is more widely used than Angular (\cite{react_v_angular}). The React framework supports coding in either JavaScript or TypeScript. The project made use of the TypeScript version for type safety.
 
 \subsection{Editor}
 
-The editor feature was implemented using the \emph{monaco} API. The API was chosen since it integrates well with React and provides many features. The features include:
+The editor feature was implemented using the \emph{monaco} API. The API was chosen since it integrates well with React and provides many features (\cite{monaco}). The features include:
 \begin{itemize}
-    \item syntax highlighting with different priorities (e.g. an error gets an error priority while a code execution highlighting gets a low priority);
+    \item syntax highlighting with different priorities (e.g. an error gets a high priority while code execution gets a low priority);
     \item the ability to easily set and get the current value; along with
-    \item numerous customisations to the editor, such as as changing the font size, setting an editor theme and showing/hiding line numbers- these are all features that a user can configure in the website.
+    \item numerous customisations to the editor, such as as changing the font size, setting an editor theme and showing/hiding line numbers- these are all features that a user can configure within the website.
 \end{itemize}
-Moreover, the monaco editor was chosen since it has the same look as Visual Studio (VS) Code, and shares many functionalities with the IDE. A developer survey in 2022 found that VS Code is the most popular code editor among 70 000 developers.
-% TODO: CITE using the reference in https://en.wikipedia.org/wiki/Visual_Studio_Code
+Moreover, the monaco editor was chosen since it has the same look as Visual Studio (VS) Code, and shares many functionalities with the IDE. A developer survey in 2022 found that VS Code is the most popular code editor among 70 000 developers (\cite{stack_overflow}).
 
 \subsection{FSM Generation}
 \begin{figure}[htb]
@@ -198,7 +194,7 @@ Moreover, the monaco editor was chosen since it has the same look as Visual Stud
     \label{fig:graphviz_isDiv2}
 \end{figure}
 
-The FSM representation of the TM is created using the \emph{graphviz} framework. This makes use of the \emph{DOT} notation, which represents graphs in text by listing their nodes and edges. In particular, a graph in DOT notation is given below:
+The FSM representation of the TM is created using the \emph{graphviz} framework. The API makes use of the \emph{DOT} notation (\cite{graphviz}). The DOT notation represents graphs in text by listing their nodes and edges (\cite{dot}). A graph in DOT notation is given below:
 \begin{lstlisting}[language=DOT]
 digraph isDiv2 {
     node [shape = "doublecircle"]; q0;
@@ -211,7 +207,13 @@ digraph isDiv2 {
     q1 -> R [label = "1|#, L"];
 }
 \end{lstlisting}
-This graph represents the FSM representation of a TM. The keyword \texttt{digraph} implies that the graph is directed. The keyword \texttt{node} is used to create states. We use an arrow symbol (\texttt{->}) to construct edges between states.
+This graph represents the FSM representation of a TM. In this graph:
+\begin{itemize}
+    \item the keyword \texttt{digraph} implies that the graph is directed;
+    \item the keyword \texttt{node} creates a state; and
+    \item the arrow symbol (\texttt{->}) constructs edges between 2 states.
+\end{itemize}
+Nodes and edges take optional parameters within square brackets that allows them to be customised.
 
 Using the graphviz API, the graph in DOT notation can be rendered in the website- the result for the directed graph \texttt{isDiv2} is given in Figure \ref{fig:graphviz_isDiv2}. Note that the figure was produced with some extra formatting code that is not shown.
 
@@ -219,26 +221,18 @@ We convert a TM to DOT notation as follows:
 \begin{itemize}
     \item we set the default formatting of a node to be a circle (similar to code in line 3 of the example);
     \item we list the initial state \texttt{q0}, the accept state \texttt{A} and the reject state \texttt{R}, with the right formatting (like in lines 2, 4 and 5); and 
-    \item we then list all the edges and label it with the corresponding transition (like in lines 6-9).
+    \item we then list all the edges and label them with the corresponding transition (like in lines 6-9).
 \end{itemize}
 
-The advantage of using the graphviz package is that it can produce a very well-formatted FSM. Initially, the graph was rendered by placing the states in order of its label, like in Figure \ref{tbl:table_isDiv2}. The user would be able to drag the states and hence achieve a more reasonable placement. However, there was time to make use of the graphviz package later in the project, and so the implementation was changed. Now, the user is unable to drag the states, but this should not be necessary as the states are already well-placed!
+The advantage of using the graphviz package is that it can produce a well-formatted FSM. Initially, the graph was rendered by placing the states in order of its label, similar to Figure \ref{fig:bad_FSM}. The user would be able to drag the states and hence achieve a more reasonable placement. However, there was time to make use of the graphviz package later in the project, and so the implementation was changed. Now, the user is unable to drag the states, but this should not be necessary as the states are already well-placed!
 
 \subsection{TM Formal Definition Conversion}
-% TODO: Mention that the definition is also given in a table representation (include a pic of that as well). Created using MathJax that takes in latex code and renders it as a SVG. Latex code follows the transition function of the TM.
-
-The formal definition of a TM is constructed quite naturally by using the class \texttt{TuringMachine}- we can look at the \texttt{transition} function to find an object of type \texttt{TMChange}, which shows:
-\begin{itemize}
-    \item the next state value;
-    \item the direction to move; and
-    \item the value the tapehead value will become.
-\end{itemize}
-These 3 values are shown to the user in a table like the one in Figure \ref{tbl:table_isDiv2}.
+The formal definition of a TM is constructed quite naturally by using the class \texttt{TuringMachine}- we can look at the \texttt{transition} function to find an object of type \texttt{TMChange}. The values are shown to the user in a table like the one in Figure \ref{tbl:table_isDiv2}.
 
 The text in the table is constructed using the \emph{MathJax} framework. This framework compiles raw code in LaTeX and renders it as an SVG.
 
 \subsection{Tape Execution}
 
-The tape was implemented as a SVG elements. These were constructed using the \emph{d3} API. To illustrate tape execution, we make use of the animation subpackage in d3. In particular, this is used to move the tape left or right, and to change its value. 
+The tape entries were implemented as SVG elements. These were constructed using the \emph{d3} API. To illustrate tape execution, we make use of the animation subpackage in d3. This is used to move the tape left or right, and to change its value. 
 
 During execution, we also highlight the current block being executed. Moreover, if the TM panel has been rendered, we highlight the current state and transition in the FSM representation. To keep track of these values, we execute the tape on both the TML program (using \texttt{CodeExecutor}) and its corresponding TM (using \texttt{TMExecutor}). We make use of the d3 API here as well to animate the change in current block/state.

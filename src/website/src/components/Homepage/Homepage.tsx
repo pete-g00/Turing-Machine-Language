@@ -31,6 +31,10 @@ function HomePage({ userConfiguration }:HomePageProps) {
     const [changeCurrentEdgeFn, setChangeCurrentEdgeFn] = useState<NodeJS.Timeout|undefined>(undefined);
 
     useEffect(() => {
+        userConfiguration.setExampleKey(userConfiguration, "isDiv2");
+    }, []);
+
+    useEffect(() => {
         if (currentEdge) {
             const changeCurrentEdgeFn = setTimeout(() => {
                 setCurrentEdge(undefined);

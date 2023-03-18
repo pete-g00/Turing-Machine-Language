@@ -1,48 +1,32 @@
 # Readme
 
-TODO: File Structure
-<!-- Put a brief description of your code here. This should at least describe the file structure. -->
+This folder contains all the content created during the project.
+
+The directory structure is:
+
+* `language` - the language definition with equivalence proof to TMs.
+* `tml-parser` - the code for the parser.
+* `website` - the code for the product.
 
 ## Build instructions
 
-TODO
-
-<!-- **You must** include the instructions necessary to build and deploy this project successfully. If appropriate, also include  -->
-<!-- instructions to run automated tests.  -->
-
 ### Requirements
 
-TODO
-<!-- List the all of the pre-requisites software required to set up your project (e.g. compilers, packages, libraries, OS, hardware)
+The project makes use of the node package manager (NPM). 
 
-For example:
+Typescript should be automatically installed this way, but if that doesn't work, [follow the instructions here](https://www.typescriptlang.org/download).
 
-* Python 3.7
-* Packages: listed in `requirements.txt` 
-* Tested on Windows 10
+The website makes use of the React framework. This requires NPM version to be at least 5.2.
 
-or another example:
-
-* Requires Raspberry Pi 3 
-* a Linux host machine with the `arm-none-eabi` toolchain (at least version `x.xx`) installed
-* a working LuaJIT installation > 2.1.0 -->
+This should be sufficient to run the code (at least in windows 10/11).
 
 ### Build steps
 
-TODO
+Within the parser/website directory, the required packages can be installed by `npm install`. 
 
-<!-- List the steps required to build software. 
-
-Hopefully something simple like `pip install -e .` or `make` or `cd build; cmake ..`. In
-some cases you may have much more involved setup required. -->
+The website can be viewed locally using `npm start`.
 
 ### Test steps
 
-<!-- List steps needed to show your software works. This might be running a test suite, or just starting the program; but something that could be used to verify your code is working correctly.
+Within the parser/website directory, the tests can be run using `npm run test`.
 
-Examples:
-
-* Run automated tests by running `pytest`
-* Start the software by running `bin/editor.exe` and opening the file `examples/example_01.bin` -->
-
-TODO

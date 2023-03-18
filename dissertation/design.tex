@@ -159,9 +159,14 @@ Moreover, there is also a check to ensure that a \textit{switch} block contains 
 \subsection{TM Generation}
 Next, the AST is used to generate a TM. There are many choices to represent a TM- the formal definition of TMs or FSM representation. To allow for more flexibility during code execution, the formal definition of TMs was chosen. 
 
-% The conversion of a TML program to a TM is done as follows:??
+This process is different to the one described in the appendix- here, we are directly converting a valid TML program into a TM. In essence, we have combined the two steps given in the appendix to achieve this.
 
-% TODO: Explain the generation process in some detail (abstractly)
+Initially, we define a TM. During the traversal of the AST, we fill it with relevant states and transitions. This mostly takes place when we are at a block, either inside a \textit{module} or an \textit{if} command. The process depends on the type of block we have:
+\begin{itemize}
+    \item if we have a \textit{switch} block, then we define the transition function one by one for each letter, by visiting all the cases within the block;
+    \item if we have a \textit{basic} block, then we define the transition function for all the letters in one go.
+\end{itemize}
+We have commands within the block/case that we can use to define the transition. For instance, if we have the command \texttt{move left}, then the transition function will report move to the left. If the command is not present, then we add the default transition, as specified in the language specification given in the appendix.
 
 \subsection{TML Execution}
 
@@ -170,25 +175,44 @@ The AST is also used for executing a TML program on a tape. Since a TML program 
 The execution of a TML program follows the rules given in the specification. This is included in the appendix. Similarly, the execution of a TM follows the rules given in the background section.
 
 \section{Product}
-
+\subsection{Structure}
 The website was planned to have multiple pages, which included:
 \begin{itemize}
-    \item the \emph{homepage} that allowed the user to make use of the parser;
-    \item the \emph{documentation} pages that explained TM and the TML; and
-    \item some pages to illustrate syntax and validation (non-syntax) \emph{errors}.
+    \item the \emph{homepage} that allows the user to make use of the parser;
+    \item the \emph{documentation} pages that explains TMs and TML programs; along with
+    \item the \emph{error} pages to illustrate syntax and validation (non-syntax) errors.
 \end{itemize}
 
+A screenshot of the homepage is given in Figure \ref{fig:homepage_design}. More screenshots are in the appendix.
+
+\subsubsection{Homepage}
 \begin{figure}[htb]
     \centering
-    \includegraphics{images/Index webpage prototype.png}
-    \caption{A prototype for the website homepage.}
-    \label{fig:homepage_prototype}
+    \includegraphics[scale=0.18]{images/Homepage execution start.png}
+    \caption{The website homepage.}
+    \label{fig:homepage_design}
 \end{figure}
 
-A prototype of the homepage was created to plan its layout. This is given in Figure \ref{fig:homepage_prototype}. The editor is placed on the left; the TM on the upper half of the right section; and the tape execution on bottom right. The toolbar features a button to go to the documentation, along with the ability to fill the editor with some example code. The editor can be compiled to a TM, and executed on a tape after the user types an input value. The execute button performs one step in execution, while the play button continually executes the program until it terminates. Note that this does not completely match the implementation.
+The user can input a program to the editor. If the program is valid, it can be compiled to a TM in two ways- it can either be converted to a FSM or to the definition version. The user can also execute the program on a tape after inputting a value. The \emph{step} button performs one step in execution. 
+
+The toolbar features a button to go to the documentation pages. It also features a button that allows the user to configure the page, e.g. fill the editor with some example code, change the editor theme, change font size, etc. 
+
+\subsubsection{Documentation Pages}
+The website has documentation pages that define both TMs and TML programs. In particular, the website gives the formal definition, shows an example and allows the user to execute the example on a tape.
+
+\subsubsection{Error Pages}
+For every language error, there is a dedicated page that:
+\begin{itemize}
+    \item describes the error informally;
+    \item illustrates the error with an example program; and 
+    \item presents a way to resolve the error.
+\end{itemize}
+There is also a general error page that lists all these errors.
+
+The website makes use of \emph{Material Design}. The Material design provides common-purpose components, such as a toolbar. Moreover, Material design is quite widespread since all Google products make use of it (\cite{material_design}). Hence, the user is expected to recognise these common constructs and should be able to easily interact with them. For instance, the user can recognise that a settings icon allows them to customise the website in some way. Furthermore, Material Design helps keep the website design consistent.
 
 \subsection{TM Conversion}
-The website allows live conversion of a (valid) TML program into a TM. This includes constructing the FSM representation of a TM from the program. This is the main conversion since it is quite easy to follow the diagram during execution. To help the user do so, the current state/transition is also highlighted in the FSM.
+The website supports live conversion of a TML program into a TM. The user can convert the TML program into both the FSM representation of a TM and its definition.
 
 \begin{table}[htb]
     \centering
@@ -202,7 +226,7 @@ The website allows live conversion of a (valid) TML program into a TM. This incl
     \label{tbl:table_isDiv2}
 \end{table}
 
-The website also allows the user to convert a TML program into a formal definition of a TM program. The result defines all the states and then presents a transition table, such as the one in Table \ref{tbl:table_isDiv2}. In this example, the non-terminating states are $q_0$ and $q_1$, and the alphabet $\Sigma = \{0, 1\}$. Moreover, the transition table says that $\delta(q_0, 0) = (R, 0, q_0)$, meaning that, during execution:
+The formal definition of the TM defines all the states and then presents a transition table, such as the one in Table \ref{tbl:table_isDiv2}. In this example, the non-terminating states are $q_0$ and $q_1$, and the alphabet $\Sigma = \{0, 1\}$. Moreover, the transition table says that $\delta(q_0, 0) = (R, 0, q_0)$, meaning that, during execution:
 \begin{itemize}
     \item the tapehead pointer moves to the \emph{right};
     \item the tapehead value stays $\emph{0}$; and 
@@ -210,7 +234,7 @@ The website also allows the user to convert a TML program into a formal definiti
 \end{itemize}
 
 \subsection{Tape Execution}
-The user can input a valid string in the alphabet and execute the TML program on a tape. The tape panel feature 15 visible tape entries (spots for an input value). The tape panel animates the execution process in the tape entries, which involves:
+The user can input a valid string in the alphabet and execute the TML program on a tape. A valid string consists of letters in the alphabet, including the blank symbol. The tape panel feature 15 visible tape entries (spots for an input value). The tape panel animates the execution process in the tape entries, which involves:
 \begin{itemize}
     \item changing the tapehead value; and
     \item moving the tape to the left or the right.
