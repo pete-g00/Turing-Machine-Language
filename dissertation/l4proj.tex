@@ -36,6 +36,11 @@
     morestring=[b]"
 }
 
+\lstdefinelanguage{WB}{
+    keywords={read, write, if, move, reject, accept, until, into, goto},
+    ndkeywords={current, blank, right, left},
+    comment=[l]{//},
+}
 
 \newtheorem{theorem}{Theorem}
 
@@ -47,16 +52,15 @@
 \maketitle
 
 \begin{abstract}
-    % Turing Machines are a model of computation that is taught to students formally 
-    Turing Machines are taught to students who have some experience in programming. This is typically done in a diagrammatic or a mathematical manner. This projects defines a programming language for Turing Machines and investigates if it is easier for them to grasp the concepts using programming or diagrams. It was found that the language was somewhat easier for students to learn than the diagrammatic approach. 
+Turing Machines are a model of computation that is typically taught to computing students after some years of coding experience. This is mostly done using finite state machines or the formal definition. It is a topic that students have struggled to learn due to its theoretical nature. This projects presents a programming language for Turing Machines along with a website to showcase it. It was found that it is somewhat easier for students to grasp the concepts using the language than finite state machines.
 \end{abstract}
 
 \chapter*{Acknowledgements}
 
-I would like to thank my supervisor Ornela for all the support she provided throughout the semester. Also, I am grateful for everyone who participated in the evaluation sessions- committing one hour in person was a big thing to ask and I am glad so many came along!
+I would like to thank my supervisor Ornela for all the support she provided throughout the semester. Also, I am grateful for everyone who participated in the evaluation sessions- committing one hour was a big thing to ask and I am glad so many came along!
 
 \def\consentname {Pete Gautam} 
-\def\consentdate {27 September 2022} 
+\def\consentdate {20 March 2023} 
 \educationalconsent
 
 \tableofcontents
@@ -73,5 +77,7 @@ I would like to thank my supervisor Ornela for all the support she provided thro
 \bibliographystyle{agsm}
 \renewcommand{\thechapter}{0} 
 \bibliography{l4proj}
+
+\listoffigures
 
 \end{document}

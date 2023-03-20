@@ -1,0 +1,15 @@
+alphabet = {0, 1}
+module program {
+    if 0, blank {
+        move right
+        accept
+    } if 1 {
+        move right
+        while 0, 1 {
+            move right
+        } if blank {
+            move left
+            reject
+        }
+    }
+}

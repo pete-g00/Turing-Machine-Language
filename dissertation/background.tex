@@ -3,12 +3,12 @@
 \subsection{Introduction to Turing Machines}
 A \emph{Turing Machine} (TM) is a collection $(Q, \Sigma, \delta, q_0)$, where:
 \begin{itemize}
-    \item $Q$ is a set of \emph{states}, including the \emph{accept state} $A$ and \emph{reject state} $R$;
-    \item $\Sigma$ is the set of \emph{letters}, which does not include the \texttt{blank} symbol;
+    \item $Q$ is a set of \emph{states}, including the \emph{accept state} $A$ and the \emph{reject state} $R$;
+    \item $\Sigma$ is a set of \emph{letters}, called the \emph{alphabet}, which does not include the \texttt{blank} symbol;
     \item $\delta \colon Q \setminus \{A, R\} \times \Sigma^+ \to Q \times \Sigma^+ \times \{\texttt{left}, \texttt{right}\}$, where $\Sigma^+ = \Sigma \cup \{\texttt{blank}\}$, is the \emph{transition function}; and
     \item $q_0 \in Q$ is the \emph{starting state}.
 \end{itemize}
-Although based on Turing's work on \cite{turing1936computable}, this definition, along with others in this section, have been adapted from \cite{hopcroft2001automata}. This variant of TMs was shown to be equivalent to Turing's definition in \cite{wang1957variant}.
+Although based on Turing's work on \citet{turing1936computable}, this definition, along with others in this section, have been adapted from \citet{hopcroft2001automata}.
 
 \begin{figure}[htb]
     \centering
@@ -47,9 +47,16 @@ Although based on Turing's work on \cite{turing1936computable}, this definition,
     \label{fig:tm_isDiv2}
 \end{figure}
 
-We can represent a TM as a \emph{finite state machine} (FSM). This is a directed graph, with vertices as states and edges as transitions. An example is given in Figure \ref{fig:tm_isDiv2}. In this case, the alphabet $\Sigma = \{0, 1\}$. The \texttt{blank} symbol is denoted by $\#$. The initial state is denoted by $q_0$; the accept state $A$ and the reject state $R$. Every edge corresponds to an evaluation of the transition function $\delta$, e.g. $\delta(q_1, 0) = (A, \texttt{blank}, \texttt{left})$. 
+We can \textit{represent} a TM as a \emph{finite state machine} (FSM). This is a directed graph, with vertices as states and edges as transitions. An example is given in Figure \ref{fig:tm_isDiv2}. In this case, the alphabet $\Sigma = \{0, 1\}$. The \texttt{blank} symbol is denoted by $\#$. The initial state is denoted by $q_0$; the accept state $A$ and the reject state $R$. Every edge corresponds to an evaluation of the transition function $\delta$, e.g. $\delta(q_1, 0) = (A, \texttt{blank}, \texttt{left})$. 
 
-The figure presents two ways of representing a FSM- subfigure (a) shows all the transitions, while subfigure (b) only shows the transitions where the tapehead value is getting changed. It also combines letters with similar transitions. We will make use of the shorthand notation.
+The figure presents two ways of representing a FSM- subfigure (a) shows the transitions explicitly, whereas subfigure (b) is less explicit:
+\begin{itemize}
+    \item It hides the transition value if it is not getting changed ($\#, L$ instead of $\# \to \#, L$). 
+    \item It also combines the letters whose transition values are not being changed and have the same transition state and direction ($0|1, L$ instead of $0, L$ and $1, L$). 
+\end{itemize}
+We will make use of the shorthand notation.
+
+FSMs are considered a \emph{representation} of a TM. This word has a very specific meaning, in that there is a bijection between FSMs (of the format given above) and TMs. Moreover, there is a `simple' algorithm that allows us to convert a FSM to a TM, and vice versa.
 
 \subsection{Executing a TM on a tape}
 Let $\Sigma$ be an alphabet. A \emph{tape} $T$ on $\Sigma$ is a function $T\colon \mathbb{Z} \to \Sigma^+$. That is, the tape has infinite entries in both directions. Moreover, each tape entry contains a value from the alphabet, or the \texttt{blank} symbol. 
@@ -65,13 +72,13 @@ Let $\Sigma$ be an alphabet. A \emph{tape} $T$ on $\Sigma$ is a function $T\colo
     \caption{A TM tape on $\{0, 1\}$.}
     \label{fig:tape_example}
 \end{figure}
-We can represent a tape using a figure. For instance, let $\Sigma = \{0, 1\}$, and let $T$ be the tape on $\Sigma$ given as follows:
+We can specify a tape using a figure. For instance, let $\Sigma = \{0, 1\}$, and let $T$ be the tape on $\Sigma$ given as follows:
 \[T(x) = \begin{cases}
     0 & x \in \{0, 2, 3\} \\
     1 & x \in \{1\} \\
     \texttt{blank} & \text{otherwise}.
 \end{cases}\]
-Then, Figure \ref{fig:tape_example} represents the tape $T$. We will assume that the first non-blank value is at index 0.
+Then, Figure \ref{fig:tape_example} illustrates the tape $T$. We will assume that the first non-blank value is at index 0.
 
 We can execute a TM on a tape. Let $M$ be a TM with alphabet $\Sigma$, and let $T$ be a tape on $\Sigma$. We execute $M$ on $T$ inductively, as follows:
 \begin{itemize}
@@ -94,7 +101,7 @@ We can execute a TM on a tape. Let $M$ be a TM with alphabet $\Sigma$, and let $
             j-1 & \texttt{dir} = \texttt{left}.
         \end{cases}\]
     \end{itemize}
-    If the state $q'$ is not a terminating state, then the execution continues with these 3 objects. Otherwise, execution is terminated with terminating state $q'$.
+    If the state $q'$ is not a terminating state, then the execution continues with these 3 objects. Otherwise, execution is terminated with the terminating state $q'$.
 \end{itemize}
 
 \begin{figure}[htb]
@@ -135,7 +142,7 @@ We illustrate this process with the TM in Figure \ref{fig:tm_isDiv2} with the ta
         \item and the tapehead index becomes $1$, with value \texttt{0}.
     \end{itemize}
     
-    \item The transition for \texttt{0} and \texttt{1} are the same with respect to $q_0$. This means that we keep moving to the right, until we end up at a blank symbol. At that point, the state of the tape is given in Figure \ref{fig:tm_tape_execution} (a). The arrow points at the tapehead entry. We are still at the state $q_0$, and the tape has not been altered.
+    \item The transition for \texttt{0} and \texttt{1} are essentially the same with respect to $q_0$. This means that we keep moving to the right until we end up at a \texttt{blank} symbol. At that point, the state of the tape is given in Figure \ref{fig:tm_tape_execution} (a). The arrow points at the tapehead entry. We are still at the state $q_0$, and the tape has not been altered.
     
     \item Now, since the tapehead value is \texttt{blank}, we move to the left and the current state becomes $q_1$. The tape has still not been changed. The current value is now $0$.
     
@@ -156,39 +163,80 @@ So, the TM in Figure \ref{fig:tm_isDiv2} executes as follows:
 Hence, this TM accepts binary numbers if and only if they are divisible by 2.
 
 \subsection{TM as a model of computation}
-Turing initially proposed TMs as the `correct' model of computation in \cite{turing1936computable}. This result is referred to as the \emph{Church-Turing Thesis}. It is a thesis since it is informal in nature; it is just a \textit{belief} that the correct model of computation is the model given by TMs. 
+Turing initially proposed TMs as the `correct' model of computation in \citet{turing1936computable}. This result is called the \emph{Church-Turing Thesis}. It is a \textit{thesis} since it is informal in nature; it is just a \textit{belief} that the correct model of computation is the model given by TMs. 
 
-In this paper, Turing also showed that TMs and $\lambda$-calculus are equivalent. Hence, it follows that $\lambda$-calculus is also the correct model of computation. There have been many other models of computations proposed, such as general recursive functions. It is widely regarded that TMs (and all the equivalent models) represent the correct model of computation. This is because many of the originally proposed models of computation turned out to be equivalent (\cite{copeland2004essential}).
+In this paper, Turing also showed that TMs and $\lambda$-calculus are equivalent. Hence, it follows that $\lambda$-calculus is also the correct model of computation. There have been many other models of computations proposed, such as general recursive functions. It is widely regarded that TMs (and all the equivalent models) specify the correct model of computation. This is because many of the originally proposed models of computation turned out to be equivalent \citep{copeland2004essential}.
+
+\subsection{Learning Automata Theory}
+Students tend to struggle learning automata theory, which includes TMs. This has been associated with the theoretical and mathematical nature of the topic \citep{wermelinger2005prolog}. As such, students claim that the lectures covering the topic are boring, monotonous and unengaging \citep{pillay2010learning}. 
+
+This is also visible in student performance. In particular, when students were taught automata theory using the pen-and-paper method, i.e. by drawing FSMs, many tend to give the wrong answer \citep{rodger2006jflap}. \citet{rodger2009increasing} mentions that this is likely because they find it tedious to check the correctness of the FSM.
+
+There have been many attempts made to improve student engagement in automata theory. 
+\begin{itemize}
+    \item There are visualisation tools that allow students to construct automata and then test simulate execution on a string. One of these tools is JFLAP, which has support for TMs \citep{rodger2006jflap}. \citet{rodger2009increasing} found that making use of this tool helped boost student engagement and performed better overall than those who had not made use of the tool. In general, algorithm animators have generally proven to be quite effective in supplementing courses \citep{stasko1998empirically}.
+    
+    \item In \citet{tecson2018tutoring}, a website was used by students to learn automata theory. Many students enjoyed this approach since it was flexible and allowed them to learn at their pace. Moreover, it offered visualisations (i.e. FSMs) and allowed the students to execute the FSM on a tape.
+    
+    \item In \citet{wermelinger2005prolog}, a package was created in Prolog to allow students to construct FSMs programmatically. The FSMs can be simulated to test for the language they accept. This was created to bridge the gap between programming languages and automata theory, and it was hoped that the package would improve student engagement and performance.
+\end{itemize} 
+
+Although there are many other proposals in literature, most tend to be similar visualisation techniques \citep{zingaro2008another}. Novel ideas are necessary to understand further how to keep students motivated in learning automata theory. 
 
 \section{Parser}
-A \emph{compiler} is a program that takes source code in a programming language (PL) and translates it into a program in another, target, PL. During the process, the compiler also detects any errors, such as syntax and type errors. 
+A \emph{compiler} is a program that takes source code in a programming language (PL) and translates it into a program in another PL. An \emph{interpreter} is a program that takes source code in a programming language and executes it directly. During the process, the compiler and the interpreter detect errors, such as syntax and type errors.
 
 \begin{figure}[htb]
     \centering
-    \begin{tikzpicture}
-        \node[draw] (LA) at (0, 0) {Lexical Analysis};
-        \node[draw] (SA) at (0, -1.5) {Syntactic Analysis};
-        \node[draw] (CA) at (0, -3) {Semantic Analysis};
-        \node[draw] (CG) at (0, -4.5) {Code Generation};
-        
-        \draw[->] (0, 1) -- node[right] {source code} (LA);
-        \draw[->] (LA) -- node[right] {token stream} (SA);
-        
-        \draw[->] (SA) -- node[above] {syntax errors} (4.5, -1.5);
-        \draw[->] (SA) -- node[right] {AST} (CA);
-        \draw[->] (CA) -- node[above] {scope/type errors} (4.5, -3);
-        
-        \draw[->] (CA) -- node[right] {AST} (CG);
-        \draw[->] (CG) -- node[right] {result program} (0, -5.5);
-    \end{tikzpicture}
-    \caption{The data flow between the compilation phases.}
-    \label{fig:compilation_process}
+    \begin{subfigure}[b]{0.4\textwidth}
+        \centering
+        \begin{tikzpicture}
+            \node[draw, text width=1.5cm, align=center] (LA) at (0, 0) {Lexical Analysis};
+            \node[draw, text width=1.5cm, align=center] (SA) at (0, -2) {Syntactic Analysis};
+            \node[draw, text width=1.5cm, align=center] (CA) at (0, -4) {Semantic Analysis};
+            \node[draw, text width=2cm, align=center] (CG) at (0, -6) {Code Generation};
+            
+            \draw[->] (0, 1.25) -- node[right, text width=1.5cm, align=center] {source code} (LA);
+            \draw[->] (LA) -- node[right, text width=1.5cm, align=center] {token stream} (SA);
+            
+            \draw[->] (SA) -- node[above, text width=1.5cm, align=center] {syntax errors} (3.5, -2);
+            \draw[->] (SA) -- node[right] {AST} (CA);
+            \draw[->] (CA) -- node[above, text width=1.6cm, align=center] {scope/type errors} (3.5, -4);
+            
+            \draw[->] (CA) -- node[right] {AST} (CG);
+            \draw[->] (CG) -- node[right, text width=1.5cm, align=center] {result program} (0, -7.5);
+        \end{tikzpicture}
+        \caption{Compilation}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.4\textwidth}
+        \centering
+        \begin{tikzpicture}
+            \node[draw, text width=1.5cm, align=center] (LA) at (0, 0) {Lexical Analysis};
+            \node[draw, text width=1.5cm, align=center] (SA) at (0, -2) {Syntactic Analysis};
+            \node[draw, text width=1.5cm, align=center] (CA) at (0, -4) {Semantic Analysis};
+            \node[draw, text width=1.5cm, align=center] (CG) at (0, -6) {Code Execution};
+            
+            \draw[->] (0, 1.25) -- node[right, text width=1.5cm, align=center] {source code} (LA);
+            \draw[->] (LA) -- node[right, text width=1.5cm, align=center] {token stream} (SA);
+            
+            \draw[->] (SA) -- node[above, text width=1.5cm, align=center] {syntax errors} (3.5, -2);
+            \draw[->] (SA) -- node[right] {AST} (CA);
+            \draw[->] (CA) -- node[above, text width=1.6cm, align=center] {scope/type errors} (3.5, -4);
+            
+            \draw[->] (CA) -- node[right] {AST} (CG);
+            \draw[white] (CG) -- (0, -7.5);
+        \end{tikzpicture}
+        \caption{Interpretation}
+    \end{subfigure}
+    \caption{The data flow during (a) compilation and (b) interpretation.}
+    \label{fig:compilation_and_interpretation}
 \end{figure}
 
-We will now consider the different phases of the compilation process. This is summarised in Figure \ref{fig:compilation_process}. This figure, along with most of the content in this section, has been adapted from \cite{aho2007compilers}.
+We will now consider the different phases of the compilation and interpretation process. This is summarised in Figure \ref{fig:compilation_and_interpretation}. This figure, along with most of the content in this section, has been adapted from \citet{aho2007compilers}. As we can see, many of the phases are the same between the two processes.
 
 \subsection{Lexical Analysis}    
-During the compilation process, we first perform \emph{lexical analysis}. In this stage, the source code is enriched to make it ready for parsing. In particular, we generate a stream of source code, which reads the program word by word. Then, it produces a stream of \emph{tokens}. A token is a word in source code along with a label. For instance, consider the mathematical expression \texttt{1 + 2}. We can convert this expression into 3 tokens: \texttt{(1, NUM)}, \texttt{(+, PLUS)} and \texttt{(2, NUM)}. 
+The first stage of compilation and interpretation is \emph{lexical analysis}. In this stage, the source code is enriched to make it ready for parsing. In particular, we generate a stream of source code, which reads the program word by word. Then, it produces a stream of \emph{tokens}. A token is a word in source code along with a label. For instance, consider the mathematical expression \texttt{1 + 2}. We can convert this expression into 3 tokens: \texttt{(1, NUM)}, \texttt{(+, PLUS)} and \texttt{(2, NUM)}. 
 
 \subsection{Syntactic Analysis}
 
@@ -197,6 +245,7 @@ Next, we try to parse the token stream into an \emph{abstract syntax tree} (AST)
 \begin{figure}[htb]
     \centering
     \begin{tikzpicture}[
+        level distance=1.2cm,
         level 1/.style={sibling distance=4cm},
         level 2/.style={sibling distance=2cm},
     ]
@@ -224,9 +273,9 @@ Next, we try to parse the token stream into an \emph{abstract syntax tree} (AST)
     \label{fig:AST_example}
 \end{figure}
 
-An AST represents the program as a tree. Typically, the internal nodes represent operations, whereas the leaves represent their arguments. The AST for the expression \texttt{(1 + 2) * (3 + 4)} is given in Figure \ref{fig:AST_example}.
+An AST presents the program as a tree. Typically, the internal nodes specify operations, while the leaves give their arguments. The AST for the expression \texttt{(1 + 2) * (3 + 4)} is given in Figure \ref{fig:AST_example}.
 
-There are many ways to parse the stream of tokens. A common method is \emph{recursive-descent parsing}. Here, we have a parser function for each construct in the language, such as a \textit{program}, an \textit{if} command, an \textit{expression}, etc. We look at the next token value and choose the right function.
+There are many ways to parse the stream of tokens. A common method is \emph{recursive-descent parsing}. Here, we have a parser function for each construct in the language, such as a \textit{program}, an \textit{if} command, an \textit{expression}, etc. We typically look at the next token value and choose a function. 
 
 One way of performing recursive-descent parsing is by \emph{top-down parsing}. In this case, we produce the parent node of the AST and then generate its children. 
 
@@ -240,4 +289,7 @@ In type errors, we check whether the AST has some type mismatch, e.g. \texttt{1 
 In scope errors, we ensure that all the identifiers present in code are defined. To do so, we need to keep track of all the variables that are in scope. In terms of functions, there is a design choice here- we can have all functions in scope from the start, or add them to scope as they are encountered. Another thing to consider is recursion- to allow recursion, the function must be in scope as soon as it is declared.
 
 \subsection{Code Generation}
-Finally, we convert the AST into code in the target language. In particular, we traverse the tree and convert each phrase from the source language to the target.
+During the final stage of compilation, we convert the AST into code in the target language. In particular, we traverse the tree and convert each phrase from the source language to the target. The actual structure of this process depends on the target language.
+
+\subsection{Code Execution}
+During the final stage of interpretation, we execute the code. This is done by traversing the AST, and then executing each block of code. Like with code generation, this process is dictated by the structure of the source language.

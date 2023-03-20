@@ -462,16 +462,24 @@
 
 ### 18 Mar 2023
 
+* *2 hours* Updated evaluation
+* *1 hour* Started working on presentation slides
 
 ### 19 Mar 2023
 
+* *1 hour* Added literature review to background
+* *1 hour* Updated abstract and introduction
 
 ## Week 11
-
 ### 20 Mar 2023
 
+* *0.5 hours* Added figures to the presentation slides
+* *1 hour* Proofread abstract and introduction
+* *1.5 hours* Proofread background
+* *0.5 hours* Updated requirements
 
+<!-- 
 ### 21 Mar 2023
 
 
-### 24 Mar 2023
+### 24 Mar 2023 -->

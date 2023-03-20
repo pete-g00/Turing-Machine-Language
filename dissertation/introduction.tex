@@ -1,29 +1,30 @@
 \chapter{Introduction}
 
-% reset page numbering. Don't remove this!
 \pagenumbering{arabic} 
 
 \section{Motivation}
-Turing Machines are a model of computation that is typically taught to computing students after some years of coding experience. They are normally taught the concept using finite state machines. This is quite different to how they have been taught programming previously, and they might find it easier to learn the concept in a way that resembles coding closely. This project presents a language to represent TMs.
+When students are asked to create an algorithm using Turing Machines, they typically do so in two steps:
+\begin{enumerate}
+    \item they plan the algorithm to understand the evolution of the tape during execution; and then
+    \item they convert this algorithm into an actual Turing Machine.
+\end{enumerate}
+Since students are expected to be pretty familiar with coding, the first step could be done programmatically!
+
+This project proposes a programming language for Turing Machines that allows students to plan tape execution rigorously (step 1) while abstracting the Turing Machine operations (step 2). It is hoped that this improves student engagement and performance in Turing Machines!
 
 \section{Objectives}
-There are 3 parts to the project:
-\begin{enumerate}
-    \item defining the language, 
-    \item creating the parser for the language and 
-    \item creating a website that allows a user to make use of the parser.
-\end{enumerate}
+There are 3 parts to the project: defining the language; creating the parser for the language; and creating a website that allows a user to make use of the parser.
 
-The first aim is to define a programming language to represent Turing machines, called the Turing Machine Language. A Turing machine can be executed on a tape, and this is what the language will simulate. 
+The first aim is to define a programming language to represent Turing machines, called the Turing Machine Language. The language will allow students to devise an algorithm to execute on tape while abstracting the definition of a Turing Machine.
 
-Next, a parser will be created for the language. This parser should be able to take in a string representation of a program, and then parse it into a program context. Then, a program context can be:
+Next, a parser is to be created for the language. This parser should be able to take in a string representation of a program, and then parse it into a program context. Then, a program context can be 
 \begin{itemize}
-    \item validated to ensure it has no errors;
+    \item validated to ensure it has no errors; 
     \item converted into a Turing machine; and
     \item executed on a tape.
 \end{itemize}
 
-Finally, a website will be created to allow the user to access the parser. It should feature an editor to allow users to type a program. The user would then be able to convert it into a Turing machine, or execute it on a valid tape.
+Finally, a website is to be created to allow the user to access the parser. It should feature an editor to allow users to type a program. The user would then be able to convert it into a Turing machine, or execute it on a valid tape.
 
 \section{Summary}
 \begin{itemize}
@@ -34,88 +35,3 @@ Finally, a website will be created to allow the user to access the parser. It sh
     \item \textbf{Chapter 6} outlines the results of the evaluation, along with some limitations to the process; and
     \item \textbf{Chapter 7} concludes the dissertation with a summary and highlights some recommendations for future work.
 \end{itemize}
-
-% \todo{Remove the guidance notes from your dissertation before submitting!}
-
-% Why should the reader care about what are you doing and what are you actually doing?
-% \section{Guidance}
-
-% \textbf{Motivate} first, then state the general problem clearly. 
-
-% \section{Writing guidance}
-% \subsection{Who is the reader?}
-
-% This is the key question for any writing. Your reader:
-
-% \begin{itemize}
-%     \item
-%     is a trained computer scientist: \emph{don't explain basics}.
-%     \item
-%     has limited time: \emph{keep on topic}.
-%     \item
-%     has no idea why anyone would want to do this: \emph{motivate clearly}
-%     \item
-%     might not know \emph{anything} about your project in particular:
-%     \emph{explain your project}.
-%     \item
-%     but might know precise details and check them: \emph{be precise and
-%     strive for accuracy.}
-%     \item
-%     doesn't know or care about you: \emph{personal discussions are
-%     irrelevant}.
-% \end{itemize}
-
-% Remember, you will be marked by your supervisor and one or more members
-% of staff. You might also have your project read by a prize-awarding
-% committee or possibly a future employer. Bear that in mind.
-
-% \subsection{References and style guides}
-% There are many style guides on good English writing. You don't need to
-% read these, but they will improve how you write.
-
-% \begin{itemize}
-%     \item
-%     \emph{How to write a great research paper} \cite{Pey17} (\textbf{recommended}, even though you aren't writing a research paper)
-%     \item
-%     \emph{How to Write with Style} \cite{Von80}. Short and easy to read. Available online.
-%     \item
-%     \emph{Style: The Basics of Clarity and Grace} \cite{Wil09} A very popular modern English style guide.
-%     \item
-%     \emph{Politics and the English Language} \cite{Orw68}  A famous essay on effective, clear writing in English.
-%     \item
-%     \emph{The Elements of Style} \cite{StrWhi07} Outdated, and American, but a classic.
-%     \item
-%     \emph{The Sense of Style} \cite{Pin15} Excellent, though quite in-depth.
-% \end{itemize}
-
-% \subsubsection{Citation styles}
-
-% \begin{itemize}
-% \item If you are referring to a reference as a noun, then cite it as: ``\citet{Orw68} discusses the role of language in political thought.''
-% \item If you are referring implicitly to references, use: ``There are many good books on writing \citep{Orw68, Wil09, Pin15}.''
-% \end{itemize}
-
-% There is a complete guide on good citation practice by Peter Coxhead available here: \url{http://www.cs.bham.ac.uk/~pxc/refs/index.html}. 
-% If you are unsure about how to cite online sources, please see \citet{UNSWWebsite}. 
-% \footnote{Specifying an online resource like \url{https://developer.android.com/studio}
-% in a footnote sometimes makes more sense than including it as a formal reference.}
-
-% \subsection{Plagiarism warning}
-
-% \begin{highlight_title}{WARNING}
-    
-%     If you include material from other sources without full and correct attribution, you are commiting plagiarism. The penalties for plagiarism are severe.
-%     Quote any included text and cite it correctly. Cite all images, figures, etc. clearly in the caption of the figure.
-% \end{highlight_title}
-
-% \subsection{Quoting text}
-
-% If you are quoting a long passage, use a \texttt{quote} environment:
-
-% \begin{quote}
-%      If you scribble your thoughts any which way, your readers will surely feel that you care nothing about them. They will mark you down as an egomaniac or a chowderhead -or, worse, they will stop reading you. The most damning revelation you can make about yourself is that you do not know what is interesting and what is not.
-% \end{quote} \citep{Von80}
-
-% If you are quoting inline, like Simon Peyton-Jones' following remark, use quotation marks ``Conveying the intuition is primary, not
-% secondary'' \citep{Pey17}.
-

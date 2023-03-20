@@ -329,13 +329,14 @@ Then, the TM with all the states $q$, the same alphabet $\Sigma$, the transition
         \draw[-stealth] (s2) -- node[above, rotate=-45] {$b \to \#, L$} (R);
         \draw[-stealth] (s2) -- node[below, rotate=-45] {$\#, L$} (R);
     \end{tikzpicture}
-    \caption{The TM corresponding to the program above. The state $q_0$ corresponds to the module \texttt{moveToEnd}; the state $q_1$ corresponds to the module \texttt{checkAFirst}; and the state $q_2$ corresponds to the module \texttt{checkASecond}.}
+    \caption{The TM corresponding to the program.}
     \label{fig:tm_from_tml}
 \end{figure}
 
 We now illustrate this process with an example. So, consider the following TML program:
 \lstinputlisting[language=TML]{code/tml_to_tm.txt}
-Then, its corresponding TM is given in Figure \ref{fig:tm_from_tml}.
+Then, its corresponding TM is given in Figure \ref{fig:tm_from_tml}. The state $q_0$ corresponds to the module \texttt{moveToEnd}; the state $q_1$ corresponds to the module \texttt{checkAFirst}; and the state $q_2$ corresponds to the module \texttt{checkASecond}.
+
 \begin{theorem}
     Let $P$ be a TML program, and let $M$ be the corresponding TM for $P$. Then, $P$ and $M$ execute on every tape $T$ in the same way. That is,
     \begin{itemize}
@@ -607,7 +608,7 @@ In this section, you are presented with TMs. You will be given some tape values 
         \end{tikzpicture}
         \caption{}
     \end{subfigure}
-    \caption{2 Turing Machines}
+    \caption{2 mystery TMs}
     \label{fig:TM_questions}
 \end{figure}
 \begin{enumerate}
@@ -661,5 +662,71 @@ The remaining questions are optional.
 \section{Survey}
 \includepdf[pages=-]{checklist.pdf}
 \includepdf[pages=-]{survey.pdf}
+
+\section{Survey Results}
+The survey was broken into 3 main parts:
+\begin{itemize}
+    \item General Questions on TML;
+    \item Comparing TML with TM; and
+    \item General Questions on the website.
+\end{itemize}
+
+\subsection{Parser and Language}
+Students were asked to evaluate the parser and the language with respect to the following criteria:
+\begin{enumerate}
+    \item TML is easy to understand
+    \item TML is easy to write programs in
+    \item I was able to fix errors in my code using the error messages provided
+    \item I was able to easily reason executing a program on a tape
+\end{enumerate}
+\begin{figure}[htb]
+    \centering
+    \includegraphics[scale=0.3]{images/tml-evaluation.png}
+    \caption{A violin plot that summarises the results of the survey relating to the TML with respect to the 4 criteria.}
+    \label{fig:tml-evaluation}
+\end{figure}
+The results are given in Figure \ref{fig:tml-evaluation}, as a violin plot. The agreement value refers to how much the user agrees to the statement: $-1$ is strongly disagree; $-0.5$ disagree; $0.5$ agree and $1$ strongly agree. The whiskers show the range of answers, e.g. nobody said they strongly disagreed with criterion 1. Moreover, the density is proportional to the number of participants answering the question with that value, e.g. most people answered criterion 1 with the value $0.5$ (agree).
+
+The students were then asked to compare TML with TM, with respect to the following criteria:
+\begin{enumerate}
+    \item I am more confident in writing a program in TML than drawing a TM
+    \item I find it easier to reason what a TML program accepts than a TM
+\end{enumerate}
+\begin{figure}[htb]
+    \centering
+    \includegraphics[scale=0.3]{images/tml-v-tm.png}
+    \caption{A violin plot that summarises the results of the survey that compare TM and TML with respect to the 2 criteria.}
+    \label{fig:tml-v-tm}
+\end{figure}
+The results are given in \ref{fig:tml-v-tm}.
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[scale=0.3]{images/use-tml.png}
+    \caption{A histogram that summarises whether the users would consider writing a TML program before drawing a TM.}
+    \label{fig:use-tml}
+\end{figure}
+Next, the students were then asked whether they would consider writing a TML program before drawing a TM. The response of this question is summarised in Figure \ref{fig:use-tml} as a histogram. In the $x$-plot, the value 0 means that the student answered no; 0.5 means maybe; and 1 means yes.
+
+\subsection{Product}
+Finally, students were asked to evaluate the product with respect to the following criteria:
+\begin{enumerate}
+    \item The website is easy to follow
+    \item The presentation of the website is intuitive
+    \item There were no visible bugs in the website
+    \item The website was fast
+    \item The website feels complete
+    \item The code execution was easy to follow
+    \item The code editor was easy to use
+\end{enumerate}
+ \begin{figure}[htb]
+    \centering
+    \includegraphics[scale=0.3]{images/website-evaluation.png}
+    \caption{A violin plot that summarises the results of the survey relating to the website with respect to the 7 criteria.}
+    \label{fig:website-evaluation}
+\end{figure}
+The results of the survey are summarised in the violin plot given in Figure \ref{fig:website-evaluation}. 
+
+
 
 \end{appendices}

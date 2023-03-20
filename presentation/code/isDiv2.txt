@@ -1,0 +1,16 @@
+alphabet = {0, 1}
+module isDiv2 {
+    // move to the end
+    while 0, 1 {
+        move right
+    } if blank {
+        move left
+        // check last letter is 0
+        if 0 {
+            changeto blank
+            accept
+        } if 1, blank {
+            reject
+        }
+    }
+}

@@ -2,50 +2,39 @@
 
 MoScoWs were used to specify the requirements for the project. In particular, the requirements were partitioned into one of the 4 levels of priority:
 \begin{itemize}
-    \item \emph{must have}- this feature is required to construct the minimum viable product; 
-    \item \emph{should have}- this feature is required for the product to be practically useful;
-    \item \emph{could have}- this feature is a stretch goal but is plausible; and
-    \item \emph{will not have}- this feature is not something that can be implemented in the given time (or conflicts with another feature).
+    \item \emph{must have} this feature is required to construct the minimum viable product; 
+    \item \emph{should have} this feature is required for the product to be practically useful;
+    \item \emph{could have} this feature is a stretch goal but is plausible; and
+    \item \emph{will not have} this feature is not something that can be implemented in the given time (or conflicts with another feature).
 \end{itemize} 
-Since the project has 3 distinct aspects. For this reason, each part had its own MoScoW section. Both functional and non-functional requirements are given.
+Since the project has 3 distinct aspects, each part had its own MoScoW section. Both functional and non-functional requirements are given together.
 
-\section{Developing TML}
-
-\paragraph{Must Have} A specification document for the TML must be created. The specification should include the following:
+\section{Turing Machine Language}
 \begin{itemize}
-    \item a formal and an informal definition for the language; and
-    \item how to execute a program on a valid tape.
+    \item A specification document for the Turing Machine Language (TML) \emph{must} be created.
+    \item A proof of equivalence between TMs and TML programs \emph{must} be provided. 
+    \item The language \emph{must} abstract details of TM, such as states and transitions.
+    \item The language \emph{must not} abstracting execution on tape, e.g. we can only move one step to the left or right during execution.
+    \item The language \emph{should} resemble a traditional programming language.
+    \item The specification \emph{should} include a formal and an informal definition for the language.
+    \item The specification \emph{should} include how to execute a program on a valid tape.
+    \item The specification \emph{should} include examples of programs \textit{before} definitions and proofs. \textit{This is so that the document is easier to follow}.
+    \item The specification and proof \emph{could} connect TML program with the Church-Turing Thesis. 
 \end{itemize}
-Along with the specification, a proof of equivalence between TMs and TML programs should also be provided.
-
-\paragraph{Should Have} The specification should include examples. In particular, there should be examples of valid and invalid programs, and those that illustrate the proofs (e.g. how to convert a TM into a TML program) so that it is easier to follow. The language should resemble a traditional programming language.
-
-\paragraph{Could Have} The specification could connect TML program with the Church-Turing Thesis. In particular, a proof of equivalence could be explored between TML program and $\lambda$-calculus.
 
 \section{Developing the parser for TML}
-
-\paragraph{Must Have} The parser must be able to:
 \begin{itemize}
-    \item parse a string representation of a TM program to a program context;
-    \item validate a program context; and 
-    \item execute a program context on a valid tape.
+    \item The parser \emph{must} be correct.
+    \item The parser \emph{must} support web deployment. 
+    \item The parser \emph{must} be able to parse a string representation of a TM program to a program context.
+    \item The parser \emph{must} be able to validate a program context.
+    \item The parser \emph{must} be able to execute a program context on a valid tape.
+    \item The parser \emph{should} be able to convert a program context to a TM. \textit{Compared to the 3 must-have requirements, this requirement was considered to be of the lowest priority, and so was considered a should-have.}
+    \item The parser \emph{could} be able to execute a TM on a tape. \textit{This might help in the website to illustrate execution on the converted TM.}
+    \item The parser \emph{will not} be able to convert a TM into a TML program.
 \end{itemize}
-Moreover, the parser must support web deployment and be correct.
-
-\paragraph{Should Have} The parser should be able to convert a program context to a TM. \textit{Compared to the 3 must-have requirements, this requirement was considered to be of the lowest priority, and so was considered a should-have.}
-
-\paragraph{Could Have} The parser should be able to execute a TM on a tape. This might help in the website to illustrate execution on the converted TM.
-
-\paragraph{Will Not Have} The parser will not be able to convert a TM into a TML program.
 
 \section{The Product}
-
-\paragraph{Must Have} The website must:
-\begin{itemize}
-    \item have a code editor for TML;
-    \item be able to convert a valid program to a TM and present it as a FSM;
-    \item be able to execute a program on a valid tape, one step at a time.
-\end{itemize}
 
 \begin{figure}[htb]
     \centering
@@ -64,9 +53,22 @@ Moreover, the parser must support web deployment and be correct.
     \label{fig:bad_FSM}
 \end{figure}
 
-\paragraph{Should Have} The code editor should support syntax highlighting. Assuming that the website does not make use of any fancy FSM assignment algorithm, i.e. it would produce an initial rendering of FSM such as the one in Figure \ref{fig:bad_FSM}, the user should be able to drag states within the FSM to place them in a better position. The website should be fast and easy to use.
-
-\paragraph{Could Have} The editor could support error detection. The user could be able to configure the website, e.g. change the editor theme, the editor font size and the speed of tape execution. The website could convert a program to its definition as a TM. The website could support automatic placement of states (within the FSM) in an aesthetic manner instead of having the user drag it.
-
-\paragraph{Will Not Have} The editor will not be able to automatically fix errors. The website will not be able to execute a TM on a tape (without a program). The website will not able to convert a TM into a TML program.
+\begin{itemize}
+    \item The website \emph{must} have a code editor for TML.
+    \item The website \emph{must} be able to convert a valid program to a TM and present it as a FSM.
+    \item The website \emph{must} be able to execute a program on a valid tape, one step at a time.
+    \item The code editor \emph{should} support syntax highlighting.
+    \item The user should be able to drag states within the FSM. \textit{This is under the assumption that the website does not make use of any fancy FSM assignment algorithm, i.e. it would produce an initial rendering of FSM such as the one in Figure \ref{fig:bad_FSM}.}
+    \item The website \emph{should} be fast, easy to use, responsive and well-designed.
+    \item The website \emph{should} be accessible by both laptops and tablets.
+    \item The website \emph{should} include documentation. \textit{This is to allow people with little or no knowledge of TMs to use the site. Also, the TML is a new concept, so people using the site are not necessarily going to be familiar with it!}
+    \item The editor \emph{could} support error detection.
+    \item The user \emph{could} be able to configure the website, e.g. change the editor theme, the editor font size and the speed of tape execution. 
+    \item The website \emph{could} convert a program to its definition as a TM. 
+    \item The website \emph{could} support automatic placement of states within the FSM in an aesthetic manner.
+    \item The editor \emph{will not} be able to automatically fix errors.
+    \item The website \emph{will not} be able to directly execute a TM on a tape. 
+    \item The website \emph{will not} able to convert a TM into a TML program.
+    \item The website \emph{will not} be accessible on phones.
+\end{itemize}
 

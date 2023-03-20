@@ -19,18 +19,17 @@ The parser was written in TypeScript. Although there are many frameworks that co
         \draw[->] (CV) -- node[right] {Program Context} (CE);
         \draw[->] (CC) -- node[left] {Turing Machine} (-2, -5.5);
     \end{tikzpicture}
-    \caption{The parsing process. The process is given inside the box. The class used to achieve the process is given in label, outside of the box. The flow of data is also shown.}
+    \caption{The parsing process.}
     \label{fig:parsing_process}
 \end{figure}
 
-The entire parsing process is summarised in Figure \ref{fig:parsing_process}.
-
+The entire parsing process is summarised in Figure \ref{fig:parsing_process}. In the figure, the process is named inside the box. The class used to achieve the process is given in label, outside of the box. The flow of data is also shown.
 
 \subsection{Lexical Analysis}
 
 During lexical analysis, a stream of source code was produced. Although the source code was not enriched into tokens, the position of the code was tracked. This was to ensure that, in case of an error, the right section of code could be highlighted. This is done using the class \texttt{CodeWrapper}. 
 
-To produce a stream of tokens, the \emph{iterator design pattern} was used. The iterator design pattern allows us to get the current value from a collection in a way that abstracts the data structure (\cite{gamma1995design}). In particular, the pattern was used to abstract the string representation of the source code and return a single entry from the code at a time. 
+To produce a stream of tokens, the \emph{iterator design pattern} was used. The iterator design pattern allows us to get the current value from a collection in a way that abstracts the data structure \citep{gamma1995design}. In particular, the pattern was used to abstract the string representation of the source code and return a single entry from the code at a time. 
 
 \subsection{Syntactic Analysis}
 \begin{figure}[htb]
@@ -63,13 +62,13 @@ To produce a stream of tokens, the \emph{iterator design pattern} was used. The 
             node[draw] {\texttt{ProgramContext}}
         };
     \end{tikzpicture}
-    \caption{A snippet of the \texttt{Context} class hierarchy. All the non-leaf classes are abstract.}
+    \caption{A snippet of the \texttt{Context} class hierarchy.}
     \label{fig:context_hierarchy}
 \end{figure}
 
 Next, the code is parsed. This is done using the class \texttt{CodeParser}. 
 
-The result of the parsing is a \texttt{ProgramContext}, which represents the root of the AST. Subclasses of the \texttt{Context} class are used to represent different statements in the class, such as \texttt{MoveContext} for \textit{move} commands and \texttt{GoToContext} for \textit{goto} commands. A snippet of the class hierarchy for \texttt{Context} is shown in Figure \ref{fig:context_hierarchy}.
+The result of the parsing is a \texttt{ProgramContext}, which represents the root of the AST. Subclasses of the \texttt{Context} class are used to represent different statements in the class, such as \texttt{MoveContext} for \textit{move} commands and \texttt{GoToContext} for \textit{goto} commands. A snippet of the class hierarchy for \texttt{Context} is shown in Figure \ref{fig:context_hierarchy}. All the non-leaf classes are abstract.
 
 The parsing process results in the construction of the AST, such as the one in Figure \ref{fig:TML_AST}. To descend to a child, we make use of the instance fields. For instance, \texttt{ProgramContext} has the following fields:
 \begin{itemize}
@@ -93,7 +92,7 @@ parseProgram():ProgramContext {
 Note that the code given above is simplified from the actual implementation.
 
 \subsection{Semantic Analysis}
-During semantic analysis, we traverse the AST using the \emph{visitor design pattern}. The visitor design pattern allows us to construct the same method for a class hierarchy without making changes to the classes (\cite{gamma1995design}). In this case, we want to create a method to validate each \texttt{Context}. Moreover, the semantic analysis is conducted by the class \texttt{CodeValidator}, which implements \texttt{CodeVisitor} to accommodate the visitor design pattern.
+During semantic analysis, we traverse the AST using the \emph{visitor design pattern}. The visitor design pattern allows us to construct the same method for a class hierarchy without making changes to the classes \citep{gamma1995design}. In this case, we want to create a method to validate each \texttt{Context}. Moreover, the semantic analysis is conducted by the class \texttt{CodeValidator}, which implements \texttt{CodeVisitor} to accommodate the visitor design pattern.
 
 To allow for visitor design pattern, a concrete \texttt{Context} class implements the method \texttt{visit}. Each concrete class makes use of the right method from the abstract \texttt{CodeVisitor} class. We illustrate this with an example. Consider the following snippet of \texttt{GoToContext}.
 \begin{lstlisting}[language=TypeScript]
@@ -167,34 +166,34 @@ Due to the complex nature of the website, it made use of many APIs.
 
 Initially, 3 frameworks were considered to implement the website:
 \begin{itemize}
-    \item the \emph{Webpack} framework - it has little overhead, allows for a lot of flexibility, but does not directly provide components (such as toolbar and drawer) or support state management (\cite{webpack});
-    \item the \emph{React} framework- it has significantly more overhead than Webpack, but it also provides a rich collection of components and supports state management directly (\cite{react});
-    \item the \emph{Angular} framework- it has even more overhead than React, but, like React, it has a rich collection of components and supports state management (\cite{angular}).
+    \item the \emph{Webpack} framework\footnote{\url{https://webpack.js.org}}- it has little overhead, allows for a lot of flexibility, integrates well with a lot of frameworks, but does not directly provide components (such as toolbar and drawer) or support state management;
+    \item the \emph{React} framework\footnote{\url{https://reactjs.org}}- it has significantly more overhead than Webpack, but it also provides a rich collection of components and supports state management directly;
+    \item the \emph{Angular} framework\footnote{\url{https://angular.io}}- it has even more overhead than React, but, like React, it has a rich collection of components and supports state management.
 \end{itemize}
 
 \emph{State management} was an important consideration when choosing the framework since the website tracks many states, such as the value of the editor and the current TM. Managing state manually would increase the complexity of the project, and could easily be avoided by choosing the right framework. For this reason, webpack was not chosen.
 
-Both React and Angular would have been equally good choices for the project. React was chosen as there are more APIs that readily integrate with React compared to Angular, including some of the APIs used in this project. This is true since React is more widely used than Angular (\cite{react_v_angular}). The React framework supports coding in either JavaScript or TypeScript. The project made use of the TypeScript version for type safety.
+Both React and Angular would have been equally good choices for the project. React was chosen as there are more APIs that readily integrate with React compared to Angular, including some of the APIs used in this project. This is true since React is more widely used than Angular \citep{react_v_angular}. The React framework supports coding in either JavaScript or TypeScript. The project made use of the TypeScript version for type safety.
 
 \subsection{Editor}
 
-The editor feature was implemented using the \emph{monaco} API. The API was chosen since it integrates well with React and provides many features (\cite{monaco}). The features include:
+The editor feature was implemented using the \emph{monaco} API\footnote{\url{https://microsoft.github.io/monaco-editor/}}. The API was chosen since it integrates well with React and provides many features. The features include:
 \begin{itemize}
     \item syntax highlighting with different priorities (e.g. an error gets a high priority while code execution gets a low priority);
     \item the ability to easily set and get the current value; along with
     \item numerous customisations to the editor, such as as changing the font size, setting an editor theme and showing/hiding line numbers- these are all features that a user can configure within the website.
 \end{itemize}
-Moreover, the monaco editor was chosen since it has the same look as Visual Studio (VS) Code, and shares many functionalities with the IDE. A developer survey in 2022 found that VS Code is the most popular code editor among 70 000 developers (\cite{stack_overflow}).
+Moreover, the monaco editor was chosen since it has the same look as Visual Studio (VS) Code, and shares many functionalities with the IDE. A developer survey in 2022 found that VS Code is the most popular code editor among 70 000 developers \citep{stack_overflow}.
 
 \subsection{FSM Generation}
 \begin{figure}[htb]
     \centering
-    \includegraphics[scale=0.7]{images/graphviz_isDiv2.pdf}
+    \includegraphics[scale=0.6]{images/graphviz_isDiv2.pdf}
     \caption{The graphviz rendering of the directed graph \texttt{isDiv2}.}
     \label{fig:graphviz_isDiv2}
 \end{figure}
 
-The FSM representation of the TM is created using the \emph{graphviz} framework. The API makes use of the \emph{DOT} notation (\cite{graphviz}). The DOT notation represents graphs in text by listing their nodes and edges (\cite{dot}). A graph in DOT notation is given below:
+The FSM representation of the TM is created using the \emph{graphviz} framework\footnote{\url{https://graphviz.org}}. The API makes use of the \emph{DOT} notation\footnote{\url{https://graphviz.org/doc/info/lang.html}}. The DOT notation represents graphs in text by listing their nodes and edges. A graph in DOT notation is given below:
 \begin{lstlisting}[language=DOT]
 digraph isDiv2 {
     node [shape = "doublecircle"]; q0;

@@ -6,7 +6,7 @@
 % -> Include summary of concrete results (``the new compiler ran 2x faster'')
 
 \section{Summary}
-The project aimed to construct a language for Turing Machines and investigate whether it is easier to learn the concept the traditional manner or through programming. To allow for the comparison of the two techniques, the project as split into 3 construction phases:
+The project aimed to construct a language for Turing Machines and investigate whether it is easier to learn the concept by pen-and-paper or through programming. To allow for the comparison of the two techniques, the project as split into 3 phases:
 \begin{itemize}
     \item defining the language;
     \item constructing a parser for the language;
@@ -14,16 +14,11 @@ The project aimed to construct a language for Turing Machines and investigate wh
 \end{itemize}
 The 3 phases were completed, after which there was an evaluation session aimed at comparing the teaching of Turing Machines using diagrams and programs.
 
-The evaluation showed that the language is somewhat easier to understand and learn than the diagrammatic approach. However, due to the limited nature of the evaluation and the previous programming experience of the students, this result might not hold in general. This could likely be improved by adding some syntactic sugar to the language so that it abstracts further the details of Turing Machines.
-
-\section{Reflection}
-This project was quite an enjoyable experience for me. I was very happy to work on a self-defined project and that gave me a lot of motivation to work on it! It was also exciting connecting programming languages and Turing machines, and I found that quite exciting! This project has also taught me a lot about web development, in particular the React framework!
-
-I do feel that due to the time constraints, I was not able to develop the language and the product completely. There are many extensions that I would have liked to add, as listed in future work. Nonetheless, I plan to work on adding these extensions during the summer!
+The evaluation showed that the language is somewhat easier to understand and learn than the diagrammatic approach. However, due to the limited nature of the evaluation and the previous programming experience of the students, this result might not hold in general.
 
 \section{Future Work}
 
-There are many additions that can be made to the language and the product in future. Some of these were discovered during production, and some as part of the user evaluation.
+There are many additions that can be made to the language and the product in future. These will help further abstract the TM operations.
 
 \subsection{Language}
 Although the language is equivalent to TMs, and has a few features that resemble a traditional PL, it is still quite low-level. There are many common paradigms that can be added to the language. These include:
@@ -35,28 +30,37 @@ Although the language is equivalent to TMs, and has a few features that resemble
 We illustrate these issues with the following program:
 \lstinputlisting[language=TML]{code/fut_work_tml.txt}
 
-The first feature is a very common feature found in program- many programs involving some check on the final character. For example, in the program above, we are traversing to the end twice- at lines 5-9 and 17-21. Hence, I believe this would be a highly beneficial feature to add.
+The first feature is a very common feature found in program- many programs involving some check on the final character. For example, in the program above, we are traversing to the end twice- at lines 5-9 and 17-21. Hence, I believe this would be a highly beneficial feature to add. Instead of abstracting TM operation, this command would actually abstract \textit{tape} operation. However, this command would make programs much more readable, and the operation we are abstracting is relatively easy to implement!
 
-The second point is also somewhat common and was suggested in the survey. At many points during execution, we want to do something for a single letter and something different for the other letters. For instance, in the example above, at lines 10-13, we want the program to accept the string if and only if the letter is a \texttt{b}. If the alphabet was longer, this would be quite inefficient. Also, another point that was raised during the survey was that the language only makes use of pattern-matching, and could be more flexible. So, this would be a great feature to extend the language. 
+The second point is also somewhat common and was suggested in the survey. At many points during execution, we want to do something for a single letter and something different for the other letters. For instance, in the example above, at lines 10-13, we want the program to accept the string if and only if the letter is a \texttt{b}. If the alphabet was longer, this would be quite inefficient. Also, another point that was raised during the survey was that the language only makes use of pattern-matching, and could further abstract the TM transition function. So, this would be a great feature to extend the language. 
 
-The final feature is quite interesting. There are many programs where the modules are very similar and only differ in some letters. For example, the program above has 2 essentially mirrored blocks at lines 4-16 and 16-28. In particular, the only difference in these lines of code is at lines 10/12 and 22/24, where the letters \texttt{a} and \texttt{b} are the other way round. Hence, I believe that adding this feature would make many programs in TML shorter and less repetitive! Moreover, this would make the language further resemble a traditional PL.
+The final feature is quite interesting. There are many programs where the modules are very similar and only differ in some letters. For example, the program above has 2 essentially mirrored blocks at lines 4-16 and 16-28. In particular, the only difference in these lines of code is at lines 10/12 and 22/24, where the letters \texttt{a} and \texttt{b} are the other way round. Hence, I believe that adding this feature would make many programs in TML shorter and less repetitive! Moreover, this would abstract the TM transition function like variables in the WB3 language, while not providing the same flexibility so that it is still quite straightfoward to convert from a TML program to a TM.
 
-% Finally, there is an open question about the language- the ability to convert a TM into a `good' TML program. Currently, the proof of equivalence makes use of an algorithm to convert a valid TML program to a complete TML program, but not vice versa. Complete TML programs can be thought of as another representation for TMs, and so add no further benefit to the language. It is the ability to nest blocks within \textit{if} commands that really makes the language rich and different to TMs. For this reason, I believe it would be a good idea to devise an algorithm to convert a TM (or a complete TML program) to a nested TML program.
-
-% One way to do so would be to achieve maximum nesting by replacing \texttt{goto} commands with the actual module, however this is not optimal- there would be a lot of duplicate code present. Instead, it might be a good idea to only replace modules that are only called once, and to keep modules that are called multiple times separate. The main benefit of this is that complete TML programs are essentially another representation of TMs and quite distant from TML programs. I believe valid, non-complete
+One of the proposals in the user evaluation was to add the \texttt{shift} command. This command would allow tape values to be shift by one position to the left or the right. This command is quite useful when we want to introduce a blank space at the middle of the tape, which is currently not allowed in TML programs. Hence, by adding this command, many complex programs will become easier to reason! However, this feature will \textbf{not} be added to the language since it goes against the purpose of the language. This is because this feature abstracts tape operations \textit{too much}. In particular, adding this operation would simplify the TML programs to an unacceptable level, and there is no such alternative in TMs. This makes it much harder to convert a TML program to a TM!
 
  \subsection{Product}
 There are many possible improvements to the website. These are some of the features that can be added:
 \begin{itemize}
     \item support for direct execution of a TM;
-    \item a play button on the tape section to execute long programs on long tapes without pressing the step button many times;
-    \item the ability to collapse the panels; and
-    \item the ability to customise the number of tape entries shown so that it is easier to follow code execution on long strings.
+    \item a play button on the tape section to execute long programs on long tapes without pressing the step button many times; and
+    \item the ability to collapse the panels.
 \end{itemize}
 All of these are great features that could be added to the website and would make it easier to use!
 
-We could also improve the website by making the TM panel more responsive. The FSM is currently being produced using the graphviz framework. The resulting SVG has hard-coded dimensions. This makes it hard to make the panel responsive. It is not completely possible to make the graph fixed; only the maximum size of the SVG can be specified. Moreover, the constraints are not taken into consideration when the API produces the FSM. This means that for complex TM, the states are quite small and hard to see. This makes it hard to follow the execution process. To fix this, we could add one of the following features:
+\begin{figure}[htb]
+    \centering
+    \includegraphics[scale=0.3]{images/Bad FSM visualisation.png}
+    \caption{A FSM rendering by graphviz.}
+    \label{fig:bad_graphviz_fsm}
+\end{figure}
+
+We could also improve the website by making the TM panel more responsive. The FSM is currently being produced using the graphviz framework. The resulting SVG has hard-coded dimensions. This makes it hard to make the panel responsive. It is not completely possible to make the graph fixed; only the maximum size of the SVG can be specified. Moreover, the constraints are not taken into consideration when the API produces the FSM. This means that for complex TM, the states are quite small and hard to see- an example is given in \ref{fig:bad_graphviz_fsm}. This makes it hard to follow the execution process. To fix this, we could add one of the following features:
 \begin{itemize}
     \item the FSM might produced as it currently is, but the user can zoom in and drag the FSM panel; or
     \item the FSM might be produced so that the states always have the same size, but the user can scroll the panel. 
 \end{itemize}
+
+\section{Reflection}
+This project was quite an enjoyable experience for me. I was very happy to work on a self-defined project and that gave me a lot of motivation to work on it! It was also exciting connecting programming languages and Turing machines! This project has also taught me a lot about web development, in particular the React framework.
+
+I do feel that due to the time constraints, I was not able to develop the language and the product completely. There are many extensions that I would have liked to add. Nonetheless, I plan to work on adding these extensions during the summer!
