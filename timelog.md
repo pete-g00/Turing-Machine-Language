@@ -478,8 +478,11 @@
 * *1.5 hours* Proofread background
 * *0.5 hours* Updated requirements
 
-<!-- 
 ### 21 Mar 2023
 
+* *1.5 hours* Proofread requirements and evaluation
+* *1 hour* Proofread conclusion
+* *0.5 hours* Proofread READMEs
 
+<!-- 
 ### 24 Mar 2023 -->

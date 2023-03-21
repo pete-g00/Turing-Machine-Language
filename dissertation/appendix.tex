@@ -393,7 +393,7 @@ In this chapter, we illustrate some screenshots of the website.
     \caption{The initial rendering of the homepage.}
     \label{fig:homepage_initial}
 \end{figure}
-The initial rendering of the homepage is given in Figure \ref{fig:homepage_initial}. It shows an example program initially, with no TM conversion or tape execution. We can change the program in settings. The user can press the button in TM panel to convert the program to either the FSM representation or the definition version.
+The initial rendering of the homepage is given in Figure \ref{fig:homepage_initial}. It shows an example program initially, with no TM conversion or tape execution. We can change the program in settings, and configure many properties of the editor. The user can press the button in the TM panel to convert the program into a TM- either the FSM representation or the definition version.
 
 \begin{figure}[htb]
     \centering
@@ -437,9 +437,9 @@ Figure \ref{fig:homepage_execution_start} shows the website during tape executio
     \label{fig:documentation_tml}
 \end{figure}
 
-There are 2 pages in the site dedicated to documentation- one that documents TMs and the other that documents TML. The initial definitions are shown in Figures \ref{fig:documentation_tm} and \ref{fig:documentation_tml}. In each page, there is an example before the actual definition. 
+There are 2 pages in the site dedicated to documentation- one that documents TMs and the other that documents the TML. Screenshots of the two pages are given in Figures \ref{fig:documentation_tm} and \ref{fig:documentation_tml}. 
 
-Below the definition, we describe execution on a tape. The user can then execute the TM/TML program by inputting a value. Like in the homepage, different aspects are highlighted during execution to make it easier to follow.
+In each page, there is an example before the actual definition. After the definition, we describe execution on a tape. The user can then execute the TM/TML program by inputting a value. Like in the homepage, different aspects are highlighted during execution to make it easier to follow.
 
 \newpage
 
@@ -667,11 +667,17 @@ The remaining questions are optional.
 The survey was broken into 3 main parts:
 \begin{itemize}
     \item General Questions on TML;
-    \item Comparing TML with TM; and
+    \item Comparing TML with TMs; and
     \item General Questions on the website.
 \end{itemize}
 
 \subsection{Parser and Language}
+\begin{figure}[htb]
+    \centering
+    \includegraphics[scale=0.35]{images/tml-evaluation.png}
+    \caption{A violin plot that summarises the results of the survey relating to the TML with respect to the 4 criteria.}
+    \label{fig:tml-evaluation}
+\end{figure}
 Students were asked to evaluate the parser and the language with respect to the following criteria:
 \begin{enumerate}
     \item TML is easy to understand
@@ -679,30 +685,24 @@ Students were asked to evaluate the parser and the language with respect to the 
     \item I was able to fix errors in my code using the error messages provided
     \item I was able to easily reason executing a program on a tape
 \end{enumerate}
-\begin{figure}[htb]
-    \centering
-    \includegraphics[scale=0.3]{images/tml-evaluation.png}
-    \caption{A violin plot that summarises the results of the survey relating to the TML with respect to the 4 criteria.}
-    \label{fig:tml-evaluation}
-\end{figure}
 The results are given in Figure \ref{fig:tml-evaluation}, as a violin plot. The agreement value refers to how much the user agrees to the statement: $-1$ is strongly disagree; $-0.5$ disagree; $0.5$ agree and $1$ strongly agree. The whiskers show the range of answers, e.g. nobody said they strongly disagreed with criterion 1. Moreover, the density is proportional to the number of participants answering the question with that value, e.g. most people answered criterion 1 with the value $0.5$ (agree).
 
+\begin{figure}[htb]
+    \centering
+    \includegraphics[scale=0.35]{images/tml-v-tm.png}
+    \caption{A violin plot that summarises the results of the survey that compare TM and TML with respect to the 2 criteria.}
+    \label{fig:tml-v-tm}
+\end{figure}
 The students were then asked to compare TML with TM, with respect to the following criteria:
 \begin{enumerate}
     \item I am more confident in writing a program in TML than drawing a TM
     \item I find it easier to reason what a TML program accepts than a TM
 \end{enumerate}
-\begin{figure}[htb]
-    \centering
-    \includegraphics[scale=0.3]{images/tml-v-tm.png}
-    \caption{A violin plot that summarises the results of the survey that compare TM and TML with respect to the 2 criteria.}
-    \label{fig:tml-v-tm}
-\end{figure}
 The results are given in \ref{fig:tml-v-tm}.
 
 \begin{figure}[htb]
     \centering
-    \includegraphics[scale=0.3]{images/use-tml.png}
+    \includegraphics[scale=0.35]{images/use-tml.png}
     \caption{A histogram that summarises whether the users would consider writing a TML program before drawing a TM.}
     \label{fig:use-tml}
 \end{figure}
@@ -721,7 +721,7 @@ Finally, students were asked to evaluate the product with respect to the followi
 \end{enumerate}
  \begin{figure}[htb]
     \centering
-    \includegraphics[scale=0.3]{images/website-evaluation.png}
+    \includegraphics[scale=0.35]{images/website-evaluation.png}
     \caption{A violin plot that summarises the results of the survey relating to the website with respect to the 7 criteria.}
     \label{fig:website-evaluation}
 \end{figure}

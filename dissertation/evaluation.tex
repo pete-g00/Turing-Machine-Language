@@ -1,10 +1,10 @@
 \chapter{Evaluation} 
 
-The project had 2 aspects to evaluate- the TML and the product (website). Both aspects were evaluated continually through unit tests and tested using a user evaluation.
+The project had 2 aspects to evaluate- the TML and the product (website). Both aspects were evaluated continually through unit tests.
 
 After the product had been completed, a user evaluation was conducted on 18 second year computing students. TMs are typically taught to students that have few years of programming experience \citep{rodger2006jflap}, and for this reason second years were chosen. They had little familiarity, if any, with automata theory and were introduced to both TMs and TML during the evaluation session. 
 
-The aim of the evaluation was for them to get acquainted with TMs and TML programs, and then to:
+The aim of the evaluation was for them to get acquainted with the two concepts, and then to:
 \begin{itemize}
     \item compare TMs and TML programs;
     \item understand whether writing a TML program would help drawing a TM; and
@@ -12,53 +12,57 @@ The aim of the evaluation was for them to get acquainted with TMs and TML progra
 \end{itemize}
 The evaluation session also served as a great opportunity to ask for any features to be added to the product and the language.
 
-During the evaluation session, students were first introduced to TML programs. This was done by showing students a program and explaining the syntax and semantics of the language. This is very different to the traditional pen-and-paper method of teaching automata theory \citep{zingaro2008another}. They were then shown how to execute the program on a tape. They were expected to think of their own strings and encouraged to reason the execution out loud.
+During the evaluation session, students were first introduced to TML programs. This was done by showing students a program and explaining the syntax and the semantics of the language. They were then shown how to execute the program on a tape. They were expected to think of their own strings and encouraged to reason the execution process out loud.
 
-To consolidate their knowledge on TML programs, they were then expected to understand what language two mystery TML programs accept. They were expected to do so by checking whether the programs accepted some values. During this process, they should have been able understand the way the program operates and hence decode all the values (the language) it accepts. They were encouraged to use the product during this process. 
+To consolidate their knowledge on TML programs, they were then expected to understand what strings two mystery TML programs accept. They were expected to do so by checking whether the programs accepted some values. During this process, they should have been able understand the way the program operates and hence decode all the values it accepts. They were encouraged to use the product during this process. 
 
 The students were then introduced to TMs. This too was done using simulations, which has been shown to be more effective than the formal definition \citep{rodger2009increasing}. They were then expected to decode 2 TMs in a similar manner to the TML programs. Since the website can only execute TML programs, they were given TML programs for the TM. Note however that this did not defeat the purpose of testing TMs since the programs given were complete TML programs, which is another \textit{representation} for TMs.
 
 Finally, they were asked to write some programs in the TML. Like in the previous sections, they were free to use the website to write the programs and test its correctness. The first few programs were quite similar to the code they had seen before. The remaining programs were somewhat more difficult, and for this reason they were optional. Nonetheless, many students attempted them and wrote impressive programs!
 
-To best understand the students' thought process when completing the worksheet, the \emph{think-aloud methodology} was used. The think-aloud methodology asks the user to explain how they are approaching a problem \citep{jorgensen1990thinking}. This allows mistakes to be identified early on. Moreover, this methodology also helped identify how the user is making using of the website, and see if some of their expectations were not met. In particular, this helped establish features that could be added to the website that would make it more convenient to use, such as keyboard shortcuts.
+To best understand the students' thought process when completing the worksheet, the \emph{think-aloud methodology} was used. The think-aloud methodology asks the individual to explain how they are approaching a problem \citep{jorgensen1990thinking}. This allows mistakes to be identified early on. Moreover, this methodology also helped identify how the user is making using of the website, and see if some of their expectations were not met. This helped establish features that could be added to the website that would make it more convenient to use, such as keyboard shortcuts.
 
 The evaluation took about 50 minutes to be completed. The students were asked to fill out a worksheet with their answers. 
 
-After they had completed the worksheet, they completed a survey to evaluate the language and the product. To avoid writing programs on paper, students were asked to copy their code from the final part of the worksheet to the survey. The results of the survey are discussed in detail in the next section. Both the worksheet and the survey are given in the appendix. The raw results of the survey are also given in the appendix, as graphs. 
+After they had completed the worksheet, they completed a survey to evaluate the language and the product. To avoid writing programs on paper, students were asked to copy their code from the final part of the worksheet to the survey. Both the worksheet and the survey are given in the appendix. The raw results of the survey are also given in the appendix, as graphs. The results of the session are discussed in the following sections.
 
 \section{Language} 
-During the evaluation session, students found the language to be quite intuitive and easy to understand. This is likely because they are familiar with the Java PL, and the TML syntax is quite similar to Java. It is natural that students find it easier to learn a new PL if it is similar to one that they are already acquainted with, so this is quite expected. 
+During the evaluation session, students found the language to be quite intuitive and easy to understand. This is likely because they are familiar with the Java PL, and the TML syntax is quite similar to Java. It is natural that students find it easier to learn a new PL that is similar to one that they are already acquainted with. 
 
 Although Java and TML share similar syntax, they do not share the same semantics. \citet{tshukudu2021teachers} found that students struggle to understand the differences between a PL they are familiar with and one that they are currently learning. In the session, students did try out commands present in Java that were not available in TML, such as an \texttt{else} case. Moreover, some students commented in the survey that they would rather have execution start at the \texttt{main} module than the top module, like in Java. To help students grasp TML syntax and semantics, the language was continually compared to Java.
 
-The evaluation sessions showed that there is a significant difference in thinking of traditional PL algorithms and TM tape algorithms. For instance, one of the questions that the students were asked to decode was the $a^n b^n$ program, which accepts strings with $a$'s followed by the same number of $b$'s. The students were given a recursive algorithm in TML. In the base case, the string is empty, and we accept it. Otherwise,
+The evaluation sessions showed that there is a significant difference in thinking of traditional PL algorithms and TM tape algorithms. For instance, one of the questions that the students were asked to decode was the TML program for the $a^n b^n$ algorithm. This program accepts strings with $a$'s followed by the same number of $b$'s. The students were given a recursive algorithm in TML. The algorithm works as follows:
 \begin{itemize}
-    \item we match $a$ at the start and remove it;
-    \item we traverse to the end of the string, match a $b$ and remove it; and
-    \item we go back to the start of the string and recurse.
+    \item In the base case, the string is empty, and we accept it.
+    \item Otherwise, 
+    \begin{itemize}
+        \item we match $a$ at the start and remove it;
+        \item we traverse to the end of the string, match a $b$ and remove it; and
+        \item we go back to the start of the string and recurse.
+    \end{itemize}
 \end{itemize}
-The students were quite confused by this TML program. Many could not understand how the recursion worked. Most found that the string must start with an $a$, and end with a $b$, but only few could decode the algorithm completely. This is likely because they would not associate a recursive algorithm to recognise $a^n b^n$ coming from their lack of experience with such algorithms.
+The students were quite confused by this TML program. Many could not understand how the recursion worked or why it was necessary. Most found that the string must start with an $a$, and end with a $b$, but only few could decode the algorithm completely. This is likely because of their lack of experience with such algorithms. 
 
-One interesting result from the user evaluation was the lack of errors in most of the code. Typically, when students write code, there are many errors present, especially syntax errors \citep{corley2020paper}. This is even more prevalent in questions involving TMs \citep{rodger2006jflap}. There might have been fewer errors since:
+It would be a good idea to introduce students explicitly to this recursion pattern when teaching TMs. This is an issue that is independent of TM operations. Hence, it is better suited to be taught using the language since the students can focus just on algorithm design without taking into account TM operations.
+
+One interesting result from the user evaluation was the lack of errors. Typically, when students write code (on paper), there are many errors present, especially syntax errors \citep{corley2020paper}. This is even more prevalent in questions involving TMs \citep{rodger2006jflap}. There might have been fewer errors since:
 \begin{itemize}
     \item many of the programs the students wrote were quite similar to the examples they were given; and
     \item they were allowed to use the editor in the website, which detects syntax errors.
 \end{itemize}
-\citet{corley2020paper} found that using an IDE helps lower the number of syntax errors present in student submissions, but that this does not hold for logic errors. However, this was not the case here- only a few solutions had logic errors present. This might be because the programs were quite simple and similar to those they had seen in the examples.
+\citet{corley2020paper} found that using an IDE helps lower the number of syntax errors present in student submissions, but that this does not hold for logic errors. However, this was not the case here- only a few solutions had logic errors present! This might be because students were free to test their code using the product.
 
-From the worksheets, it is clear that students managed to grasp many of the important concepts about TMs and TML programs in quite a short time. Moreover, student seemed to like the visualisations and simulations and were quite engaged throughout the session. In the worksheets, there was no significant difference in the students' ability to decode a TMs compared to TML programs.
+From the worksheets, it is clear that the students managed to grasp many of the important concepts about TMs and TML programs in quite a short time. Moreover, student seemed to like the visualisations and simulations and were quite engaged throughout the session. In the worksheets, there was no significant difference in the students' ability to decode a TMs compared to TML programs.
 
-Many students mentioned in the survey that they would consider writing a TML program for some algorithm before drawing the TM. A lot of students mentioned that they would struggle to directly construct a TM due to its states and transitions. Students were introduced of the two-step process when constructing TMs:
+Many students mentioned in the survey that they would consider writing a TML program for some algorithm before drawing the TM. A lot of students mentioned that they would struggle to directly construct a TM due to its theoretical nature. Students were introduced of the two-step process when constructing TMs:
 \begin{enumerate}
     \item planning tape execution, and then
     \item drawing TMs.
 \end{enumerate}
 They felt that it was natural to separate the two stages, and that the TML was a good model for the first step.
 
-A very interesting result from the survey was that students found it easier to reason what a TML program accepts than a TM. This was unexpected since a significant number of students claimed that they find it easier to follow the FSM representation than code. Perhaps the reason they claimed it was still easier to understand TML program is because it is clearer than the FSM. Moreover, the students were more exposed to TML programs than TMs.
-
 \subsection{TML and WB3}
-There have been a few different languages that aim to simulate the behaviour of TMs. One of these is the \emph{Wang-B language} (WB). This language has been constructed as part of a Formal Languages course in Stanford University \citep{stanford_WB}. It is used to show that adding different constructs to a TM does not make it more powerful. As such, there are many versions of the language where different constructs have been added. We will consider \emph{WB3}- the later variants make use of multiple tapes and stacks, which is not relevant in our case.
+Over the years, there have been a few different languages that aim to simulate the behaviour of TMs. One of these is the \emph{Wang-B language} (WB). This language has been constructed as part of a Formal Languages course in Stanford University \citep{stanford_WB}. It is used to show that adding different constructs to a TM does not make it more powerful. As such, there are many versions of the language where different constructs have been added. We will consider \emph{WB3}- the later variants make use of multiple tapes and stacks, which is not relevant in our case.
 
 We compare and contrast WB3 with TML. To do so, consider the following program in WB3:
 \begin{lstlisting}[language=WB]
@@ -81,15 +85,16 @@ Note that the syntax given does not totally match the one presented in \citet{st
 
 As we can see, the language resembles assembly code. Instead of \textit{modules}, it has blocks of code with a label at the top, like \texttt{start} and \texttt{match}. Moreover, it makes use of \texttt{read} and \texttt{write} commands to get and set the tapehead value. Most constructs in WB3 and TML are quite similar, such as \texttt{move} and \texttt{goto}. However, there are 2 things that are different:
 \begin{itemize}
-    \item The WB3 language makes use of the keyword \texttt{until}. This is the negated version of the \texttt{while} command in TML, but is weaker since WB3 language only allows for \texttt{move} commands. The TML also allows for \texttt{changeto} commands in a \texttt{while} block. Nonetheless, this is rarely used in practice. Also, \texttt{until} is more efficient in practice since moving to the end can be done by \texttt{until blank} instead of \texttt{while a, b}- this will be quite efficient with a bigger alphabet set. It is also clearer when the loop ends in this case. However, this does not apply all the time- \texttt{while a} is clearer than \texttt{until b, blank}.
+    \item The WB3 language makes use of the keyword \texttt{until}. This is the negated version of the \texttt{while} command in TML. However, it is weaker since WB3 language only allows for \texttt{move} commands. The TML also allows for \texttt{changeto} commands in a \texttt{while} block. Nonetheless, this is rarely used in practice. Also, \texttt{until} is more efficient in practice since moving to the end can be done by \texttt{until blank} instead of \texttt{while a, b}- this would be quite efficient with a bigger alphabet set. It is also clearer when the loop ends in this case. However, this does not apply all the time- \texttt{while a} is clearer than \texttt{until b, blank}.
     
-    \item The WB3 language allows variables. In line 2, the current tapehead value gets stored at the variable \texttt{x}, and the program makes use of this value at lines 3 and 7. This is not something that TML supports. In fact, programs in WB3 are much shorter than in TML due to variables! However, TMs do not support variables, and so it is easier to convert a TML program to TMs than a WB3 program. Moreover, this feature abstracts TM operations by providing shortcuts in the transition function!
+    \item The WB3 language allows variables. In line 2, the current tapehead value gets stored at the variable \texttt{x}, and the program makes use of this value at lines 3 and 7. This is not something that the TML supports. In fact, programs in WB3 are much shorter than in TML due to variables! However, TMs do not support variables, which makes it easier to convert a TML program to TMs than a WB3 program. This is a feature that could be added to TML since it abstracts TM operations by providing shortcuts in the construction of the transition function!
 \end{itemize}
+Overall, the WB3 language does quite a good job abstracting TM operations while keeping the tape operations concrete. However, it does not resemble a typical PL closely.
 
 \section{Parser and Product}
 The parser was continually tested during production to ensure correctness. This was achieved using unit testing. They were used to test all aspects of the parser and were extensive. In fact, the unit tests had more than $95\%$ code coverage.
 
-Similarly, the product was also continually tested during production for correctness. This was achieved through unit testing. Unlike the testing for language, this was however less successful due to the limits in mocking frameworks and time constraints. Nonetheless, the tests covered all the major parts of the website and ensured that all the functionalities implemented were correct. If there was more time, the mocking would be more thorough so that the tests could be exhaustive.
+Similarly, the product was also continually tested during production for correctness. This was achieved through unit testing. Unlike the testing for language, this was however less successful due to the limits in mocking frameworks and time constraints. Nonetheless, the tests covered all the major parts of the website and ensured that all the functionalities implemented were correct. 
 
 During the user evaluation, most found the website easy to use, intuitive and fast. Unfortunately, there were some bugs present in the website. For example, if the user:
 \begin{itemize}
@@ -97,14 +102,14 @@ During the user evaluation, most found the website easy to use, intuitive and fa
     \item edited the program; and then
     \item started tape execution,
 \end{itemize}
-the TM would not have updated to the newest version. This was a bug since the TM was highlighting the current state and transition, but this did not apply to the tape execution. The bug was later fixed.
+the TM would not have updated to the newest version. This was a bug since the TM was highlighting the current state and transition, but this did not apply to the actual tape execution. The bug was later fixed.
 
 The unit tests have ensured that the parser is correct. Moreover, the user evaluation has shown that the product is a good platform to parse a TML program and execute it. There are some issues with the website, but it is easy to use and works as expected. \citet{rodger2009increasing} has shown that students tend to engage better in automata theory when they are able to execute a FSM on a string, and the product is quite capable of doing so!
 
 \section{Limitations to User Evaluation}
 Due to the time constraints of the project, there were some limitations to the evaluation, in particular the user evaluation. The biggest limitation was the length of the evaluation session. It was hard to conduct a productive, short and accessible session. For this reason, it was not possible to test the students' ability to draw TMs. 
 
-A significant portion of the question do not require the student to understand TMs or TML programs; they can just run the code on the website and get the answer. This was done to help the students grasp the language easily. When it came to describing the values that a program/TM accepted, it was clear that some had not understood the program. For instance, in a mystery program that accepts values that are 3 mod 4, some students claimed that the program accepts all odd numbers!
+A significant portion of the questions do not require the student to understand TMs or TML programs; they can just run the code on the website and get the answer. This was done to help the students grasp the language easily. When it came to describing the values that a program/TM accepted, it was clear that some had not understood the program. For instance, in a mystery program that accepts values that are 3 mod 4, some students claimed that the program accepts all odd numbers!
 
 The students' ability to write some TM programs could not be tested completely. In fact, the core questions only involved making minor changes to the programs they were given; it was only the optional questions that truly tested their ability to write TM programs and reason about them.
 
@@ -113,6 +118,6 @@ Another issue with the user evaluation was its structure. To keep the process si
     \item one group learns TML and then TMs; while
     \item the other learns TML directly.
 \end{itemize}
-That way, when the students draw TMs, we can directly compare whether students' performance improves if they first learn TML. 
+That way, when the students draw TMs, we can directly compare whether students' performance improves if they first learn TML. Ideally, this would be done when the students are taking the automata theory course. That way, the students would be willing to spend more time with the product and it would be more comparable to other similar studies such as \citet{rodger2009increasing} and \citet{pillay2010learning}.
 
-Finally, we note that the results from this survey might not hold in general. In particular, these students had prior knowledge of Java, so were quite comfortable with Java-like syntax. \citet{lo2015programming} found that Java syntax is harder for students to learn than Python syntax. This implies that if a student is not familiar with Java-like syntax, they might struggle learning the TML more.
+Finally, we note that the results from this survey might not hold in general. In particular, these students had prior knowledge of Java, so were quite comfortable with Java-like syntax. \citet{lo2015programming} found that Java syntax is harder for students to learn than Python syntax. This implies that if a student is not familiar with Java-like syntax, they might struggle learning the TML more. Moreover, Python is one of the most commonly taught PL at universities \citep{meszarosova2015python}, so an average learner might struggle more with TML than these students!

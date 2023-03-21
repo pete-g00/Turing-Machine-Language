@@ -1,4 +1,4 @@
-This is the repository for my Level 4 Computing (combined) project on Turing Machine Languages (TML). We consider a new approach to learning about Turing Machines by treating it as a programming language and compares it to the standard approach. It is supervised by Ornela Dardha.
+This is the repository for my Level 4 Computing (combined) project on Turing Machine Languages (TML). We consider a new approach to learning Turing Machines by treating it as a programming language and compare it to the standard approach. It is supervised by Ornela Dardha.
 
 The directory structure is:
 

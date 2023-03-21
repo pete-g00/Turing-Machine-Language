@@ -1,7 +1,7 @@
 \chapter{Implementation}
 \section{Parser}
 
-The parser was written in TypeScript. Although there are many frameworks that could have been used for lexical and syntactic analysis, these were not chosen. The main reason for this is that the parser was meant to be used within a website. In particular, the parser was expected to become an node package manager (NPM) package. Moreover, TML is quite a simple language, which made this task relatively easy and short.
+The parser was written in TypeScript. Although there are many frameworks that could have been used for lexical and syntactic analysis, these were not chosen. The main reason for this is that the parser was meant to be used within a website. In particular, the parser was expected to become an node package manager (NPM) package. Moreover, the TML is quite a simple language, which made this task relatively easy and short.
 
 \begin{figure}[htb]
     \centering
@@ -29,7 +29,7 @@ The entire parsing process is summarised in Figure \ref{fig:parsing_process}. In
 
 During lexical analysis, a stream of source code was produced. Although the source code was not enriched into tokens, the position of the code was tracked. This was to ensure that, in case of an error, the right section of code could be highlighted. This is done using the class \texttt{CodeWrapper}. 
 
-To produce a stream of tokens, the \emph{iterator design pattern} was used. The iterator design pattern allows us to get the current value from a collection in a way that abstracts the data structure \citep{gamma1995design}. In particular, the pattern was used to abstract the string representation of the source code and return a single entry from the code at a time. 
+To produce a stream of tokens, the \emph{iterator design pattern} was used. The iterator design pattern allows us to get the current value from a collection in a way that abstracts the underlying data structure \citep{gamma1995design}. In this case, the pattern was used to abstract the string representation of the source code and return a single entry from the code at a time. 
 
 \subsection{Syntactic Analysis}
 \begin{figure}[htb]
@@ -72,11 +72,11 @@ The result of the parsing is a \texttt{ProgramContext}, which represents the roo
 
 The parsing process results in the construction of the AST, such as the one in Figure \ref{fig:TML_AST}. To descend to a child, we make use of the instance fields. For instance, \texttt{ProgramContext} has the following fields:
 \begin{itemize}
-    \item \texttt{alphabet} for \texttt{AlphabetContext}; and
-    \item \texttt{modules} for an array of \texttt{ModuleContext}.
+    \item \texttt{alphabet} which contains the \texttt{AlphabetContext}; and
+    \item \texttt{modules} which contains an array of \texttt{ModuleContext}.
 \end{itemize}
 
-The parser is recursive-descent, meaning that we delegate the parsing procedure to a method that parses a specific construct. For example, \texttt{parseModule} parses a \textit{module}, while \texttt{parseIf} parses an \textit{if} command. A snippet of the method \texttt{parseProgram} is given below.
+The parser is \emph{recursive-descent}, meaning that we delegate the parsing procedure to a method that parses a specific construct. For example, \texttt{parseModule} parses a \textit{module}, while \texttt{parseIf} parses an \textit{if} command. A snippet of the method \texttt{parseProgram} is given below.
 \begin{lstlisting}[language=TypeScript]
 parseProgram():ProgramContext {
     var alphabet:AlphabetContext = parseAlphabet();
@@ -86,7 +86,7 @@ parseProgram():ProgramContext {
         modules.add(parseModule());
     }
     
-    return new ProgramContext(position, alphabet, modules);
+    return new ProgramContext(alphabet, modules);
 }
 \end{lstlisting}
 Note that the code given above is simplified from the actual implementation.
@@ -113,7 +113,7 @@ class CodeValidator extends CodeVisitor<boolean> {
         return context.visit(this);
     }
     
-    // validate that the goto identifier a module name
+    // validate that the goto identifier is a defined module name
     visitGoTo(gotoContext:GoToContext):boolean {
         if (!moduleNames.contains(gotoContext.identifier)) {
             throw new CodeError("Undefined name- " + identifier);
@@ -127,28 +127,25 @@ class CodeValidator extends CodeVisitor<boolean> {
 \end{lstlisting}
 To run the \texttt{CodeValidator}, we visit \texttt{ProgramContext}.
 
-When traversing the AST, we typically want to aggregate the result or share it with the parent. For this reason, we typically return a specific type of values within each visit method. To allow any type to be returned, the class \texttt{CodeVisitor} has a type parameter that represents the return type of each \texttt{visit} method.
+When traversing the AST, we typically want to aggregate the result or share it with the parent. For this reason, we return a specific type of values within each visit method. To allow any type to be returned, the class \texttt{CodeVisitor} has a type parameter \texttt{T} that represents the return type of each \texttt{visit} method.
 
-In \texttt{CodeValidator}, we return \texttt{boolean} values. In particular, we return \texttt{true} if a block has a \textit{flow} command. This data is used in containers that have multiple blocks, such as a module. We throw an error if a non-final block has a \textit{flow} command. In the example code above, a block with a \textit{goto} command returns \texttt{true} since it is a \textit{flow} command. 
+In \texttt{CodeValidator}, we return \texttt{boolean} values. In particular, we return \texttt{true} if a block has a \textit{flow} command. This data is used in containers that have multiple blocks, such as a module. We throw an error if a non-final block has a \textit{flow} command. In the example code above, a block with a \textit{goto} command returns \texttt{true} since it is a \textit{flow} command. If this does not apply to some construct, e.g. the \textit{alphabet}, we return \texttt{true}.
 
-% A disadvantage of using the visitor design pattern is that the return value might not make sense in all subclasses. For instance, the value returned by \texttt{ProgramContext} does not make a difference in the validation process. There are other constructs as well for which the value does not make sense. In all these cases, to adhere to the pattern, we return \texttt{true}.
-
-The advantage of using the visitor design pattern is that we have a way of traversing the AST without altering any of the \texttt{Context} classes; we can just construct a \texttt{Visitor} class. However, if we wanted to add another \texttt{Context} subclass, then we would need to amend all the \texttt{Visitor} classes. We expect the language to be pretty static, so this is perfectly fine in our case.
-
+The advantage of using the visitor design pattern is that we have a way of traversing the AST without altering any of the \texttt{Context} classes; we can just construct a \texttt{Visitor} class. On the other hand, if we wanted to add another \texttt{Context} subclass, then we would need to amend all the \texttt{Visitor} classes. We expect the language to be pretty static, so this is not a relevant issue!
 
 \subsection{TM Generation}
 Next, we convert the AST into a TM. 
 
-The TM is implemented in the class \texttt{TuringMachine} and mimics the definition of a TM. In particular, a TM is composed of many instances of \texttt{TMState}, which represent states within a TM. A TM state instance has a method \texttt{transition} that takes in a letter and returns the transition data, as a \texttt{TMChange}. A \texttt{TMChange} shows:
+The TM is implemented in the class \texttt{TuringMachine} and mimics the definition of a TM. In particular, a TM is composed of many instances of \texttt{TMState}, which represent states within a TM. A TM state instance has a method \texttt{transition} that takes in a letter and returns the transition data, as a \texttt{TMChange}. A \texttt{TMChange} contains:
 \begin{itemize}
     \item the next state value;
     \item the direction to move; and
     \item the value the tapehead value will become.
 \end{itemize}
 
-We traverse the AST using the visitor design pattern. Initially, we define the TM and add relevant states and transitions during the traversal. 
+We traverse the AST using the visitor design pattern. Initially, we define the TM. We add relevant states and transitions during the traversal. 
 
-The visitor methods return the label of the next state, if applicable. This is defined in a very complex manner, depending on whether we have an \textit{if} or a \textit{while} command, or none at all! Hence, we delegate this responsibility from a \textit{switch} block to the relevant case command.
+The visitor methods return the label of the next state, if applicable. This is defined in a very complex manner, depending on whether we have an \textit{if} or a \textit{while} command, or none at all! Hence, we can partially delegate this responsibility from a \textit{switch} block to the relevant \textit{case}.
 
 \subsection{Code and TM Execution}
 Finally, a validated program can be executed using \texttt{CodeExecutor}. This class follows the iterator design pattern. In particular, we can make use of the method \texttt{execute} to run one step in execution. This method returns \texttt{false} if and only if execution has not terminated. The steps of execution are defined precisely in the language specification, given in the appendix.
@@ -158,8 +155,6 @@ Unlike the previous two stages, code execution does not make use of the visitor 
 TM execution has been implemented in the class \texttt{TMExecutor}. This also makes use of the iterator design pattern and supports execution one step at a time. The definition of TM execution is given in the background section.
 
 \section{Product}
-% Screenshots of the website homepage, documentation and error pages are given in the appendix. 
-
 Due to the complex nature of the website, it made use of many APIs.
 
 \subsection{Website Framework}
@@ -171,19 +166,22 @@ Initially, 3 frameworks were considered to implement the website:
     \item the \emph{Angular} framework\footnote{\url{https://angular.io}}- it has even more overhead than React, but, like React, it has a rich collection of components and supports state management.
 \end{itemize}
 
-\emph{State management} was an important consideration when choosing the framework since the website tracks many states, such as the value of the editor and the current TM. Managing state manually would increase the complexity of the project, and could easily be avoided by choosing the right framework. For this reason, webpack was not chosen.
+\emph{State management} was an important consideration when choosing the framework. This is because the website tracks many states, such as the value of the editor and the current TM. Managing state manually would increase the complexity of the project, and could easily be avoided by choosing the right framework. For this reason, webpack was not chosen.
 
-Both React and Angular would have been equally good choices for the project. React was chosen as there are more APIs that readily integrate with React compared to Angular, including some of the APIs used in this project. This is true since React is more widely used than Angular \citep{react_v_angular}. The React framework supports coding in either JavaScript or TypeScript. The project made use of the TypeScript version for type safety.
+Both React and Angular would have been equally good choices for the project. React was chosen as there are more APIs that readily integrate with React compared to Angular. This included some of the APIs used in this project. This is true since React is more widely used than Angular \citep{react_v_angular}. 
+
+The React framework supports coding in either JavaScript or TypeScript. The project made use of the TypeScript version for type safety.
 
 \subsection{Editor}
 
 The editor feature was implemented using the \emph{monaco} API\footnote{\url{https://microsoft.github.io/monaco-editor/}}. The API was chosen since it integrates well with React and provides many features. The features include:
 \begin{itemize}
-    \item syntax highlighting with different priorities (e.g. an error gets a high priority while code execution gets a low priority);
-    \item the ability to easily set and get the current value; along with
-    \item numerous customisations to the editor, such as as changing the font size, setting an editor theme and showing/hiding line numbers- these are all features that a user can configure within the website.
+    \item \emph{syntax highlighting} with different priorities (e.g. an error gets a high priority while code execution gets a low priority);
+    \item the ability to easily \emph{set} and \emph{get} the current value; along with
+    \item numerous \emph{customisations} to the editor, such as as changing the font size, setting the editor theme and showing/hiding line numbers- these are all features that a user can configure within the website.
 \end{itemize}
-Moreover, the monaco editor was chosen since it has the same look as Visual Studio (VS) Code, and shares many functionalities with the IDE. A developer survey in 2022 found that VS Code is the most popular code editor among 70 000 developers \citep{stack_overflow}.
+Moreover, the monaco editor was chosen since it has the same look as Visual Studio (VS) Code, and shares many functionalities with the IDE. The \citet{stack_overflow} developer survey 
+found that VS Code is the most popular code editor among 70 000 developers.
 
 \subsection{FSM Generation}
 \begin{figure}[htb]
@@ -214,7 +212,7 @@ This graph represents the FSM representation of a TM. In this graph:
 \end{itemize}
 Nodes and edges take optional parameters within square brackets that allows them to be customised.
 
-Using the graphviz API, the graph in DOT notation can be rendered in the website- the result for the directed graph \texttt{isDiv2} is given in Figure \ref{fig:graphviz_isDiv2}. Note that the figure was produced with some extra formatting code that is not shown.
+Using the graphviz API, the graph in DOT notation can be rendered in the website- the result for the directed graph \texttt{isDiv2} is given in Figure \ref{fig:graphviz_isDiv2}. Note that the figure was produced with some extra formatting code that is not given.
 
 We convert a TM to DOT notation as follows:
 \begin{itemize}
@@ -232,6 +230,6 @@ The text in the table is constructed using the \emph{MathJax} framework. This fr
 
 \subsection{Tape Execution}
 
-The tape entries were implemented as SVG elements. These were constructed using the \emph{d3} API. To illustrate tape execution, we make use of the animation subpackage in d3. This is used to move the tape left or right, and to change its value. 
+The tape entries were implemented as SVG elements. These were constructed using the \emph{d3} API\footnote{\url{https://d3js.org}}. To illustrate tape execution, we make use of the animation subpackage in d3. This is used to move the tape left or right, and to change its value. 
 
 During execution, we also highlight the current block being executed. Moreover, if the TM panel has been rendered, we highlight the current state and transition in the FSM representation. To keep track of these values, we execute the tape on both the TML program (using \texttt{CodeExecutor}) and its corresponding TM (using \texttt{TMExecutor}). We make use of the d3 API here as well to animate the change in current block/state.
