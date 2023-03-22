@@ -7,6 +7,9 @@
 *.synctex.gz
 *.fls
 *.out
+*.nav
+*.snm
+*.toc
 
 # npm
 node_modules

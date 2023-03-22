@@ -484,5 +484,8 @@
 * *1 hour* Proofread conclusion
 * *0.5 hours* Proofread READMEs
 
+### 22 Mar 2023
+* *1 hour* Recorded the first part of the presentation- title, introduction, background, design and implementation
+
 <!-- 
 ### 24 Mar 2023 -->
