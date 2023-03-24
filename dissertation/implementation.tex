@@ -89,7 +89,7 @@ parseProgram():ProgramContext {
     return new ProgramContext(alphabet, modules);
 }
 \end{lstlisting}
-Note that the code given above is simplified from the actual implementation.
+Note that the code given above is simplified from the actual implementation for readability.
 
 \subsection{Semantic Analysis}
 During semantic analysis, we traverse the AST using the \emph{visitor design pattern}. The visitor design pattern allows us to construct the same method for a class hierarchy without making changes to the classes \citep{gamma1995design}. In this case, we want to create a method to validate each \texttt{Context}. Moreover, the semantic analysis is conducted by the class \texttt{CodeValidator}, which implements \texttt{CodeVisitor} to accommodate the visitor design pattern.
@@ -129,28 +129,29 @@ To run the \texttt{CodeValidator}, we visit \texttt{ProgramContext}.
 
 When traversing the AST, we typically want to aggregate the result or share it with the parent. For this reason, we return a specific type of values within each visit method. To allow any type to be returned, the class \texttt{CodeVisitor} has a type parameter \texttt{T} that represents the return type of each \texttt{visit} method.
 
-In \texttt{CodeValidator}, we return \texttt{boolean} values. In particular, we return \texttt{true} if a block has a \textit{flow} command. This data is used in containers that have multiple blocks, such as a module. We throw an error if a non-final block has a \textit{flow} command. In the example code above, a block with a \textit{goto} command returns \texttt{true} since it is a \textit{flow} command. If this does not apply to some construct, e.g. the \textit{alphabet}, we return \texttt{true}.
+In \texttt{CodeValidator}, we return \texttt{boolean} values. We return \texttt{true} if a block has a \textit{flow} command. This data is used in containers that have multiple blocks, such as a module. We throw an error if a non-final block has a \textit{flow} command. In the example code above, a block with a \textit{goto} command returns \texttt{true} since it is a \textit{flow} command. If this does not apply to some construct, e.g. the \textit{alphabet}, we return \texttt{true}.
 
 The advantage of using the visitor design pattern is that we have a way of traversing the AST without altering any of the \texttt{Context} classes; we can just construct a \texttt{Visitor} class. On the other hand, if we wanted to add another \texttt{Context} subclass, then we would need to amend all the \texttt{Visitor} classes. We expect the language to be pretty static, so this is not a relevant issue!
 
 \subsection{TM Generation}
 Next, we convert the AST into a TM. 
 
-The TM is implemented in the class \texttt{TuringMachine} and mimics the definition of a TM. In particular, a TM is composed of many instances of \texttt{TMState}, which represent states within a TM. A TM state instance has a method \texttt{transition} that takes in a letter and returns the transition data, as a \texttt{TMChange}. A \texttt{TMChange} contains:
+The TM is implemented in the class \texttt{TuringMachine}. An instance is composed of many instances of \texttt{TMState}, which represent states within a TM. A \texttt{TMState} instance has a method \texttt{transition} that takes in a letter and returns the transition data, as a \texttt{TMChange}. A \texttt{TMChange} contains:
 \begin{itemize}
     \item the next state value;
     \item the direction to move; and
     \item the value the tapehead value will become.
 \end{itemize}
+Clearly, it mimics the definition of a TM.
 
 We traverse the AST using the visitor design pattern. Initially, we define the TM. We add relevant states and transitions during the traversal. 
 
 The visitor methods return the label of the next state, if applicable. This is defined in a very complex manner, depending on whether we have an \textit{if} or a \textit{while} command, or none at all! Hence, we can partially delegate this responsibility from a \textit{switch} block to the relevant \textit{case}.
 
 \subsection{Code and TM Execution}
-Finally, a validated program can be executed using \texttt{CodeExecutor}. This class follows the iterator design pattern. In particular, we can make use of the method \texttt{execute} to run one step in execution. This method returns \texttt{false} if and only if execution has not terminated. The steps of execution are defined precisely in the language specification, given in the appendix.
+Finally, a validated program can be executed using \texttt{CodeExecutor}. This class follows the iterator design pattern. We can make use of the method \texttt{execute} to run one step in execution. This method returns \texttt{false} if and only if execution has not terminated. The steps of execution are defined precisely in the language specification, given in the appendix.
 
-Unlike the previous two stages, code execution does not make use of the visitor design pattern. This is because we do not need to traverse the AST in one go to convert the program. Instead, it makes more sense to use the iterator design pattern- this supports execution one step at a time.
+Unlike the previous two stages, code execution does \textbf{not} make use of the visitor design pattern. This is because we do not need to traverse the AST in one go to convert the program. Instead, it makes more sense to use the iterator design pattern- this supports execution one step at a time.
 
 TM execution has been implemented in the class \texttt{TMExecutor}. This also makes use of the iterator design pattern and supports execution one step at a time. The definition of TM execution is given in the background section.
 
@@ -166,7 +167,7 @@ Initially, 3 frameworks were considered to implement the website:
     \item the \emph{Angular} framework\footnote{\url{https://angular.io}}- it has even more overhead than React, but, like React, it has a rich collection of components and supports state management.
 \end{itemize}
 
-\emph{State management} was an important consideration when choosing the framework. This is because the website tracks many states, such as the value of the editor and the current TM. Managing state manually would increase the complexity of the project, and could easily be avoided by choosing the right framework. For this reason, webpack was not chosen.
+\emph{State management} was an important consideration when choosing the framework. This is because the website tracks many states, such as the value of the editor and the current TM. Managing state manually would increase the complexity of the project, and could easily be avoided by choosing the right framework. For this reason, Webpack was not chosen.
 
 Both React and Angular would have been equally good choices for the project. React was chosen as there are more APIs that readily integrate with React compared to Angular. This included some of the APIs used in this project. This is true since React is more widely used than Angular \citep{react_v_angular}. 
 
@@ -210,9 +211,9 @@ This graph represents the FSM representation of a TM. In this graph:
     \item the keyword \texttt{node} creates a state; and
     \item the arrow symbol (\texttt{->}) constructs edges between 2 states.
 \end{itemize}
-Nodes and edges take optional parameters within square brackets that allows them to be customised.
+Nodes and edges take optional parameters that allow for customisation.
 
-Using the graphviz API, the graph in DOT notation can be rendered in the website- the result for the directed graph \texttt{isDiv2} is given in Figure \ref{fig:graphviz_isDiv2}. Note that the figure was produced with some extra formatting code that is not given.
+Using the graphviz API, the graph in DOT notation can be rendered in the website- the result for the directed graph \texttt{isDiv2} is given in Figure \ref{fig:graphviz_isDiv2}. Note that the figure was produced with some extra formatting code that is not shown.
 
 We convert a TM to DOT notation as follows:
 \begin{itemize}
@@ -226,7 +227,7 @@ The advantage of using the graphviz package is that it can produce a well-format
 \subsection{TM Formal Definition Conversion}
 The formal definition of a TM is constructed quite naturally by using the class \texttt{TuringMachine}- we can look at the \texttt{transition} function to find an object of type \texttt{TMChange}. The values are shown to the user in a table like the one in Figure \ref{tbl:table_isDiv2}.
 
-The text in the table is constructed using the \emph{MathJax} framework. This framework compiles raw code in LaTeX and renders it as an SVG.
+The text in the table is constructed using the \emph{MathJax} framework\footnote{\url{https://www.mathjax.org}}. This framework compiles raw code in LaTeX and renders it as an SVG.
 
 \subsection{Tape Execution}
 

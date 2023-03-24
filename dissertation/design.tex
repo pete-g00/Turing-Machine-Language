@@ -8,7 +8,7 @@ The TML provides commands to specify tape operations. In particular,
 \end{itemize}
 To abstract states in a TM, the TML provides a PL-like alternative, called \emph{modules}. A module simulates a state in TMs. To allow for flow of code to go from one module to another, we make use of \texttt{goto} commands. We can go to the \textit{accept} and \textit{reject} states using the keywords \texttt{accept} and \texttt{reject} respectively.
 
-The following program illustrates a simple program in TML with all the basic operations.
+The following illustrates a simple program in TML with all the basic operations.
 \lstinputlisting[language=TML]{code/simple_program.txt}
 The execution of a program starts at the first module, i.e. the module \texttt{first}. We remove the first tape value and move the tape pointer to the right. We then go to module \texttt{second} and continue execution. Note that we allow recursion- line 5 can be replaced with \texttt{goto first}.
 
@@ -17,7 +17,7 @@ To abstract the transition function, the language makes use of \emph{pattern-mat
 
 Although the language is already equivalent to TMs, TML programs do not abstract TMs enough. In particular, modules are equivalent to TM states at this point. To mitigate this, we add nesting within \texttt{if} statements. That way, modules are more expressible than states. It also allows us to write programs that are more comparable to programs written in other languages. An example of a nested TML program is given below.
 \lstinputlisting[language=TML]{code/isDiv2Rec.txt}
-In this program, we have nested an \texttt{if} block within an \texttt{if} block in lines 12-15.
+In this program, we have nested an \texttt{if} block within an \texttt{if} block in lines 12-16.
 
 \begin{figure}[htb]
     \centering
@@ -42,13 +42,13 @@ What we have is a \emph{complete program}- this is a class of TML programs that 
     \item there is a bijection between TMs and complete TML programs, and
     \item we can easily convert a module to a state, and vice versa.
 \end{itemize}
-It is not possible to combine the 2 modules- because the block corresponding to $q_1$ would be nested within $q_0$, recursion would convert the self-loop at $q_1$ into a transition from $q_1$ to $q_0$. By only allowing the TM to be written this way, we would not have completely abstracted TM states. We must support nested self-loops.
+It is not possible to combine the 2 modules- because the block corresponding to $q_1$ would be nested within $q_0$, recursion would convert the self-loop at $q_1$ into a transition from $q_1$ to $q_0$. By only allowing the TM to be written this way, we would not have completely abstracted TM states. We \textit{must} support nested self-loops.
 
 To allow for self-loops to be nested, we introduce a new construct- a \texttt{while} command. This is similar to an \texttt{if} command, but after the block is executed, we stay at the same block. Note that this does not necessarily mean that the same \textit{case} is run. This is precisely a self-loop. We can now convert the TM to a single module:
 \lstinputlisting[language=TML]{code/while_program.txt}
 We can also conclude that the TML is not a mere \textit{representation} for TMs- we have found 2 programs that convert to the TM at Figure \ref{fig:self-loop-TM}. So, there is no bijection between TML programs and TMs. We have successfully abstracted TM states and transitions from the language!
 
-The formal syntax of the language is given in the appendix, along with a proof of equivalence between TMs and TML programs in terms of tape execution. The proof of equivalence is composed of several proofs, which involve:
+The formal syntax of the language is given in the appendix, along with a proof of equivalence between TMs and TML programs with respect to tape execution. The proof of equivalence is composed of several proofs, which involve:
 \begin{itemize}
     \item converting a TM into a (complete) TML program;
     \item converting a valid TML program into a complete TML program; and
@@ -144,9 +144,9 @@ Next, the AST is used to generate a TM. This is the final stage of the compilati
 
 This process is different to the one described in the proof of equivalence- here, we are directly converting a valid TML program into a TM. In essence, we have combined the two steps given in the proof to achieve this.
 
-Initially, we define a TM. During the traversal of the AST, we fill it with relevant states and transitions. This mostly takes place when we are at a block, either inside a module or an \textit{if} command. The process depends on the type of block we have:
+Initially, we define a TM. During the traversal of the AST, we add relevant states and transitions. This mostly takes place when we are at a block, either inside a \textit{module} or an \textit{if} command. The process depends on the type of block we have:
 \begin{itemize}
-    \item if we have a \textit{switch} block, then we define the transition function one by one for each letter, by visiting all the cases within the block;
+    \item if we have a \textit{switch} block, then we define the transition function for each letter by visiting all the cases within the block;
     \item if we have a \textit{basic} block, then we define the transition function for all the letters in one go.
 \end{itemize}
 We have commands within the block/case that we can use to define the transition. For instance, if we have the command \texttt{move left}, then the transition direction will be left. If the command is not present, then we add the default transition, as specified in the language specification.
@@ -178,7 +178,7 @@ A screenshot of the homepage is given in Figure \ref{fig:homepage_design}. More 
 
 The user can input a program to the editor. If the program is valid, it can be compiled to a TM in two ways- it can either be converted to a FSM or to the definition version. The user can also execute the program on a tape after inputting a value. The step button performs one step in execution. 
 
-The toolbar features a button to go to the documentation pages. It also features a button that allows the user to configure the page, e.g. fill the editor with some example code, change the editor theme, change font size, etc. 
+The toolbar features a button to go to the documentation pages. There is also a button that allows the user to configure the page, e.g. fill the editor with some example code, change the editor theme, change font size, etc. 
 
 \subsubsection{Documentation Pages}
 The website has documentation pages that define both TMs and TML programs. In particular, the page:
@@ -222,12 +222,12 @@ The formal definition of the TM defines all the states and then presents the tra
 \end{itemize}
 
 \subsection{Tape Execution}
-The user can input a valid string in the alphabet and execute the TML program on a tape. A valid string consists of letters in the alphabet, including the blank symbol. The tape panel features 15 visible tape entries (spots for an input value). The tape panel animates the execution process in the tape entries, which involves:
+The user can input a valid string in the alphabet and execute the TML program on a tape. A valid string consists of letters in the alphabet and the blank symbol. The tape panel features 15 visible tape entries (positions for an input value). The tape panel animates the execution process in the tape entries, which involves:
 \begin{itemize}
     \item changing the tapehead value; and
     \item moving the tape to the left or the right.
 \end{itemize}
-Note that a \textit{move} command moves the \textit{pointer}, not the tape. Hence, the command \texttt{move left} moves the \textit{tape} to the right; the tapehead position remains constant.
+Note that a \textit{move} command moves the \textit{pointer}, not the tape. Hence, the command \texttt{move left} moves the tape to the \textit{right}; the tapehead position remains constant.
 
 \begin{figure}[htb]
     \centering
@@ -289,6 +289,6 @@ Note that a \textit{move} command moves the \textit{pointer}, not the tape. Henc
     \label{fig:tape_movement}
 \end{figure}
 
-For the tape movement animation to look smooth, there are always 2 tape entries to either side of the tape. That way, if the tape gets moved to left or right, there will be a tape entry to show. This is illustrated in Figure \ref{fig:tape_movement} (a)- the tape entries 0 and 4 are out of frame and therefore invisible. 
+For the tape movement animation to look smooth, there are always 2 tape entries to either side of the tape. That way, if the tape gets moved left or right, there will be a tape entry to show. This is illustrated in Figure \ref{fig:tape_movement} (a)- the tape entries 0 and 4 are out of frame and therefore invisible. 
 
-When the tape moves, there will be 2 tape entries on one side. For instance, if the tape moves to the left in Figure \ref{fig:tape_movement} (a), we get Figure \ref{fig:tape_movement} (b). After the transition has completed, we move the most extreme tape entry to the other side. In the example, we move tape entry 0 to the right, leading to the tape state given in Figure \ref{fig:tape_movement} (c). At this point, we also change the tape value of entry 0 so that it matches tape value at index 5. Since these changes are invisible, they take place instantly after the animation is complete.
+When the tape moves, there will be 2 tape entries on one side. For instance, if the tape moves to the left in Figure \ref{fig:tape_movement} (a), we get Figure \ref{fig:tape_movement} (b)- there are 2 invisible entries to the left. After the transition has completed, we move the most extreme tape entry to the other side. In the example, we move tape entry 0 to the right, leading to the tape state given in Figure \ref{fig:tape_movement} (c). At this point, we also change the tape value of entry 0 so that it matches the value at index 5. Since these changes are invisible, they take place instantly after the animation is complete.

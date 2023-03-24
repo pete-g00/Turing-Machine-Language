@@ -1,11 +1,11 @@
 \chapter{Background}
 \section{Turing Machine}
 \subsection{Introduction to Turing Machines}
-A \emph{Turing Machine} (TM) is a collection $(Q, \Sigma, \delta, q_0)$, where:
+A \emph{Turing Machine} (TM) is a tuple $(Q, \Sigma, \delta, q_0)$, where:
 \begin{itemize}
     \item $Q$ is a set of \emph{states}, including the \emph{accept state} $A$ and the \emph{reject state} $R$;
     \item $\Sigma$ is a set of \emph{letters}, called the \emph{alphabet}, which does not include the \texttt{blank} symbol;
-    \item $\delta \colon Q \setminus \{A, R\} \times \Sigma^+ \to Q \times \Sigma^+ \times \{\texttt{left}, \texttt{right}\}$, where $\Sigma^+ = \Sigma \cup \{\texttt{blank}\}$, is the \emph{transition function}; and
+    \item $\delta \colon Q \setminus \{A, R\} \times \Sigma^+ \to Q \times \Sigma^+ \times \{\texttt{left}, \texttt{right}\}$ is the \emph{transition function}, where $\Sigma^+ = \Sigma \cup \{\texttt{blank}\}$; and
     \item $q_0 \in Q$ is the \emph{starting state}.
 \end{itemize}
 Although based on Turing's work on \citet{turing1936computable}, this definition, along with others in this section, have been adapted from \citet{hopcroft2001automata}.
@@ -59,7 +59,7 @@ We will make use of the shorthand notation.
 FSMs are considered a \emph{representation} of a TM. This word has a very specific meaning, in that there is a bijection between FSMs (of the format given above) and TMs. Moreover, there is a `simple' algorithm that allows us to convert a FSM to a TM, and vice versa.
 
 \subsection{Executing a TM on a tape}
-Let $\Sigma$ be an alphabet. A \emph{tape} $T$ on $\Sigma$ is a function $T\colon \mathbb{Z} \to \Sigma^+$. That is, the tape has infinite entries in both directions. Moreover, each tape entry contains a value from the alphabet, or the \texttt{blank} symbol. 
+Let $\Sigma$ be an alphabet. A \emph{tape} $T$ on $\Sigma$ is a function $T\colon \mathbb{Z} \to \Sigma^+$. That is, the tape has infinite entries in both directions. Moreover, each tape entry contains a value from the alphabet $\Sigma$, or the \texttt{blank} symbol. 
 
 \begin{figure}[htb]
     \centering
@@ -78,7 +78,7 @@ We can specify a tape using a figure. For instance, let $\Sigma = \{0, 1\}$, and
     1 & x \in \{1\} \\
     \texttt{blank} & \text{otherwise}.
 \end{cases}\]
-Then, Figure \ref{fig:tape_example} illustrates the tape $T$. We will assume that the first non-blank value is at index 0.
+Then, Figure \ref{fig:tape_example} illustrates the tape $T$. Like in this example, we will assume that the first non-blank value is at index 0. We only consider tapes that \textit{have} a first non-blank value.
 
 We can execute a TM on a tape. Let $M$ be a TM with alphabet $\Sigma$, and let $T$ be a tape on $\Sigma$. We execute $M$ on $T$ inductively, as follows:
 \begin{itemize}
@@ -86,7 +86,7 @@ We can execute a TM on a tape. Let $M$ be a TM with alphabet $\Sigma$, and let $
 
     \item At the start, the tape is $T$; the tapehead index is $0$; and the current state is the initial state $q_0$. 
     
-    \item At some point during the execution, assume that we have the tape $S$, tapehead index $j$, with \emph{tapehead value} $T(j) = t$, and a non-terminating state $q$ (i.e. not $A$ or $R$). Denote $\delta(q, t) = (q', t', \texttt{dir})$. Then, 
+    \item At some point during the execution, assume that we have the tape $S$, tapehead index $j$, with \emph{tapehead value} $T(j) = t$, and a non-terminating state $q$ (i.e. not $q \neq A$ and $q \neq R$). Denote $\delta(q, t) = (q', t', \texttt{dir})$. Then, 
     \begin{itemize}
         \item the next state is $q'$;
         \item the next tape is $S'$, where
@@ -165,16 +165,16 @@ Hence, this TM accepts binary numbers if and only if they are divisible by 2.
 \subsection{TM as a model of computation}
 Turing initially proposed TMs as the `correct' model of computation in \citet{turing1936computable}. This result is called the \emph{Church-Turing Thesis}. It is a \textit{thesis} since it is informal in nature; it is just a \textit{belief} that the correct model of computation is the model given by TMs. 
 
-In this paper, Turing also showed that TMs and $\lambda$-calculus are equivalent. Hence, it follows that $\lambda$-calculus is also the correct model of computation. There have been many other models of computations proposed, such as general recursive functions. It is widely regarded that TMs (and all the equivalent models) specify the correct model of computation. This is because many of the originally proposed models of computation turned out to be equivalent \citep{copeland2004essential}.
+In this paper, Turing also showed that TMs and $\lambda$-calculus are equivalent. Hence, it follows that $\lambda$-calculus is also the correct model of computation. There have been many other models of computations proposed. It is widely regarded that TMs (and all the equivalent models) specify the correct model of computation. This is because many of the originally proposed models of computation turned out to be equivalent \citep{copeland2004essential}.
 
 \subsection{Learning Automata Theory}
 Students tend to struggle learning automata theory, which includes TMs. This has been associated with the theoretical and mathematical nature of the topic \citep{wermelinger2005prolog}. As such, students claim that the lectures covering the topic are boring, monotonous and unengaging \citep{pillay2010learning}. 
 
-This is also visible in student performance. In particular, when students were taught automata theory using the pen-and-paper method, i.e. by drawing FSMs, many tend to give the wrong answer \citep{rodger2006jflap}. \citet{rodger2009increasing} mentions that this is likely because they find it tedious to check the correctness of the FSM.
+This is also visible in student performance. In particular, when students are taught automata theory using the pen-and-paper method, i.e. by drawing FSMs, many tend to give the wrong answer \citep{rodger2006jflap}. \citet{rodger2009increasing} mentions that this is likely because they find it tedious to check the correctness of the FSM.
 
 There have been many attempts made to improve student engagement in automata theory. 
 \begin{itemize}
-    \item There are visualisation tools that allow students to construct automata and then test simulate execution on a string. One of these tools is JFLAP, which has support for TMs \citep{rodger2006jflap}. \citet{rodger2009increasing} found that making use of this tool helped boost student engagement and performed better overall than those who had not made use of the tool. In general, algorithm animators have generally proven to be quite effective in supplementing courses \citep{stasko1998empirically}.
+    \item There are visualisation tools that allow students to construct automata and then test simulate execution on a string. One of these tools is JFLAP, which has support for TMs \citep{rodger2006jflap}. \citet{rodger2009increasing} found that making use of this tool helped boost student engagement. Moreover, students using JFLAP performed better overall than those who did not made use of the tool. In general, algorithm animators have generally proven to be quite effective in supplementing courses \citep{stasko1998empirically}.
     
     \item In \citet{tecson2018tutoring}, a website was used by students to learn automata theory. Many students enjoyed this approach since it was flexible and allowed them to learn at their pace. Moreover, it offered visualisations (i.e. FSMs) and allowed the students to execute the FSM on a tape.
     
@@ -273,16 +273,16 @@ Next, we try to parse the token stream into an \emph{abstract syntax tree} (AST)
     \label{fig:AST_example}
 \end{figure}
 
-An AST presents the program as a tree. Typically, the internal nodes specify operations, while the leaves give their arguments. The AST for the expression \texttt{(1 + 2) * (3 + 4)} is given in Figure \ref{fig:AST_example}.
+An AST represents the program as a tree. Typically, the internal nodes specify operations, while the leaves contain their arguments. The AST for the expression \texttt{(1 + 2) * (3 + 4)} is given in Figure \ref{fig:AST_example}.
 
-There are many ways to parse the stream of tokens. A common method is \emph{recursive-descent parsing}. Here, we have a parser function for each construct in the language, such as a \textit{program}, an \textit{if} command, an \textit{expression}, etc. We typically look at the next token value and choose a function. 
+There are many ways to parse the stream of tokens. A common method is \emph{recursive-descent parsing}. Here, we have a parser function for each construct in the language, such as a \textit{program}, an \textit{if} command and an \textit{expression}. We typically look at the next token and choose a function. 
 
 One way of performing recursive-descent parsing is by \emph{top-down parsing}. In this case, we produce the parent node of the AST and then generate its children. 
 
 The simplest form of recursive-descent parsing is called \emph{predictive parsing}. This applies when the next token determines what structure it is to be parsed. For instance, if we see the token \texttt{if}, then we know we are parsing an \textit{if} command.
 
 \subsection{Semantic Analysis}
-Now, we traverse the AST and check that there are no errors in the source code. Typically, there are 2 types of things to check in this stage- \emph{type errors} and \emph{scope errors}. 
+Now, we traverse the AST and check that there are no errors in the source code. Typically, there are 2 kinds of errors to check at this stage- \emph{type errors} and \emph{scope errors}. 
 
 In type errors, we check whether the AST has some type mismatch, e.g. \texttt{1 + true}. We can detect this by keeping track of the types of the identifiers and see if they are legal.
 

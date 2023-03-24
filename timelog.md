@@ -487,5 +487,11 @@
 ### 22 Mar 2023
 * *1 hour* Recorded the first part of the presentation- title, introduction, background, design and implementation
 
-<!-- 
-### 24 Mar 2023 -->
+### 23 Mar 2023
+* *2 hours* Proofread up to design
+
+### 24 Mar 2023
+* *2 hours* Completed final proofreading
+* *1 hour* Recorded the demo
+* *1 hour* Recorded the end of the presentation- evaluation, future work and conclusion
+* *1 hour* Edited video and uploaded to YouTube
